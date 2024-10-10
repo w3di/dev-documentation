@@ -1,0 +1,219 @@
+{
+  "main": {
+    "id": "7c519bac0be1a2c9",
+    "type": "split",
+    "children": [
+      {
+        "id": "d93a48786f0899cd",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "356ef1fb69f46dd6",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {}
+            }
+          },
+          {
+            "id": "bdc0f16f4320bef2",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {}
+            }
+          },
+          {
+            "id": "0f1264d3fa9f6fcc",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "js/Типы данных js/Объектные типы/Объектные типы.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "87e18fe1843668d9",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "js/Functions/Способы объявления функций/Способы объявления функции.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ],
+        "currentTab": 1
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "92ae8236aa6952cb",
+    "type": "split",
+    "children": [
+      {
+        "id": "fc840dcb76486575",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "ca1bca4eee3ac26f",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "6d893df22d5f4413",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "10bd9f6a8a45548c",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 498.5
+  },
+  "right": {
+    "id": "ac46df7947f3060e",
+    "type": "split",
+    "children": [
+      {
+        "id": "09e624a56c4696a8",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "5c803884aa34fde5",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "357272589a19c563",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "309e925e16e8cdef",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "c04509687067c399",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "bdc0f16f4320bef2",
+  "lastOpenFiles": [
+    "js/Область видимости и Lexical Environment с Scope Chain/Понятия Lexical Environment и Scope Chain.md",
+    "React/hooks",
+    "React",
+    "js/Asynchronous Programming/async & await.md",
+    "js/Asynchronous Programming/Asynchronous Programming.md",
+    "js/Asynchronous Programming/Promises.md",
+    "js/Asynchronous Programming/Callbacks.md",
+    "async / await.md",
+    "async ",
+    "js/Asynchronous Programming/async / await 1.md",
+    "js/Asynchronous Programming/async / await.md",
+    "js/Asynchronous Programming/async ",
+    "js/Asynchronous Programming/Снимок экрана 2024-10-10 в 22.14.37.png",
+    "js/DOM/DOM.md",
+    "js/DOM/Дополнительно/Дополнительно.md",
+    "js/EventLoop/Event Loop.md",
+    "js/Functions/Способы объявления функций/Способы объявления функции.md",
+    "js/Functions/Способы объявления функций/Arrow Function (Стрелочная функция).md",
+    "js/Functions/Способы объявления функций/Function Constructor (Конструктор функции).md",
+    "js/Functions/Способы объявления функций/Function Declaration (Объявление функции).md",
+    "js/Functions/Способы объявления функций/Function Expression (Функциональное выражение).md",
+    "js/Functions/Способы объявления функций/function* (функции-генераторы).md",
+    "js/Functions/Способы объявления функций/Immediately Invoked Function Expression (IIFE).md",
+    "js/Область видимости и Lexical Environment с Scope Chain/Область видимости и Lexical Environment с Scope Chain.md",
+    "js/DOM/Дополнительно/BOM.md",
+    "js/Functions/Методы работы с контекстом выполнения функции/Методы работы с контекстом выполнения функции.md",
+    "js/Functions/Functions.md",
+    "js/Functions/Дополнительные концепции функций.md",
+    "js/Functions/Функциональные концепции/First-class Objects.md",
+    "js/Functions/Функциональные концепции/Функциональные концепции.md",
+    "js/DOM/Дополнительно/Снимок экрана 2024-10-10 в 17.52.54.png",
+    "js/DOM/Render Tree/Снимок экрана 2024-09-17 в 11.17.12.png",
+    "js/DOM/Дополнительно",
+    "Снимок экрана 2024-09-17 в 11.16.58.png",
+    "js/DOM/Render Tree",
+    "js/DOM && DOM Manipulation && CSSOM/Untitled",
+    "js/DOM/Основные концепции/Типы узлов",
+    "js/DOM && DOM Manipulation && CSSOM/Работа с событиями/Работа с событиями",
+    "js/DOM/CSSOM",
+    "Untitled 1.canvas",
+    "Untitled.canvas",
+    "js/Untitled.canvas"
+  ]
+}
