@@ -6,11 +6,16 @@ function stripInlineMd(s) {
   return s
     .replace(/!\[[^\]]*]\([^)]*\)/g, "")
     .replace(/\[([^\]]+)]\([^)]*\)/g, "$1")
-    .replace(/`{1,3}([^`]+)`{1,3}/g, "$1")
+    .replace(/`([^`]+)`/g, "<b>$1</b>") // одинарные кавычки -> <b>
+    .replace(/`{3}([^`]+)`{3}/g, "$1") // тройные кавычки остаются как есть
     .replace(/(\*\*|__|\*|_|~~)/g, "")
-    .replace(/<\/?[^>]+>/g, "")
     .trim();
 }
+
+function convertTabsToHtmlSpaces(s) {
+  return s.replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
+}
+
 function isHeading(line) {
   return /^\s{0,3}#{1,6}\s+/.test(line);
 }
@@ -19,9 +24,16 @@ function isCodeFence(line) {
 }
 function getListMatch(line) {
   const ordered = /^(\s*)(\d+)\.\s+(.*)$/.exec(line);
-  if (ordered) return { indent: ordered[1], text: ordered[3] };
+  if (ordered)
+    return {
+      indent: ordered[1],
+      text: ordered[3],
+      type: "ordered",
+      number: ordered[2],
+    };
   const unordered = /^(\s*)[-+*]\s+(.*)$/.exec(line);
-  if (unordered) return { indent: unordered[1], text: unordered[2] };
+  if (unordered)
+    return { indent: unordered[1], text: unordered[2], type: "unordered" };
   return null;
 }
 function calcDepth(indentRaw) {
@@ -52,15 +64,31 @@ function mdToJson(markdown) {
   const stack = [{ type: "normal", container: root.items, depth: -1 }];
 
   let inCode = false;
+  let codeLines = []; // для сбора строк кода
   let lastItem = null; // последний добавленный узел (для склейки параграфов)
   let questionCount = 0;
 
   for (let raw of lines) {
     if (isCodeFence(raw)) {
+      if (inCode) {
+        // Закрываем блок кода - добавляем собранные строки как <pre><code> тег с HTML-форматированием
+        const codeContent = codeLines
+          .map((line) => line.replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;")) // табуляция -> 4 неразрывных пробела
+          .join("<br />"); // переносы строк -> <br />
+        const top = stack[stack.length - 1];
+        if (top && top.type === "lines") {
+          top.lines.push(`<pre><code>${codeContent}</code></pre>`);
+        }
+        codeLines = [];
+      }
       inCode = !inCode;
       continue;
     }
-    if (inCode) continue;
+    if (inCode) {
+      // Собираем строки кода
+      codeLines.push(raw);
+      continue;
+    }
     if (isHeading(raw)) continue;
 
     const m = getListMatch(raw);
@@ -76,9 +104,14 @@ function mdToJson(markdown) {
       while (stack.length && stack[stack.length - 1].depth >= depth)
         stack.pop();
       const top = stack[stack.length - 1];
-      // Если мы внутри сбора строк для ответа вопроса — просто добавляем сырую строку
+      // Если мы внутри сбора строк для ответа вопроса — обрабатываем и добавляем
       if (top && top.type === "lines") {
-        top.lines.push(raw);
+        // Для нумерованных списков сохраняем номер, для неупорядоченных используем ▪
+        if (m.type === "ordered") {
+          top.lines.push(`${m.number}. ${convertTabsToHtmlSpaces(text)}`);
+        } else {
+          top.lines.push(`▪ ${convertTabsToHtmlSpaces(text)}`);
+        }
         // Заводим новый фрейм той же коллекции строк на текущей глубине,
         // чтобы корректно отслеживать выход из подразделов
         stack.push({ type: "lines", lines: top.lines, depth });
@@ -92,13 +125,21 @@ function mdToJson(markdown) {
       if (isQuestion) {
         questionCount += 1;
         item = {
-          question: text,
+          question: convertTabsToHtmlSpaces(text),
           id: makeId(text, questionCount),
           answer: "",
           _answerLines: [],
         };
       } else {
-        item = { text, answer: [] };
+        // Для нумерованных списков сохраняем номер, для неупорядоченных используем ▪
+        if (m.type === "ordered") {
+          item = {
+            text: `${m.number}. ${convertTabsToHtmlSpaces(text)}`,
+            answer: [],
+          };
+        } else {
+          item = { text: `▪ ${convertTabsToHtmlSpaces(text)}`, answer: [] };
+        }
       }
 
       parentContainer.push(item);
@@ -115,9 +156,24 @@ function mdToJson(markdown) {
 
     // Параграф/детали — привязываем к последнему узлу
     const top = stack[stack.length - 1];
-    // Если мы внутри ответа вопроса — добавляем сырую строку как есть
+    // Если мы внутри ответа вопроса — проверяем, не является ли строка элементом списка
     if (top && top.type === "lines") {
-      top.lines.push(raw);
+      const listMatch = getListMatch(raw);
+      if (listMatch) {
+        // Это элемент списка - обрабатываем как список
+        const processed = stripInlineMd(listMatch.text);
+        if (listMatch.type === "ordered") {
+          top.lines.push(
+            `${listMatch.number}. ${convertTabsToHtmlSpaces(processed)}`
+          );
+        } else {
+          top.lines.push(`▪ ${convertTabsToHtmlSpaces(processed)}`);
+        }
+      } else {
+        // Обычная строка - обрабатываем inline markdown
+        const processed = stripInlineMd(raw);
+        top.lines.push(convertTabsToHtmlSpaces(processed));
+      }
       lastItem = null;
       continue;
     }
@@ -125,10 +181,12 @@ function mdToJson(markdown) {
     if (clean && lastItem) {
       if ("text" in lastItem && !("question" in lastItem)) {
         // продлеваем текст ответа
-        lastItem.text = lastItem.text ? `${lastItem.text}\n${clean}` : clean;
+        lastItem.text = lastItem.text
+          ? `${lastItem.text}\n${convertTabsToHtmlSpaces(clean)}`
+          : convertTabsToHtmlSpaces(clean);
       } else {
         // под вопросом — создаём новый ответ-параграф
-        const para = { text: clean, answer: [] };
+        const para = { text: convertTabsToHtmlSpaces(clean), answer: [] };
         const topContainer = stack[stack.length - 1].container;
         topContainer.push(para);
         lastItem = para;
@@ -143,7 +201,7 @@ function mdToJson(markdown) {
   function finalize(items) {
     for (const it of items) {
       if (typeof it.answer === "string" && Array.isArray(it._answerLines)) {
-        it.answer = it._answerLines.join("\n");
+        it.answer = it._answerLines.join("<br />");
         delete it._answerLines;
       } else if (Array.isArray(it.answer)) {
         finalize(it.answer);
