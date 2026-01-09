@@ -111,13 +111,13 @@ console.log(a);
 
 ### live-coding для проверки знаний react hooks 
 Исправить и реализовать корректную работу обратного отсчета с отображением оставшегося времени возможностью запуска, остановки и сброса таймера
-https://codesandbox.io/p/devbox/nostalgic-alex-vm48ly?file=%2Fsrc%2FApp.js%3A12%2C1&workspaceId=ws_Bjk8xxrfuCPKL2bYSwJFrZ
+
 
 Реализовать переиспользуемый debounce для задержки обновления значения viewText в компоненте при вводе текста в TextInput
-https://codesandbox.io/p/devbox/condescending-gates-yq5gmy?file=%2Fsrc%2FApp.js%3A35%2C29&workspaceId=ws_Bjk8xxrfuCPKL2bYSwJFrZ
+
 
 Реализовать React Native компонент, /позволяющий пользователю по нажатию на кнопку добавлять случайную машину из списка доступных в свой личный "гараж".
-https://codesandbox.io/p/sandbox/happy-sound-dnzck5?file=%2Fsrc%2FApp.js%3A37%2C57
+
 
 
 Нативные модули - это класс который написан на одном из нативных ЯП (sfti obg-c kotlin java c++) в этом нативном модуле есть нативные методы которые что-то там делают, и мы можем их в своем js можем их вызывать

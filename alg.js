@@ -6,7 +6,7 @@ function stripInlineMd(s) {
   return s
     .replace(/!\[[^\]]*]\([^)]*\)/g, "")
     .replace(/\[([^\]]+)]\([^)]*\)/g, "$1")
-    .replace(/`([^`]+)`/g, "<b>$1</b>") // одинарные кавычки -> <b>
+    .replace(/`([^`]+)`/g, "$1")
     .replace(/`{3}([^`]+)`{3}/g, "$1") // тройные кавычки остаются как есть
     .replace(/(\*\*|__|\*|_|~~)/g, "")
     .trim();
@@ -14,6 +14,23 @@ function stripInlineMd(s) {
 
 function convertTabsToHtmlSpaces(s) {
   return s.replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
+}
+
+function escapeHtmlForJson(s) {
+  // Сначала защищаем теги <code>, </code> и <br />
+  const protected = s
+    .replace(/<code>/g, "___CODE_OPEN___")
+    .replace(/<\/code>/g, "___CODE_CLOSE___")
+    .replace(/<br\s*\/?>/g, "___BR_TAG___");
+
+  // Экранируем остальные HTML теги
+  const escaped = protected.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+  // Возвращаем обратно защищенные теги
+  return escaped
+    .replace(/___CODE_OPEN___/g, "<code>")
+    .replace(/___CODE_CLOSE___/g, "</code>")
+    .replace(/___BR_TAG___/g, "<br />");
 }
 
 function isHeading(line) {
@@ -222,7 +239,31 @@ if (require.main === module) {
   }
   const md = fs.readFileSync(inPath, "utf8");
   const json = mdToJson(md);
-  fs.writeFileSync(outPath, JSON.stringify(json, null, 2), "utf8");
+
+  // Кастомная сериализация для сохранения <code> тегов
+  function customStringify(obj, indent = 0) {
+    const spaces = "  ".repeat(indent);
+    if (typeof obj === "string") {
+      // Экранируем HTML теги, но сохраняем <code>
+      const htmlEscaped = escapeHtmlForJson(obj);
+      // Экранируем кавычки и обратные слеши для JSON
+      const escaped = htmlEscaped.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+      return `"${escaped}"`;
+    }
+    if (Array.isArray(obj)) {
+      const items = obj.map((item) => customStringify(item, indent + 1));
+      return `[\n${spaces}  ${items.join(`,\n${spaces}  `)}\n${spaces}]`;
+    }
+    if (typeof obj === "object" && obj !== null) {
+      const pairs = Object.entries(obj).map(([key, value]) => {
+        return `${spaces}  "${key}": ${customStringify(value, indent + 1)}`;
+      });
+      return `{\n${pairs.join(",\n")}\n${spaces}}`;
+    }
+    return JSON.stringify(obj);
+  }
+
+  fs.writeFileSync(outPath, customStringify(json), "utf8");
   console.log(`Saved: ${outPath}`);
 }
 

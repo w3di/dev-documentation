@@ -1,99 +1,41 @@
 
-### блок вопросов по js:
-задачка на контекст, функции и call bind apply
-```js
-const obj = {
-  name: "Colin",
-  prop: {
-    name: "Rox",
-    getname: function () {
-      return this.name;
-    },
-    arrow: () => this.name,
-    iife: function () {
-      (function () {
-        console.log(this.name);
-      })();
-    },
-    arrowInsideFunction: function () {
-      return () => console.log(this.name);
-    },
-  },
-};
+### JavaScript
 
-console.log(obj.prop.getname()); //
-const test = obj.prop.getname;
-console.log(test); //
-console.log(test.call(obj.prop)); //
-console.log(test.apply(obj)); //
-console.log(test.bind(obj)()); //
-console.log(test.bind(obj).bind(obj.prop)()); // ?
-console.log(obj.prop.arrow()); //
-obj.prop.iife(); //
-obj.prop.arrowInsideFunction()(); //
-```
+1. Расскажи о себе как разработчике и о своем опыте.
+2. Какие примитивные и сложные типы данных существуют в JavaScript?
+3. В чем разница между `null` и `undefined`?
+4. В чем различие между `var`, `let` и `const`?
+5. Что такое область видимости (scope) и как работает hoisting?
+6. Что такое функция в JavaScript и какие способы её объявления ты знаешь?
+7. Какие методы массивов ты используешь чаще всего и для чего?
+8. Что такое асинхронность в JavaScript?
+9. Как работает асинхронный код через `Promise` и `async/await`?
 
-задачка на промисы и var let const и зоны видимости, и промисы
-```js
-async function run() {
-  for (var i = 1; i <= 3; i++) {
-    new Promise((res, rej) => {
-      console.log(i);
-      setTimeout(() => {
-        console.log(i);
-        res();
-      }, 400);
-    });
-  }
-  console.log("Done");
-}
+---
 
-run()
-  .then(
-    () => {
-      console.log("then1");
-    },
-    () => {
-      console.log("then2");
-    }
-  )
-  .catch(() => {
-    {
-      console.log("catch");
-    }
-  })
-  .finally(() => {
-    console.log("finally");
-  });
-```
+### TypeScript
 
-знания метода массива
-```js
-[1, 2, 3].map(console.log);
-const a = [1, 2, 3].map(console.log);
-console.log(a);
-```
+10. В чем разница между `type` и `interface`?
+11. В чем разница между `any`, `never` и `unknown`?
 
-### Блок вопросов по React Native:
-1. Что такое React Native и как он работает?
-	1. ios/android
-2. Как ты стилизуешь компоненты? в чем преемущество StyleSheet.create()?
-	1. не знает плюс styleshtt
-3. Какие способы обработки нажатий (touch events) существуют в React Native, и как правильно их использовать?
-	1. ++
-### Блок вопросов по Expo: 
-не знает expo
-1. Что такое Expo и как он помогает в разработке приложений на React Native?
-2. Чем отличаются `Expo Go` и `Dev Build` в контексте работы с Expo?
-3. Какие ограничения накладывает использование приложения `Expo Go` при разработке приложений с использованием React Native?
-4. Что такое нативные модули (native modules) в React Native и в каких случаях их необходимо использовать?
-5. Как можно сохранять данные между сеансами (например, на устройстве) в приложении, разработанном на React Native?
-	1. async storage
-	2. secure staroge
-	3. sql
-6. Что такое `expo-router`, как он работает и какие преимущества он предоставляет при разработке приложений с использованием Expo?
+---
 
-### live-coding для проверки знаний react hooks и react native
+### React
 
-Реализовать React Native компонент, /позволяющий пользователю по нажатию на кнопку добавлять случайную машину из списка доступных в свой личный "гараж".
-https://codesandbox.io/p/sandbox/happy-sound-dnzck5?file=%2Fsrc%2FApp.js%3A37%2C57
+12. Как использовать `useState` и задавать initial state? Приведи примеры.
+13. Как работает `useEffect` и какие бывают варианты зависимостей? Приведи примеры.
+14. Для чего используется `useRef` и чем он отличается от `useState`?
+15. Когда происходит перерендер компонента?
+16. Как организовать глобальное состояние в приложении и избежать prop-drilling?
+
+---
+
+### React Native
+
+15. В чем разница между компонентами React Native и обычными HTML-компонентами?
+16. Какие способы стилизации есть в React Native (`StyleSheet`, inline-стили) и каковы их плюсы и минусы?
+17. Чем отличается Expo от чистого React Native?
+18. Какие есть режимы сборки в React Native: Managed vs Bare?
+19. Как подключать сторонние пакеты, если Expo не поддерживает модуль нативно?
+20. Как реализовать Splash-экран и сохранить состояние авторизации?
+21. Разница между старой и новой архитектурой в RN
