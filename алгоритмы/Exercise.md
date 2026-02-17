@@ -8,28 +8,28 @@ https://leetcode.com/problems/squares-of-a-sorted-array/description/ ❌
 https://leetcode.com/problems/container-with-most-water/description/ ✅
 https://leetcode.com/problems/remove-duplicates-from-sorted-array/description/ ❌
 https://leetcode.com/problems/move-zeroes/description/ ❌
-https://leetcode.com/problems/is-subsequence/description/ ❌
+https://leetcode.com/problems/is-subsequence/description/ ✅
 https://leetcode.com/problems/backspace-string-compare/description/ ❌
 https://leetcode.com/problems/merge-sorted-array/description/ ❌
 
 ## Sliding Window
 
-https://leetcode.com/problems/maximum-average-subarray-i/description/
-https://leetcode.com/problems/minimum-size-subarray-sum/description/
-https://leetcode.com/problems/max-consecutive-ones-iii/description/
-https://leetcode.com/problems/longest-subarray-of-1s-after-deleting-one-element/
-https://leetcode.com/problems/fruit-into-baskets/description/
+https://leetcode.com/problems/maximum-average-subarray-i/description/ ✅
+https://leetcode.com/problems/minimum-size-subarray-sum/description/ ✅
+https://leetcode.com/problems/max-consecutive-ones-iii/description/✅
+https://leetcode.com/problems/longest-subarray-of-1s-after-deleting-one-element/ ✅
+https://leetcode.com/problems/fruit-into-baskets/description/✅
 
 ## Linking List
 
- https://leetcode.com/problems/design-linked-list/description/
- https://leetcode.com/problems/middle-of-the-linked-list/description/
- https://leetcode.com/problems/delete-the-middle-node-of-a-linked-list/description/
- https://leetcode.com/problems/reverse-linked-list/description/
- https://leetcode.com/problems/palindrome-linked-list/description/
- https://leetcode.com/problems/remove-duplicates-from-sorted-list/description/
- https://leetcode.com/problems/remove-nth-node-from-end-of-list/description/
- https://leetcode.com/problems/swap-nodes-in-pairs/description/
+ https://leetcode.com/problems/design-linked-list/description/ ❌
+ https://leetcode.com/problems/middle-of-the-linked-list/description/ ✅
+ https://leetcode.com/problems/delete-the-middle-node-of-a-linked-list/description/ ✅
+ https://leetcode.com/problems/reverse-linked-list/description/ ❌
+ https://leetcode.com/problems/palindrome-linked-list/description/ ✅
+ https://leetcode.com/problems/remove-duplicates-from-sorted-list/description/ ✅
+ https://leetcode.com/problems/remove-nth-node-from-end-of-list/description/ ❌
+ https://leetcode.com/problems/swap-nodes-in-pairs/description/ ❌
  https://leetcode.com/problems/merge-two-sorted-lists/description/
  https://leetcode.com/problems/linked-list-cycle/description/
 
@@ -73,3 +73,11 @@ https://leetcode.com/problems/deepest-leaves-sum/description/
 https://leetcode.com/problems/diameter-of-binary-tree/description/
 https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/description/
 https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/description/
+
+## Trie, Autocomplete
+https://leetcode.com/problems/implement-trie-prefix-tree/description/
+https://leetcode.com/problems/search-suggestions-system/description/
+
+## Heap
+
+## Intervals
