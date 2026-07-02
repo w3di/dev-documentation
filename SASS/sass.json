@@ -1,0 +1,169 @@
+{
+  "section": {
+    "id": "sass",
+    "name": "SASS/SCSS",
+    "slug": "sass"
+  },
+  "questions": [
+    {
+      "id": "sass-what-is-sass",
+      "slug": "what-is-sass",
+      "question": "Что такое Sass и чем SCSS отличается от Indented Syntax?",
+      "answer": "- Sass -- CSS-препроцессор, добавляющий переменные, вложенность, миксины, функции, модули, циклы и другие возможности\n- SCSS (.scss) -- синтаксис с `{}` и `;`, совместимый с CSS. Самый популярный\n- Indented Syntax (.sass) -- оригинальный синтаксис с отступами вместо `{}` и переносами вместо `;`\n- Оба синтаксиса могут загружать друг друга",
+      "difficulty": "interview",
+      "tags": ["Синтаксис"]
+    },
+    {
+      "id": "sass-vs-css",
+      "slug": "sass-vs-css",
+      "question": "Чем Sass/SCSS отличается от обычного CSS?",
+      "answer": "Sass добавляет:\n1. Переменные (`$var`) с `!default` и `!global`\n2. Вложенность селекторов и `&`\n3. Миксины (`@mixin`/`@include`) с аргументами и `@content`\n4. Наследование (`@extend`, `%placeholder`)\n5. Функции (`@function`) и встроенные модули (`sass:math`, `sass:color`)\n6. Типы данных: списки, карты, вычисления\n7. Модульная система (`@use`, `@forward`)\n8. Управляющие конструкции (`@if`, `@each`, `@for`, `@while`)\n9. Операторы с автоконвертацией единиц",
+      "difficulty": "interview",
+      "tags": ["Синтаксис"]
+    },
+    {
+      "id": "sass-variables",
+      "slug": "variables",
+      "question": "Как работают переменные в SCSS и чем отличаются от CSS Custom Properties?",
+      "answer": "- Sass-переменные: `$var: value`. Компилируются и исчезают. Императивное поведение. Лексическая область видимости.\n- CSS Custom Properties: `--var: value` / `var(--var)`. Остаются в CSS. Декларативные. Каскадная область (DOM).\n- `!default` -- значение по умолчанию, можно переопределить через `@use ... with`\n- `!global` -- установка глобальной переменной из локального контекста\n- Дефисы и подчеркивания взаимозаменяемы: `$font-size` == `$font_size`",
+      "difficulty": "interview",
+      "tags": ["Переменные"]
+    },
+    {
+      "id": "sass-nesting",
+      "slug": "nesting",
+      "question": "Как работает вложенность и родительский селектор & в SCSS?",
+      "answer": "- Sass автоматически комбинирует внешний селектор с внутренним\n- `&` ссылается на родительский селектор: `&:hover`, `&__element` (BEM), `[dir=rtl] &`\n- `&` допускается только в начале составных селекторов (`span&` -- ошибка)\n- Рекомендуется не более 3 уровней вложенности\n- Свойства тоже можно вкладывать: `transition: { property: ...; duration: ...; }`",
+      "difficulty": "interview",
+      "tags": ["Правила стилей"]
+    },
+    {
+      "id": "sass-modules",
+      "slug": "modules",
+      "question": "Как работает модульная система @use и @forward в Sass?",
+      "answer": "- `@use` загружает модуль с namespace: `@use 'colors'` -> `colors.$primary`\n- `@use 'module' as c` -- кастомное namespace\n- `@use 'module' as *` -- без namespace (осторожно)\n- `@use 'module' with ($var: value)` -- конфигурация `!default` переменных\n- `@forward` -- проброс API модуля потребителям: `@forward 'module' as prefix-*`\n- `@forward 'module' show/hide` -- контроль видимости\n- Приватные члены начинаются с `-` или `_`\n- `@import` устарел (удалится в Sass 3.0)",
+      "difficulty": "interview",
+      "tags": ["Модульная система"]
+    },
+    {
+      "id": "sass-mixins",
+      "slug": "mixins",
+      "question": "Как работают миксины в SCSS и когда их использовать?",
+      "answer": "- `@mixin` определяет, `@include` подключает\n- Поддерживают: обычные аргументы, значения по умолчанию, именованные аргументы, `$args...` (произвольные)\n- `@content` -- принимает блок стилей при `@include`\n- `using ($var)` (Dart Sass 1.15.0+) -- передача аргументов в `@content`\n- Блоки `@content` имеют лексическую область видимости\n- Миксин vs extend: миксин копирует стили (параметры, @content), extend объединяет селекторы",
+      "difficulty": "interview",
+      "tags": ["Миксины"]
+    },
+    {
+      "id": "sass-functions",
+      "slug": "functions",
+      "question": "Как создавать функции в SCSS и чем они отличаются от миксинов?",
+      "answer": "- `@function` определяет, `@return` возвращает значение\n- Функции должны быть чистыми (без побочных эффектов)\n- Аргументы аналогичны миксинам (обычные, по умолчанию, именованные, `...`)\n- Нераспознанные имена функций компилируются в CSS-функции\n- Функции как значения: `meta.get-function()` + `meta.call()`\n\nОтличие от миксинов:\n- Функция возвращает одно значение\n- Миксин генерирует блок стилей\n- Для побочных эффектов -- миксин, для вычислений -- функция",
+      "difficulty": "interview",
+      "tags": ["Функции"]
+    },
+    {
+      "id": "sass-extend",
+      "slug": "extend",
+      "question": "Как работает @extend и когда лучше использовать %placeholder?",
+      "answer": "- `@extend` обновляет правила, добавляя расширяющий селектор к расширяемому\n- Sass выполняет 'умное объединение' (intelligent unification)\n- `%placeholder` -- не генерирует CSS сам по себе, рекомендуемый подход\n- `!optional` -- подавляет ошибку если расширяемый селектор не найден\n- Ограничения: только простые селекторы, не работает через `@media`\n- Sass Guidelines рекомендуют предпочитать `@mixin` -- `@extend` может дать непредсказуемый рост селекторов",
+      "difficulty": "interview",
+      "tags": ["Наследование и @extend"]
+    },
+    {
+      "id": "sass-flow-control",
+      "slug": "flow-control",
+      "question": "Как работают условия и циклы в SCSS?",
+      "answer": "- `@if`/`@else if`/`@else` -- условия. Truthiness: только `false` и `null` ложны. `0`, `\"\"`, `()` -- истинны!\n- `@each $item in $list` -- итерация по списку/карте. Деструктуризация: `@each $key, $val in $map`\n- `@for $i from 1 through N` -- включая N. `to N` -- исключая N\n- `@while` -- пока условие истинно. Используйте только когда кол-во итераций неизвестно\n- Переменные в flow control НЕ создают теневые копии -- присваивают во внешнюю область",
+      "difficulty": "interview",
+      "tags": ["Управление потоком"]
+    },
+    {
+      "id": "sass-values",
+      "slug": "values",
+      "question": "Какие типы значений существуют в SCSS?",
+      "answer": "10 типов:\n1. Numbers -- с единицами или без (`16px`, `0.5`). 64-bit float. Совместимые единицы автоконвертируются\n2. Strings -- в кавычках (`\"hello\"`) и без (`bold`). Индексы с 1\n3. Colors -- все CSS цветовые пространства (rgb, hsl, oklch и др.)\n4. Lists -- неизменяемы. Разделители: запятые, пробелы, слэши\n5. Maps -- ключ-значение. Вложенные операции (Dart Sass 1.27.0+). Неизменяемы\n6. Booleans -- `true`, `false`\n7. null -- пропускается в CSS\n8. Calculations -- `calc()`, `clamp()`, `min()`, `max()`\n9. Functions -- через `meta.get-function()`\n10. Mixins -- через `meta.get-mixin()` (1.69.0+)",
+      "difficulty": "interview",
+      "tags": ["Типы значений"]
+    },
+    {
+      "id": "sass-builtin-modules",
+      "slug": "builtin-modules",
+      "question": "Какие встроенные модули есть в Sass и основные функции?",
+      "answer": "7 модулей (подключаются через `@use 'sass:*'`):\n1. `sass:math` -- `math.div()`, `math.round()`, `math.clamp()`, тригонометрия, `math.$pi`\n2. `sass:string` -- `string.index()`, `string.slice()`, `string.split()`, `string.quote()`/`unquote()`\n3. `sass:color` -- `color.adjust()`, `color.scale()`, `color.change()`, `color.mix()`, работа с каналами\n4. `sass:list` -- `list.nth()`, `list.append()`, `list.join()`, `list.index()`, `list.zip()`\n5. `sass:map` -- `map.get()`, `map.set()`, `map.merge()`, `map.deep-merge()`, `map.keys()`/`values()`\n6. `sass:selector` -- `selector.unify()`, `selector.append()`, `selector.nest()`\n7. `sass:meta` -- `meta.type-of()`, `meta.inspect()`, `meta.get-function()`/`meta.call()`, интроспекция",
+      "difficulty": "interview",
+      "tags": ["Встроенные модули"]
+    },
+    {
+      "id": "sass-interpolation",
+      "slug": "interpolation",
+      "question": "Как работает интерполяция #{} и какие подводные камни?",
+      "answer": "- `#{}` встраивает SassScript в CSS: селекторы, имена свойств, CSS Custom Properties, at-правила, строки\n- Не используйте для значений свойств: `color: $var`, не `color: #{$var}`\n- Не используйте с числами: `#{$width}px` создает строку! Используйте `$width * 1px`\n- Строки в кавычках теряют кавычки при интерполяции\n- Для CSS Custom Properties интерполяция обязательна: `--color: #{$var}`",
+      "difficulty": "interview",
+      "tags": ["Интерполяция"]
+    },
+    {
+      "id": "sass-color-functions",
+      "slug": "color-functions",
+      "question": "Чем отличаются color.adjust(), color.change() и color.scale()?",
+      "answer": "- `color.adjust($color, $lightness: -20%)` -- прибавляет/вычитает фиксированное количество (60% -> 40%)\n- `color.change($color, $red: 100)` -- устанавливает абсолютное значение канала\n- `color.scale($color, $lightness: -20%)` -- масштабирует от текущей позиции к max/min (60% -> 48%)\n- `color.scale()` рекомендуется как более интуитивный\n- Устаревшие: `darken()`, `lighten()`, `saturate()`, `desaturate()` -- замена: `color.adjust()` / `color.scale()`",
+      "difficulty": "interview",
+      "tags": ["Встроенные модули"]
+    },
+    {
+      "id": "sass-architecture",
+      "slug": "architecture",
+      "question": "Что такое 7-1 архитектура и рекомендации по организации SCSS?",
+      "answer": "7 папок + 1 main.scss:\n- abstracts/ -- переменные, миксины, функции (не генерирует CSS)\n- vendors/ -- сторонние стили\n- base/ -- reset, типографика\n- layout/ -- header, footer, сетка\n- components/ -- UI-компоненты\n- pages/ -- стили страниц\n- themes/ -- темы\n\nРекомендации:\n- Один компонент -- один файл\n- `_index.scss` для `@forward` в каждой папке\n- Порядок: abstracts -> vendors -> base -> layout -> components -> pages -> themes\n- kebab-case для именования всего",
+      "difficulty": "interview",
+      "tags": ["Лучшие практики и архитектура"]
+    },
+    {
+      "id": "sass-breaking-changes",
+      "slug": "breaking-changes",
+      "question": "Какие критические изменения ожидаются в Sass 3.0 и как подготовиться?",
+      "answer": "Основные удаления в Sass 3.0:\n1. `@import` -> `@use`/`@forward`\n2. `/` как деление -> `math.div()`\n3. Глобальные цветовые функции -> модули `sass:color`\n4. Глобальные встроенные -> модули `sass:*`\n\nПодготовка:\n- `npx sass-migrator module --migrate-deps input.scss` -- автомиграция\n- `--fatal-deprecation=import,slash-div,global-builtin,color-functions` -- превращает предупреждения в ошибки\n- `--quiet-deps` -- подавляет предупреждения из зависимостей",
+      "difficulty": "interview",
+      "tags": ["Критические изменения"]
+    },
+    {
+      "id": "sass-truthiness",
+      "slug": "truthiness",
+      "question": "Как работает truthiness в Sass и чем отличается от JavaScript?",
+      "answer": "- В Sass только `false` и `null` ложны\n- Все остальное ИСТИННО: `0`, `\"\"` (пустая строка), `()` (пустой список)\n- В JavaScript falsy: `0`, `\"\"`, `null`, `undefined`, `NaN`, `false`\n- Это влияет на `@if`, `@while`, функцию `if()` и булевы операторы `and`/`or`/`not`",
+      "difficulty": "interview",
+      "tags": ["Управление потоком"]
+    },
+    {
+      "id": "sass-operators",
+      "slug": "operators",
+      "question": "Какие операторы поддерживает SCSS и каков их приоритет?",
+      "answer": "Приоритет (от высшего к низшему):\n1. Унарные: `not`, `+`, `-`\n2. `*`, `%`; деление через `math.div()`\n3. `+`, `-`\n4. `>`, `>=`, `<`, `<=`\n5. `==`, `!=`\n6. `and`\n7. `or`\n\nОсобенности:\n- Совместимые единицы автоконвертируются: `96px == 1in`\n- Строки: `\"a\" == a` (кавычки не влияют)\n- Строковая конкатенация: `\"hello\" + \" world\"` -> `\"hello world\"`",
+      "difficulty": "interview",
+      "tags": ["Операторы"]
+    },
+    {
+      "id": "sass-custom-properties",
+      "slug": "custom-properties",
+      "question": "Как в SCSS взаимодействовать с CSS Custom Properties?",
+      "answer": "- CSS Custom Properties парсятся как чистый CSS, не как Sass\n- Для вставки Sass-значений обязательна интерполяция `#{}`\n```scss\n$primary: #81899b;\n:root {\n  --primary: #{$primary};      // --primary: #81899b\n  --broken: $primary;          // буквально: $primary\n}\n```\n- Sass-переменные: compile-time, одно значение, лексический скоуп\n- CSS Custom Properties: runtime, разные значения для элементов, каскадный скоуп",
+      "difficulty": "interview",
+      "tags": ["Переменные"]
+    },
+    {
+      "id": "sass-content-args",
+      "slug": "content-args",
+      "question": "Как передавать аргументы в @content миксинов?",
+      "answer": "С Dart Sass 1.15.0+ можно передавать аргументы в `@content` через `using`:\n```scss\n@mixin media($types...) {\n  @each $type in $types {\n    @media #{$type} {\n      @content($type);\n    }\n  }\n}\n@include media(screen, print) using ($type) {\n  h1 { @if $type == print { font-family: serif; } }\n}\n```\nБлоки `@content` имеют лексическую область видимости -- видят переменные вызывающей области, не миксина.",
+      "difficulty": "interview",
+      "tags": ["Миксины"]
+    },
+    {
+      "id": "sass-partials-index",
+      "slug": "partials-index",
+      "question": "Что такое partials и индексные файлы в SCSS?",
+      "answer": "- Partials: файлы с `_` (например, `_variables.scss`) не компилируются отдельно. При `@use` подчеркивание опускается.\n- Индексные файлы: `_index.scss` в папке загружается автоматически при `@use 'folder'`\n- Обычно содержат `@forward` для всех файлов папки\n- Sass автоматически разрешает расширения (.scss, .sass, .css)\n- URL чувствительны к регистру, используйте `/` даже на Windows",
+      "difficulty": "interview",
+      "tags": ["Модульная система"]
+    }
+  ]
+}

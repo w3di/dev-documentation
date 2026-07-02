@@ -186,9 +186,9 @@
 37. Что представляет собой ключевое слово `this` и как определяется его контекст в разных ситуациях?
 	- `this` представляет собой ссылку на текущий контекст выполнения, который определяется способом вызова функции
 	1. В глобальной области видимости.
-		1. строгом режиме равен `undefined`
-		2. браузера им является объект `window`
-		3. в среде Node.js – объект global
+		1. в браузере им является объект `window` (в том числе в строгом режиме)
+		2. в строгом режиме внутри обычной функции `this` равен `undefined`
+		3. в среде Node.js на верхнем уровне модуля – `module.exports` (`{}`), а не `global`
 	1. В методе объекта.
 		- на контекст объекта
 	1. В функции-конструкторе.
@@ -280,7 +280,7 @@
 	- `Call Stack` - это структура данных, используемая движком JavaScript для отслеживания выполнения функций в программе. Он работает по принципу **LIFO (Last In, First Out)**, то есть последняя вызванная функция обрабатывается первой.
 
 60. Что такое очереди задач: `macrotasks` и `microtasks`, и как они влияют на порядок выполнения кода?
-	- Когда асинхронная задача попадает в **`Call Stack`**, она передается во внешнюю систему, которая после завершения добавляет её `callback` в macroTasks Queue или microTasks Queue. Когда `Call Stack` становится пустым, сначала обрабатываются задачи из macroTasks Queue, а затем из microTasks Queue
+	- Когда асинхронная задача попадает в **`Call Stack`**, она передается во внешнюю систему, которая после завершения добавляет её `callback` в macroTasks Queue или microTasks Queue. Когда `Call Stack` становится пустым, сначала обрабатываются все задачи из microTasks Queue, а затем берётся одна задача из macroTasks Queue. После каждой макрозадачи снова выполняются все накопившиеся микрозадачи
 
 61. Приведите примеры микрозадач (`microtasks`) и макрозадач (`macrotasks`) в JavaScript?
 	- MicroTasks:
@@ -307,7 +307,7 @@
 64. Как работают `Promise.all()`, `Promise.allSettled()`, `Promise.race()` и `Promise.any()`? Какие есть дополнительные статические методы промисов?
 	- `Promise.all()` — ждет выполнения всех промисов, прерывается, если один промис отклонен
 	- `Promise.allSettled()` — ждет завершения всех промисов в независимости от их статуса
-	- `Promise.race()` — возвращает первый выполненный промис.
+	- `Promise.race()` — возвращает первый завершившийся (settled) промис, будь он fulfilled или rejected.
 	- `Promise.any()` — возвращает первый выполненный успешно промис, игнорируя ошибки
 	- `Promise.reject()` - cоздает промис, который немедленно переходит в состояние **`rejected`** с указанной причиной ошибки
 	- `Promise.resolve()` - cоздает промис, который немедленно переходит в состояние **`fulfilled`** с указанным значением
@@ -382,7 +382,7 @@
 75. Какие методы массивов (`map`, `filter`, `reduce` и др.) используются для работы с данными и чем они полезны?
 	- `map` - Применяет функцию к каждому элементу массива и возвращает новый массив с результатами.
 	- `forEach` - Применяет функцию для каждого элемента массива, но ничего не возвращает
-	- filtred - создает новый массив, содержащий только элементы, которые удовлетворяют заданному условию.
+	- `filter` - создает новый массив, содержащий только элементы, которые удовлетворяют заданному условию.
 	- `reduce` - преобразует массив в одно значение, применяя функцию последовательно к каждому элементу и аккумулятору
 	- `reduce`Right - аналогичен `reduce`, но обход массива выполняется справа налево.
 	- `find` - возвращает первый элемент массива, который удовлетворяет заданному условию, или `undefined`, если такого элемента нет.
@@ -400,7 +400,7 @@
 77. Что делает метод `reduce` и когда он может заменить другие методы работы с массивами?
 	- преобразует массив в одно значение, применяя функцию последовательно к каждому элементу и аккумулятору
 
-20. Чем отличается копирование массива с помощью `slice`, оператора spread и `Array.from`()?
+78. Чем отличается копирование массива с помощью `slice`, оператора spread и `Array.from`()?
 	- `slice` - позволяет копировать часть массива (подмассив) с указанием границ индексов.
 	- spread-оператора - поддерживает объединение массивов и добавление новых элементов в процессе копирования.
 	- `Array.from`() - работает с массивоподобными объектами (например, `arguments` или `DOM`-коллекциями) и позволяет преобразовывать элементы при копировании.
@@ -461,7 +461,7 @@
 	- Разница:
 		1. `'prop' in obj` вернёт `false` после `delete`, но `true` после присваивания `undefined`
 		2. `Object.keys(obj)` не будет включать удалённое свойство, но включит свойство со значением `undefined`
-		3. `delete` освобождает память, присваивание `undefined` - нет
+		3. `delete` удаляет свойство из объекта, освобождение памяти происходит позже через сборку мусора (GC), когда на значение больше нет ссылок
 
 41. Как оператор `delete` работает с массивами в JavaScript?
 	- `delete` может удалять элементы массива по индексу
@@ -552,8 +552,8 @@
 	- `forEach()`:
 		1. Нельзя прервать через `break` или `continue`
 		2. Возвращает `undefined`
-		3. Работает только с массивами
-		4. Нельзя использовать `return` для выхода из функции-обработчика
+		3. Работает с массивами, `Map`, `Set`, `NodeList`, `TypedArray` и другими коллекциями
+		4. `return` в callback завершает текущую итерацию (аналог `continue`), но нельзя выйти из всего цикла (аналог `break`)
 	- `for...of` и `for`:
 		1. Можно использовать `break` и `continue`
 		2. Можно использовать `return` для выхода из функции
@@ -785,7 +785,7 @@
 	- Лучше устанавливать прототип при создании объекта через `Object.create()`
 
 88. Как проверить, является ли свойство собственным или унаследованным?
-	- `Object.hasOwnProperty(prop)` - проверяет, является ли свойство собственным (не унаследованным)
+	- `obj.hasOwnProperty(prop)` - проверяет, является ли свойство собственным (не унаследованным)
 	- `Object.hasOwn(obj, prop)` - современная альтернатива `hasOwnProperty()` (ES2022)
 	- `prop in obj` - проверяет наличие свойства в объекте или его прототипах
 	- `Object.keys()`, `Object.values()`, `Object.entries()` - возвращают только собственные свойства
@@ -1002,3 +1002,524 @@
 		2. Позволяет изменять существующие свойства
 	- `Object.preventExtensions(obj)` - запрещает добавление новых свойств
 	- Для глубокого замораживания нужно рекурсивно применять `Object.freeze()`
+
+## Proxy и Reflect
+
+117. Что такое `Proxy` в JavaScript и для чего он используется?
+	- `Proxy` — объект-обёртка, которая перехватывает и переопределяет фундаментальные операции над целевым объектом (чтение, запись, удаление свойств и др.)
+	- Создаётся через `new Proxy(target, handler)`, где `handler` — объект с trap-функциями
+	- Используется для:
+		1. Валидации данных при записи
+		2. Логирования доступа к свойствам
+		3. Реализации реактивности (Vue 3)
+		4. Создания «виртуальных» свойств
+		5. Ленивой инициализации
+
+118. Какие traps (ловушки) существуют у `Proxy` и какие операции они перехватывают?
+	- Всего 13 traps:
+		1. `get(target, prop, receiver)` — чтение свойства
+		2. `set(target, prop, value, receiver)` — запись свойства
+		3. `has(target, prop)` — оператор `in`
+		4. `deleteProperty(target, prop)` — оператор `delete`
+		5. `ownKeys(target)` — `Object.keys()`, `Object.getOwnPropertyNames()`, `for...in`
+		6. `getOwnPropertyDescriptor(target, prop)` — `Object.getOwnPropertyDescriptor()`
+		7. `defineProperty(target, prop, descriptor)` — `Object.defineProperty()`
+		8. `getPrototypeOf(target)` — `Object.getPrototypeOf()`
+		9. `setPrototypeOf(target, proto)` — `Object.setPrototypeOf()`
+		10. `isExtensible(target)` — `Object.isExtensible()`
+		11. `preventExtensions(target)` — `Object.preventExtensions()`
+		12. `apply(target, thisArg, args)` — вызов функции
+		13. `construct(target, args, newTarget)` — оператор `new`
+
+119. Что такое `Revocable Proxy` и для чего он нужен?
+	- `Proxy.revocable(target, handler)` создаёт Proxy, который можно «отозвать» (сделать недействительным)
+	- Возвращает объект `{ proxy, revoke }`
+	- После вызова `revoke()` любая операция с proxy бросит `TypeError`
+	- Используется для временного предоставления доступа к объекту
+
+120. Какие инварианты (invariants) `Proxy` не может нарушить?
+	- `Proxy` обязан соблюдать инварианты для консистентности языка:
+		1. `get` не может вернуть значение, отличное от свойства с `writable: false, configurable: false`
+		2. `set` не может успешно завершиться для свойства с `writable: false, configurable: false`
+		3. `has` не может скрыть non-configurable собственное свойство
+		4. `deleteProperty` не может удалить non-configurable свойство
+		5. `ownKeys` обязан включать все non-configurable собственные свойства
+		6. `getPrototypeOf` должен возвращать реальный прототип, если объект non-extensible
+	- Нарушение инвариантов бросает `TypeError`
+
+121. Что такое `Reflect` API и зачем использовать его вместо прямых операций?
+	- `Reflect` — встроенный объект с методами, дублирующими все 13 операций Proxy
+	- Преимущества перед прямыми операциями:
+		1. Возвращает `boolean` вместо бросания ошибок (`Reflect.defineProperty` vs `Object.defineProperty`)
+		2. Принимает `receiver` — корректно работает с наследованием через Proxy
+		3. Функциональный стиль вместо операторов: `Reflect.deleteProperty(obj, 'key')` вместо `delete obj.key`
+		4. Один-к-одному соответствие с traps Proxy — удобно для делегирования поведения по умолчанию
+
+## Execution Context
+
+122. Что такое `Execution Context` и из чего он состоит?
+	- `Execution Context` (EC) — внутренняя структура, которую движок JS создаёт при выполнении кода
+	- Виды EC:
+		1. **Global EC** — создаётся один раз при запуске, привязан к `window`/`globalThis`
+		2. **Function EC** — создаётся при каждом вызове функции
+		3. **Eval EC** — создаётся при вызове `eval()`
+	- Компоненты EC:
+		1. `LexicalEnvironment` — для `let`, `const`, `function declarations`, `class`
+		2. `VariableEnvironment` — для `var`
+		3. `ThisBinding` — значение `this`
+		4. `Realm` — realm record (набор встроенных объектов)
+		5. `Function` — ссылка на объект функции (null для Global EC)
+
+123. Какие фазы проходит `Execution Context` при создании?
+	- **Creation Phase** (фаза создания):
+		1. Создаётся `LexicalEnvironment` — регистрируются `let`, `const`, функции (TDZ для let/const)
+		2. Создаётся `VariableEnvironment` — регистрируются `var` (инициализируются `undefined`)
+		3. Определяется значение `this`
+	- **Execution Phase** (фаза выполнения):
+		1. Код выполняется построчно
+		2. Переменным присваиваются значения
+		3. Вызываются функции (создаются новые EC)
+
+124. В чём разница между `LexicalEnvironment` и `VariableEnvironment`?
+	- `VariableEnvironment` — фиксируется при создании EC, хранит только `var` объявления
+	- `LexicalEnvironment` — изначально указывает на тот же Environment Record, но может изменяться при входе в блок `{}`:
+		1. При входе в блок `{ let x = 1; }` создаётся новый `LexicalEnvironment` для блока
+		2. `VariableEnvironment` не меняется — `var` остаётся в функциональном scope
+	- Именно поэтому `let`/`const` имеют блочную область видимости, а `var` — функциональную
+
+## Garbage Collection (Сборка мусора)
+
+125. Как работает сборка мусора в JavaScript (V8)?
+	- V8 использует **Generational Garbage Collection** — разделяет объекты по «возрасту»:
+		1. **Young Generation (New Space)** — новые объекты (~1-8 MB), собираются часто алгоритмом **Scavenge** (копирующий GC с двумя semi-spaces)
+		2. **Old Generation (Old Space)** — объекты, пережившие несколько Scavenge, собираются реже алгоритмом **Mark-Sweep-Compact**
+	- Принцип: большинство объектов живут недолго («infant mortality hypothesis»)
+
+126. Что такое алгоритм Mark-Sweep-Compact?
+	- Трёхфазный алгоритм для Old Generation:
+		1. **Mark** — обход графа объектов от корней (roots), маркировка достижимых объектов (tri-color marking: белый/серый/чёрный)
+		2. **Sweep** — проход по памяти, освобождение немаркированных (белых) объектов
+		3. **Compact** — перемещение живых объектов для устранения фрагментации памяти
+	- V8 выполняет маркировку инкрементально и параллельно (Orinoco) для минимизации пауз
+
+127. Что такое `WeakRef` и `FinalizationRegistry`?
+	- `WeakRef` — слабая ссылка на объект, не препятствующая сборке мусора:
+		- `const ref = new WeakRef(obj)` — создание
+		- `ref.deref()` — получить объект или `undefined`, если он собран
+	- `FinalizationRegistry` — позволяет зарегистрировать callback, который вызовется после сборки объекта:
+		- `const registry = new FinalizationRegistry(callback)`
+		- `registry.register(obj, heldValue)` — регистрация
+	- Оба механизма недетерминированы — нельзя полагаться на время вызова
+	- Используются для кэшей, пулов ресурсов, cleanup внешних ресурсов
+
+128. Какие типичные утечки памяти бывают в JavaScript и как их обнаружить?
+	- Типичные утечки:
+		1. Забытые таймеры (`setInterval` без `clearInterval`)
+		2. Замыкания, удерживающие ссылки на большие объекты
+		3. Отсоединённые DOM-узлы (detached DOM nodes) — элемент удалён из DOM, но на него есть ссылка в JS
+		4. Глобальные переменные (случайные присвоения без `let`/`const`)
+		5. EventListener без `removeEventListener`
+		6. Кэши без ограничения размера
+	- Обнаружение:
+		1. Chrome DevTools → Memory → Heap Snapshot
+		2. Performance Monitor → JS Heap Size
+		3. `--expose-gc` + `process.memoryUsage()` в Node.js
+
+## Итераторы и генераторы
+
+129. Что такое протокол итератора (Iterator Protocol) и `Symbol.iterator`?
+	- **Iterable Protocol** — объект является итерируемым, если у него есть метод `[Symbol.iterator]()`, возвращающий итератор
+	- **Iterator Protocol** — объект является итератором, если у него есть метод `next()`, возвращающий `{ value, done }`
+	- Встроенные итерируемые объекты: `Array`, `String`, `Map`, `Set`, `TypedArray`, `arguments`, `NodeList`
+	- Потребители итераторов: `for...of`, spread `...`, деструктуризация, `Array.from()`, `Promise.all()`, `yield*`
+
+130. Как создать кастомный итерируемый объект?
+	- Реализовать метод `[Symbol.iterator]()`, который возвращает объект с методом `next()`:
+	```javascript
+	const range = {
+		from: 1, to: 5,
+		[Symbol.iterator]() {
+			let current = this.from;
+			const last = this.to;
+			return {
+				next() {
+					return current <= last
+						? { value: current++, done: false }
+						: { done: true };
+				}
+			};
+		}
+	};
+	for (const n of range) console.log(n); // 1 2 3 4 5
+	```
+
+131. Как работают генераторы с `yield*` для делегирования?
+	- `yield*` делегирует выполнение другому генератору или итерируемому объекту
+	- Возвращаемое значение `yield*` — это `value` из `{ value, done: true }` делегируемого генератора
+	```javascript
+	function* inner() { yield 'a'; yield 'b'; return 'inner done'; }
+	function* outer() {
+		const result = yield* inner(); // делегирует inner
+		console.log(result); // 'inner done'
+		yield 'c';
+	}
+	// [...outer()] → ['a', 'b', 'c']
+	```
+
+132. Что такое async-итераторы и `for await...of`?
+	- **Async Iterator Protocol** — метод `next()` возвращает `Promise<{ value, done }>`
+	- **Async Iterable** — объект с методом `[Symbol.asyncIterator]()`
+	- `for await...of` — цикл для перебора async iterable:
+	```javascript
+	async function* asyncRange(start, end) {
+		for (let i = start; i <= end; i++) {
+			await new Promise(r => setTimeout(r, 100));
+			yield i;
+		}
+	}
+	for await (const num of asyncRange(1, 3)) console.log(num);
+	```
+	- Используется для: потоков данных, пагинации API, чтения файлов по частям
+
+## Регулярные выражения
+
+133. Что такое `RegExp` в JavaScript и какие основные методы существуют?
+	- `RegExp` — объект для работы с регулярными выражениями (паттерн-матчинг строк)
+	- Создание: литерал `/pattern/flags` или `new RegExp('pattern', 'flags')`
+	- Методы RegExp:
+		1. `regex.test(str)` — возвращает `true`/`false` (есть ли совпадение)
+		2. `regex.exec(str)` — возвращает массив с деталями первого совпадения или `null`
+	- Методы String, работающие с RegExp:
+		1. `str.match(regex)` — массив совпадений (с флагом `g`) или детали первого
+		2. `str.matchAll(regex)` — итератор всех совпадений (требует флаг `g`)
+		3. `str.replace(regex, replacement)` — замена совпадений
+		4. `str.replaceAll(regex, replacement)` — замена всех совпадений (требует флаг `g`)
+		5. `str.search(regex)` — индекс первого совпадения или `-1`
+		6. `str.split(regex)` — разбивка строки по паттерну
+
+134. Какие флаги регулярных выражений существуют в JavaScript?
+	1. `g` (global) — искать все совпадения, а не только первое
+	2. `i` (ignoreCase) — регистронезависимый поиск
+	3. `m` (multiline) — `^` и `$` работают для каждой строки, а не всего текста
+	4. `s` (dotAll) — `.` соответствует любому символу, включая `\n`
+	5. `u` (unicode) — корректная работа с Unicode (суррогатные пары)
+	6. `v` (unicodeSets) — расширенный unicode mode с `\p{}` в наборах (ES2024)
+	7. `y` (sticky) — поиск только с позиции `lastIndex`
+	8. `d` (hasIndices) — результат содержит индексы начала/конца подгрупп
+
+135. Что такое именованные группы захвата и lookahead/lookbehind?
+	- **Именованные группы**: `(?<name>pattern)` — захватывает совпадение и присваивает имя:
+		- `'2024-03-15'.match(/(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})/)?.groups` → `{ year: '2024', month: '03', day: '15' }`
+	- **Lookahead** (заглядывание вперёд):
+		1. Positive: `(?=pattern)` — совпадает, если за текущей позицией следует pattern
+		2. Negative: `(?!pattern)` — совпадает, если за текущей позицией НЕ следует pattern
+	- **Lookbehind** (заглядывание назад):
+		1. Positive: `(?<=pattern)` — совпадает, если перед текущей позицией есть pattern
+		2. Negative: `(?<!pattern)` — совпадает, если перед текущей позицией НЕТ pattern
+	- Lookahead и lookbehind не захватывают символы (zero-width assertions)
+
+## Строки
+
+136. Какие основные методы строк существуют в JavaScript?
+	- Поиск:
+		1. `indexOf(str)` / `lastIndexOf(str)` — индекс первого/последнего вхождения
+		2. `includes(str)` — содержит ли строка подстроку
+		3. `startsWith(str)` / `endsWith(str)` — начинается/заканчивается ли
+		4. `search(regex)` — поиск по регулярному выражению
+	- Извлечение:
+		1. `slice(start, end)` — извлекает часть строки (поддерживает отрицательные индексы)
+		2. `substring(start, end)` — аналогично, но без отрицательных индексов
+		3. `at(index)` — символ по индексу (поддерживает отрицательные, ES2022)
+	- Преобразование:
+		1. `toUpperCase()` / `toLowerCase()` — регистр
+		2. `trim()` / `trimStart()` / `trimEnd()` — удаление пробелов
+		3. `padStart(len, str)` / `padEnd(len, str)` — дополнение до длины
+		4. `repeat(count)` — повторение строки
+		5. `replace(search, replacement)` / `replaceAll(search, replacement)`
+	- Разбивка: `split(separator)`
+	- Строки иммутабельны — все методы возвращают новую строку
+
+137. Что такое `template literals` и `tagged templates`?
+	- **Template literals** — строки в обратных кавычках с интерполяцией:
+		- `` `Hello, ${name}!` `` — подстановка выражений
+		- Поддерживают многострочность без `\n`
+	- **Tagged templates** — функция, обрабатывающая template literal:
+	```javascript
+	function html(strings, ...values) {
+		return strings.reduce((result, str, i) =>
+			result + str + (values[i] !== undefined ? escapeHtml(values[i]) : ''), '');
+	}
+	html`<p>${userInput}</p>` // экранирует userInput
+	```
+	- `strings` — массив строковых частей (с `.raw` для необработанных строк)
+	- Применения: санитизация HTML, CSS-in-JS (styled-components), i18n, SQL-запросы
+
+## Property Descriptors (Дескрипторы свойств)
+
+138. Что такое дескрипторы свойств (property descriptors) в JavaScript?
+	- Каждое свойство объекта имеет скрытые атрибуты, описывающие его поведение:
+	- **Data descriptor** (свойство-данные):
+		1. `value` — значение свойства
+		2. `writable` — можно ли изменять значение (`true` по умолчанию для литералов)
+		3. `enumerable` — видимо ли при перечислении (`for...in`, `Object.keys()`)
+		4. `configurable` — можно ли удалять свойство и менять его дескриптор
+	- **Accessor descriptor** (свойство-аксессор):
+		1. `get` — функция-геттер
+		2. `set` — функция-сеттер
+		3. `enumerable` и `configurable`
+	- Свойство не может одновременно быть data и accessor descriptor
+
+139. Как работают `Object.defineProperty()` и `Object.getOwnPropertyDescriptors()`?
+	- `Object.defineProperty(obj, prop, descriptor)` — создаёт или изменяет свойство с указанными атрибутами:
+		- При создании через `defineProperty` атрибуты по умолчанию `false` (в отличие от литерала, где `true`)
+	- `Object.defineProperties(obj, props)` — определяет несколько свойств сразу
+	- `Object.getOwnPropertyDescriptor(obj, prop)` — возвращает дескриптор одного свойства
+	- `Object.getOwnPropertyDescriptors(obj)` — возвращает дескрипторы всех собственных свойств
+	- Используется для точного копирования объектов с геттерами/сеттерами:
+		- `Object.create(Object.getPrototypeOf(obj), Object.getOwnPropertyDescriptors(obj))`
+
+## Well-known Symbols
+
+140. Какие well-known символы существуют в JavaScript и для чего они используются?
+	- Well-known symbols — встроенные символы, определяющие поведение объектов:
+		1. `Symbol.iterator` — метод, возвращающий итератор (`for...of`)
+		2. `Symbol.asyncIterator` — метод, возвращающий async итератор (`for await...of`)
+		3. `Symbol.toPrimitive` — метод для приведения к примитиву (приоритетнее `valueOf`/`toString`)
+		4. `Symbol.hasInstance` — кастомизация `instanceof`
+		5. `Symbol.species` — конструктор для создания производных объектов (Map, Set, Array наследники)
+		6. `Symbol.toStringTag` — кастомизация `Object.prototype.toString.call()`
+		7. `Symbol.isConcatSpreadable` — контроль поведения `Array.prototype.concat()`
+		8. `Symbol.match` / `Symbol.replace` / `Symbol.search` / `Symbol.split` — кастомизация строковых методов
+
+141. Как работает `Symbol.toPrimitive` и в чём его отличие от `valueOf`/`toString`?
+	- `Symbol.toPrimitive` — метод, вызываемый при приведении объекта к примитиву
+	- Принимает `hint`: `'number'`, `'string'` или `'default'`
+	- Если определён — используется вместо `valueOf` и `toString`
+	```javascript
+	const money = {
+		amount: 100, currency: 'USD',
+		[Symbol.toPrimitive](hint) {
+			if (hint === 'number') return this.amount;
+			if (hint === 'string') return `${this.amount} ${this.currency}`;
+			return this.amount; // default
+		}
+	};
+	+money     // 100 (hint: 'number')
+	`${money}` // '100 USD' (hint: 'string')
+	money + 0  // 100 (hint: 'default')
+	```
+
+## Современные возможности (ES2022+)
+
+142. Что такое `structuredClone()` и чем он отличается от `JSON.parse(JSON.stringify())`?
+	- `structuredClone(value)` — встроенная функция для глубокого копирования объектов (ES2022)
+	- Преимущества перед `JSON.parse(JSON.stringify())`:
+		1. Копирует `Date`, `RegExp`, `Map`, `Set`, `ArrayBuffer`, `Blob`, `File`, `ImageData`
+		2. Сохраняет циклические ссылки (JSON бросит ошибку)
+		3. Копирует `undefined` (JSON теряет)
+		4. Копирует `NaN`, `Infinity`, `-Infinity` (JSON преобразует в `null`)
+	- Не копирует:
+		1. Функции — бросит `DataCloneError`
+		2. DOM-элементы
+		3. Свойства, добавленные через `Object.defineProperty` с `enumerable: false`
+		4. Цепочку прототипов — результат всегда plain object
+
+143. Что такое `AbortController` и `AbortSignal`?
+	- `AbortController` — механизм для отмены асинхронных операций
+	- `controller.signal` — объект `AbortSignal`, передаётся в отменяемую операцию
+	- `controller.abort(reason)` — отменяет операцию
+	```javascript
+	const controller = new AbortController();
+	fetch('/api/data', { signal: controller.signal })
+		.catch(err => {
+			if (err.name === 'AbortError') console.log('Запрос отменён');
+		});
+	controller.abort(); // отменяет fetch
+	```
+	- `AbortSignal.timeout(ms)` — создаёт signal, который автоматически отменяется через ms
+	- `AbortSignal.any(signals)` — отменяется при срабатывании любого из signals (ES2024)
+	- Работает с: `fetch`, `addEventListener`, `ReadableStream`, `WritableStream`
+
+144. Что такое `top-level await`?
+	- Возможность использовать `await` на верхнем уровне ES-модуля (без обёртки в `async function`)
+	```javascript
+	// module.js
+	const data = await fetch('/api/config').then(r => r.json());
+	export default data;
+	```
+	- Модуль, использующий top-level await, блокирует выполнение импортирующих его модулей до завершения
+	- Работает только в ES-модулях (`type: "module"`), не в обычных скриптах и не в CommonJS
+	- Применения: инициализация конфигурации, динамический выбор зависимостей, подключение к БД
+
+145. Что такое `Error cause` и как его использовать?
+	- ES2022 добавил возможность указывать причину ошибки через свойство `cause`:
+	```javascript
+	try {
+		await fetch('/api');
+	} catch (err) {
+		throw new Error('Не удалось загрузить данные', { cause: err });
+	}
+	```
+	- `error.cause` хранит оригинальную ошибку — сохраняет цепочку причин
+	- Работает со всеми типами ошибок: `TypeError`, `RangeError`, `SyntaxError` и др.
+	- Полезно для перехвата ошибок на границах слоёв (UI → сервис → API)
+
+146. Какие новые методы массивов появились в ES2023?
+	- **Копирующие аналоги мутирующих методов** (не изменяют оригинал):
+		1. `toSorted(compareFn)` — аналог `sort()`, возвращает новый отсортированный массив
+		2. `toReversed()` — аналог `reverse()`, возвращает новый перевёрнутый массив
+		3. `toSpliced(start, deleteCount, ...items)` — аналог `splice()`, возвращает новый массив
+		4. `with(index, value)` — возвращает новый массив с заменённым элементом по индексу
+	```javascript
+	const arr = [3, 1, 2];
+	arr.toSorted();    // [1, 2, 3] — arr не изменён
+	arr.toReversed();  // [2, 1, 3]
+	arr.with(1, 99);   // [3, 99, 2]
+	```
+
+147. Что такое `Object.groupBy()` и `Map.groupBy()`?
+	- ES2024 — статические методы для группировки элементов:
+	- `Object.groupBy(iterable, callback)` — возвращает объект с группами:
+	```javascript
+	const people = [
+		{ name: 'Alice', age: 25 },
+		{ name: 'Bob', age: 30 },
+		{ name: 'Charlie', age: 25 }
+	];
+	Object.groupBy(people, p => p.age);
+	// { '25': [{name:'Alice',...}, {name:'Charlie',...}], '30': [{name:'Bob',...}] }
+	```
+	- `Map.groupBy(iterable, callback)` — возвращает `Map` (ключи могут быть любого типа)
+
+148. Какие полезные статические методы `Object` существуют в JavaScript?
+	- Создание и прототипы:
+		1. `Object.create(proto, descriptors)` — создаёт объект с указанным прототипом
+		2. `Object.assign(target, ...sources)` — копирует перечисляемые свойства (shallow)
+	- Перечисление:
+		1. `Object.keys(obj)` — массив собственных перечисляемых ключей
+		2. `Object.values(obj)` — массив значений
+		3. `Object.entries(obj)` — массив пар `[key, value]`
+		4. `Object.fromEntries(iterable)` — создаёт объект из пар (обратная к `entries`)
+	- Дескрипторы:
+		1. `Object.defineProperty()` / `Object.defineProperties()`
+		2. `Object.getOwnPropertyDescriptor()` / `Object.getOwnPropertyDescriptors()`
+	- Иммутабельность:
+		1. `Object.freeze()` / `Object.isFrozen()`
+		2. `Object.seal()` / `Object.isSealed()`
+		3. `Object.preventExtensions()` / `Object.isExtensible()`
+	- Сравнение: `Object.is(val1, val2)`
+	- Группировка: `Object.groupBy()` (ES2024)
+	- Проверка: `Object.hasOwn(obj, prop)` (ES2022)
+
+## Currying и Partial Application
+
+149. Что такое каррирование (`currying`) и как оно работает?
+	- Каррирование — преобразование функции с несколькими аргументами в цепочку функций, каждая из которых принимает один аргумент
+	```javascript
+	// Обычная функция
+	const add = (a, b, c) => a + b + c;
+	// Каррированная
+	const curriedAdd = a => b => c => a + b + c;
+	curriedAdd(1)(2)(3); // 6
+	```
+	- Универсальная функция каррирования:
+	```javascript
+	function curry(fn) {
+		return function curried(...args) {
+			if (args.length >= fn.length) return fn(...args);
+			return (...moreArgs) => curried(...args, ...moreArgs);
+		};
+	}
+	```
+
+150. Что такое частичное применение (`partial application`) и чем оно отличается от каррирования?
+	- **Partial application** — фиксирование части аргументов функции, возвращая новую функцию с меньшим количеством параметров
+	- Отличие от каррирования:
+		1. Каррирование всегда разбивает на функции по одному аргументу
+		2. Partial application может фиксировать любое количество аргументов за раз
+	- Реализация через `bind`:
+		- `const double = multiply.bind(null, 2)` — фиксирует первый аргумент как 2
+
+## Higher Order Functions
+
+151. Что такое функции высшего порядка (`Higher Order Functions`)?
+	- Функция, которая принимает другую функцию как аргумент и/или возвращает функцию
+	- Примеры встроенных HOF:
+		1. `Array.prototype.map/filter/reduce/forEach/sort/find/some/every`
+		2. `setTimeout/setInterval`
+		3. `addEventListener`
+		4. `Promise.then/catch/finally`
+	- Применения: композиция, декораторы, middleware, обработчики событий
+
+## Паттерн «Декоратор» для функций
+
+152. Что такое функция-декоратор в JavaScript?
+	- Функция-обёртка, которая расширяет поведение другой функции без изменения её кода
+	```javascript
+	function debounce(fn, delay) {
+		let timer;
+		return function(...args) {
+			clearTimeout(timer);
+			timer = setTimeout(() => fn.apply(this, args), delay);
+		};
+	}
+	function throttle(fn, limit) {
+		let lastCall = 0;
+		return function(...args) {
+			const now = Date.now();
+			if (now - lastCall >= limit) {
+				lastCall = now;
+				return fn.apply(this, args);
+			}
+		};
+	}
+	```
+	- Типичные декораторы: debounce, throttle, memoize, once, retry, delay, log
+
+## SharedArrayBuffer и Atomics
+
+153. Что такое `SharedArrayBuffer` и `Atomics`?
+	- `SharedArrayBuffer` — буфер памяти, разделяемый между главным потоком и Web Workers
+	- В отличие от обычного `ArrayBuffer`, не копируется при передаче в Worker — оба потока работают с одной памятью
+	- `Atomics` — объект с атомарными операциями для безопасного доступа к разделяемой памяти:
+		1. `Atomics.load(arr, index)` / `Atomics.store(arr, index, value)` — атомарное чтение/запись
+		2. `Atomics.add/sub/and/or/xor` — атомарные арифметические и битовые операции
+		3. `Atomics.wait(arr, index, value)` — блокирует поток до изменения значения
+		4. `Atomics.notify(arr, index, count)` — пробуждает ожидающие потоки
+		5. `Atomics.compareExchange(arr, index, expected, replacement)` — CAS-операция
+	- Требует заголовки `Cross-Origin-Isolation` (`COOP` + `COEP`) в браузере
+
+## Tail Call Optimization
+
+154. Что такое оптимизация хвостовых вызовов (Tail Call Optimization)?
+	- **Tail call** — вызов функции, являющийся последней операцией перед return
+	- **TCO** — оптимизация, при которой движок переиспользует текущий stack frame вместо создания нового
+	- Позволяет бесконечную рекурсию без переполнения стека:
+	```javascript
+	// Не tail call — после рекурсии ещё операция умножения
+	function factorial(n) {
+		if (n <= 1) return 1;
+		return n * factorial(n - 1);
+	}
+	// Tail call — рекурсивный вызов последний
+	function factorial(n, acc = 1) {
+		if (n <= 1) return acc;
+		return factorial(n - 1, n * acc);
+	}
+	```
+	- В спецификации ES2015, но реализована только в Safari/JavaScriptCore
+	- V8 (Chrome, Node.js) и SpiderMonkey (Firefox) **не реализуют** TCO
+
+## Explicit Resource Management (using)
+
+155. Что такое `using` и `Symbol.dispose` (Explicit Resource Management)?
+	- ES2024 proposal (Stage 3+) — детерминированное управление ресурсами (аналог `try-with-resources` в Java, `using` в C#)
+	- `using` — объявление переменной, ресурс которой автоматически освобождается при выходе из блока:
+	```javascript
+	{
+		using file = openFile('data.txt');
+		// работа с файлом
+	} // file[Symbol.dispose]() вызывается автоматически
+	```
+	- `Symbol.dispose` — синхронный cleanup, `Symbol.asyncDispose` — асинхронный (с `await using`)
+	- `DisposableStack` / `AsyncDisposableStack` — контейнер для группировки ресурсов

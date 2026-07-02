@@ -1,0 +1,729 @@
+{
+  "section": {
+    "id": "typescript",
+    "name": "TypeScript",
+    "slug": "typescript"
+  },
+  "questions": [
+    {
+      "id": "ts-what-is",
+      "slug": "what-is-typescript",
+      "question": "Что такое TypeScript и зачем он нужен?",
+      "answer": "TypeScript — это надмножество JavaScript, добавляющее статическую типизацию. Он компилируется в обычный JavaScript.\n\nЗачем нужен:\n1. Выявление ошибок на этапе компиляции, а не в рантайме\n2. Автодополнение и навигация по коду в IDE\n3. Самодокументирующийся код через аннотации типов\n4. Безопасный рефакторинг\n5. Поддержка новых возможностей JS с транспиляцией в старые версии",
+      "difficulty": "interview",
+      "tags": ["Основы"]
+    },
+    {
+      "id": "ts-structural-typing",
+      "slug": "structural-typing",
+      "question": "Что такое структурная типизация в TypeScript и чем она отличается от номинативной типизации?",
+      "answer": "- **Структурная типизация** — совместимость типов определяется по структуре (форме/набору свойств), а не по имени объявления. Два типа с одинаковой структурой совместимы, даже если объявлены раздельно.\n- **Номинативная типизация** — совместимость по имени типа (как в Java/C#).\n- В TypeScript можно имитировать номинативную типизацию через **брендинг** (добавление уникального поля): `type UserId = number & { readonly __brand: \"UserId\" }`",
+      "difficulty": "interview",
+      "tags": ["Система типов"]
+    },
+    {
+      "id": "ts-any-unknown",
+      "slug": "any-unknown",
+      "question": "Чем типы `any` и `unknown` отличаются в TypeScript и когда использовать каждый?",
+      "answer": "- `any` — отключает проверку типов, позволяет делать со значением что угодно (любой доступ, вызов, присваивание). «Протекает» в другие типы и ломает проверку вниз по цепочке.\n- `unknown` — безопаснее: требует сужения типа (type guard, проверка) или явного приведения перед использованием. Останавливает небезопасные операции на границе.\n- Используйте `unknown` вместо `any` для внешних данных (API, JSON.parse, пользовательский ввод)",
+      "difficulty": "interview",
+      "tags": ["Система типов"]
+    },
+    {
+      "id": "ts-void-never",
+      "slug": "void-never",
+      "question": "Чем различаются типы `void` и `never` в TypeScript, и где они применяются?",
+      "answer": "- `void` — функция возвращает «ничего»; значение можно проигнорировать. `Promise<void>` значит «промис завершится без результата».\n- `never` — функция **не завершается** успешно: бросает ошибку или бесконечно работает. Полезно для исчерпывающих проверок (exhaustiveness).\n- `never` — подтип любого типа (bottom type); ни один тип не подтип `never` (кроме него самого).\n- `never` — элемент-поглотитель для union: `string | never = string`",
+      "difficulty": "interview",
+      "tags": ["Система типов"]
+    },
+    {
+      "id": "ts-readonly-as-const",
+      "slug": "readonly-as-const",
+      "question": "В чём разница между модификатором `readonly` и утверждением `as const` в TypeScript?",
+      "answer": "- `readonly` (в типах/классах/`ReadonlyArray<T>`) делает свойства/элементы неизменяемыми **поверхностно**.\n- `as const` фиксирует литеральные типы (строки/числа), делает объект/кортеж **глубоко** readonly на уровне вывода типов.\n- Для глубокой иммутабельности в типах используют рекурсивные mapped types (например, `DeepReadonly`)",
+      "difficulty": "interview",
+      "tags": ["Система типов", "Утилитарные типы"]
+    },
+    {
+      "id": "ts-type-vs-interface",
+      "slug": "type-vs-interface",
+      "question": "Когда уместнее использовать `type`, а когда `interface` в TypeScript?",
+      "answer": "**`interface`:**\n- Описание форм объектов/классов\n- Поддерживает `extends`, `implements` и декларативное слияние (declaration merging)\n- Кешируется компилятором — быстрее при пересечениях\n\n**`type`:**\n- Объединения (`|`) и пересечения (`&`)\n- Условные и шаблонные типы\n- Алиасы примитивов, кортежей, mapped types\n\n- `interface` может расширять `type`, если тот раскрывается в объектный тип (не union)\n- Нельзя выразить union через `interface`; для этого используют `type`",
+      "difficulty": "interview",
+      "tags": ["Интерфейсы и типы"]
+    },
+    {
+      "id": "ts-declaration-merging",
+      "slug": "declaration-merging",
+      "question": "Что такое декларативное слияние (Declaration Merging) в TypeScript?",
+      "answer": "- Несколько объявлений `interface` с одинаковым именем автоматически сливаются в одно.\n- Свойства с одинаковым именем должны иметь идентичный тип.\n- При перегрузке методов строковые литералы приоритизируются.\n- Module Augmentation: расширение сторонних типов через `declare module`.\n- Global Augmentation: расширение глобальных типов через `declare global`.\n- Не работает с `type` — только с `interface`, `namespace`, `enum`.",
+      "difficulty": "interview",
+      "tags": ["Интерфейсы и типы"]
+    },
+    {
+      "id": "ts-extends-implements",
+      "slug": "extends-implements",
+      "question": "Что означают `extends` и `implements` при объявлении класса и в чём разница?",
+      "answer": "- **`extends`** — наследование: класс/интерфейс получает все свойства и методы родителя. Можно переопределить (`override`). Наследуется и реализация.\n- **`implements`** — контракт: класс **обязан** реализовать все свойства и методы интерфейса. Не наследует реализацию.\n- Множественное наследование: `interface Child extends A, B {}`\n- Множественная реализация: `class Child implements A, B {}`\n- В дженериках: `T extends U` — задаёт верхнюю грань (ограничение) для `T`",
+      "difficulty": "interview",
+      "tags": ["Интерфейсы и типы", "Классы"]
+    },
+    {
+      "id": "ts-union-intersection",
+      "slug": "union-intersection",
+      "question": "Какая разница между объединением типов (`A | B`) и пересечением типов (`A & B`)?",
+      "answer": "- **Union** (`A | B`) — значение одного из вариантов; нужен narrowing для доступа к специфичным свойствам.\n- **Intersection** (`A & B`) — значение должно удовлетворять **всем** вариантам одновременно (объединение свойств/контрактов).\n- Пересечение несовместимых примитивов даёт `never`: `string & number → never`\n- Union распределяется в условных типах (distributive conditional types)\n- Исчерпывающие проверки (exhaustiveness) используют `never` для union",
+      "difficulty": "interview",
+      "tags": ["Интерфейсы и типы"]
+    },
+    {
+      "id": "ts-index-signatures",
+      "slug": "index-signatures",
+      "question": "Что такое индексные сигнатуры (Index Signatures) и как они работают?",
+      "answer": "- Строковая: `{ [key: string]: T }` — любой строковый ключ\n- Числовая: `{ [index: number]: T }` — числовые индексы\n- Числовая индексная сигнатура должна быть подтипом строковой (JS приводит числовые ключи к строкам)\n- Можно комбинировать с явными свойствами (их типы должны быть совместимы)\n- Альтернатива — `Record<K, V>` для фиксированного набора ключей\n- Template Literal Index Signatures (TS 4.4+): `{ [key: `data-${string}`]: string }`",
+      "difficulty": "interview",
+      "tags": ["Интерфейсы и типы"]
+    },
+    {
+      "id": "ts-generics-basics",
+      "slug": "generics-basics",
+      "question": "Как устроены дженерики (обобщённые типы) в TypeScript и зачем они нужны?",
+      "answer": "- Дженерики параметризуют типы/функции/классы: `function id<T>(x: T): T`\n- Позволяют создавать переиспользуемый типобезопасный код\n- Когда использовать: связь входных и выходных типов, типизация коллекций\n- Когда НЕ использовать: если параметр используется один раз → используйте `unknown`\n- Ограничения: `T extends U` задаёт верхнюю грань\n- Значения по умолчанию: `interface Container<T = string> {}`\n- Дефолты должны следовать после обязательных параметров\n- Вывод типа имеет приоритет над дефолтом",
+      "difficulty": "interview",
+      "tags": ["Дженерики"]
+    },
+    {
+      "id": "ts-generic-constraints",
+      "slug": "generic-constraints",
+      "question": "Как работают ограничения дженериков (`T extends`) в TypeScript?",
+      "answer": "- `T extends U` — верхняя грань: T должен быть совместим с U\n- Структурное ограничение: `T extends { length: number }` — T должен иметь свойство length\n- Ключевое ограничение: `K extends keyof T` — K должен быть ключом T\n- Множественные ограничения через пересечение: `T extends A & B`\n- `const` type parameters (TS 5.0+): `<const T>` — авто-сужение до литералов без `as const`\n- `NoInfer<T>` (TS 5.4+): предотвращает вывод типа из конкретной позиции",
+      "difficulty": "interview",
+      "tags": ["Дженерики"]
+    },
+    {
+      "id": "ts-generic-inference",
+      "slug": "generic-inference",
+      "question": "Как работает вывод типов (Type Inference) в дженериках TypeScript?",
+      "answer": "- Неявный вывод из аргументов: best common type\n- Множественные позиции вывода: результат — union\n- Контекстный вывод из колбэков\n- Частичный вывод не поддерживается напрямую — обходной путь через каррирование\n- Сохранение литеральных типов через `as const` или `const` type parameters (TS 5.0+)\n- `NoInfer<T>` (TS 5.4+): предотвращает вывод из определённой позиции",
+      "difficulty": "deep",
+      "tags": ["Дженерики", "Система типов"]
+    },
+    {
+      "id": "ts-conditional-types",
+      "slug": "conditional-types",
+      "question": "Что такое условные типы (Conditional Types) в TypeScript и как они работают?",
+      "answer": "- Синтаксис: `T extends U ? X : Y` — тернарный оператор на уровне типов\n- **Дистрибутивность**: «голый» T в union распределяется: каждый член проверяется отдельно\n- Отключение дистрибутивности: обернуть в кортеж `[T] extends [U] ? X : Y`\n- Проверка `never` требует обёртки в кортеж (иначе условие не выполняется)\n- Вложенные условные типы для цепочек проверок\n- Часто применяются с `infer` для извлечения частей типов",
+      "difficulty": "interview",
+      "tags": ["Дженерики", "Продвинутые типы"]
+    },
+    {
+      "id": "ts-infer",
+      "slug": "infer",
+      "question": "Что делает ключевое слово `infer` в условных типах TypeScript?",
+      "answer": "- Объявляет переменную типа в условном выражении: `T extends Promise<infer R> ? R : T`\n- Извлечение возвращаемого типа: `T extends (...args: any[]) => infer R ? R : never`\n- Извлечение элементов кортежа: `T extends [infer H, ...infer Rest] ? ...`\n- Извлечение частей строк: `T extends \\`${infer P}\\` ? ...`\n- Ковариантная позиция (return): результат — union\n- Контравариантная позиция (params): результат — intersection\n- Constrained infer (TS 4.7+): `infer N extends number` — ограничение на выводимый тип",
+      "difficulty": "interview",
+      "tags": ["Дженерики", "Продвинутые типы"]
+    },
+    {
+      "id": "ts-mapped-types",
+      "slug": "mapped-types",
+      "question": "Что такое отображаемые типы (Mapped Types) и как применять модификаторы?",
+      "answer": "- Построение типа на основе другого: `{ [K in keyof T]: T[K] }`\n- Модификаторы: `+readonly/-readonly`, `+?/-?` для управления мутабельностью/обязательностью полей\n- Ремап ключей (TS 4.1+): `{ [K in keyof T as NewKey<K>]: T[K] }`\n- Фильтрация через `never`: `{ [K in keyof T as T[K] extends string ? K : never]: T[K] }`\n- Рекурсивные mapped types для вложенных структур\n- На основе mapped types построены утилитарные типы: `Partial`, `Required`, `Readonly`, `Pick`",
+      "difficulty": "interview",
+      "tags": ["Продвинутые типы"]
+    },
+    {
+      "id": "ts-keyof-indexed",
+      "slug": "keyof-indexed",
+      "question": "Как получить тип ключей (`keyof`) и тип значений (`T[keyof T]`) объекта?",
+      "answer": "- Ключи: `keyof T` — union строковых/числовых/символьных литералов\n- Ключи у значения: `keyof typeof obj`\n- Значения: `T[keyof T]` — union типов всех значений\n- Индексный доступ: `type Age = Person[\"age\"]`\n- Элемент массива: `T[number]` — тип элемента массива/кортежа\n- Строковая индексная сигнатура даёт `string | number` для `keyof` (JS приводит числовые ключи к строкам)\n- `symbol` появляется в `keyof` только при явной `[key: symbol]` сигнатуре",
+      "difficulty": "interview",
+      "tags": ["Продвинутые типы", "Система типов"]
+    },
+    {
+      "id": "ts-type-inference",
+      "slug": "type-inference",
+      "question": "Что такое вывод типов (Type Inference) в TypeScript и как он работает?",
+      "answer": "- Автоматический вывод по присваиваемому значению (включая литералы → литеральные типы, если не расширяются)\n- Best common type — выбор наиболее общего типа из массива значений\n- Contextual typing — по месту использования (параметры колбэков, JSX)\n- Return type inference — по возвращаемому значению функций\n- Анализ потока управления (Control Flow Analysis) — сужение типов в ветвях\n- `const x = \"hello\"` → тип `\"hello\"` (литеральный)\n- `let y = \"hello\"` → тип `string` (расширенный, т.к. можно переприсвоить)",
+      "difficulty": "interview",
+      "tags": ["Система типов"]
+    },
+    {
+      "id": "ts-type-narrowing",
+      "slug": "type-narrowing",
+      "question": "Что такое сужение типов (Type Narrowing) и какими способами оно выполняется?",
+      "answer": "Сужение — уточнение типа объединения до более конкретного на основе проверок:\n1. **`typeof`** — для примитивов: `typeof v === \"string\"`\n2. **Truthiness** — проверка на truthy/falsy: `if (user) { ... }`\n3. **Equality** — сравнение с литералами/null/undefined: `=== null`\n4. **`in`** — наличие свойства: `\"data\" in response`\n5. **`instanceof`** — проверка по прототипной цепочке\n6. **Discriminated unions** — по общему дискриминатору в union\n7. **Пользовательские гарды**: `function isA(x: unknown): x is A { ... }`\n8. **`asserts`** — утверждение: `asserts value is Type`",
+      "difficulty": "interview",
+      "tags": ["Сужение типов"]
+    },
+    {
+      "id": "ts-typeof-guard",
+      "slug": "typeof-guard",
+      "question": "Как работает `typeof` для сужения типов в TypeScript?",
+      "answer": "- Возвращает: `\"string\"`, `\"number\"`, `\"boolean\"`, `\"symbol\"`, `\"bigint\"`, `\"undefined\"`, `\"function\"`, `\"object\"`\n- `typeof null === \"object\"` — историческая особенность, TypeScript это учитывает\n- Негативное сужение в ветке `else`: если не `\"string\"`, то тип сужается исключением `string`\n- Рекурсивное исключение типов при вложенных проверках",
+      "difficulty": "interview",
+      "tags": ["Сужение типов"]
+    },
+    {
+      "id": "ts-truthiness-narrowing",
+      "slug": "truthiness-narrowing",
+      "question": "Как работает сужение через проверку истинности (Truthiness Narrowing)?",
+      "answer": "- Falsy значения: `false`, `0`, `-0`, `0n`, `\"\"`, `null`, `undefined`, `NaN`\n- Truthy: всё остальное\n- **Подвох**: отфильтровывает `0` и `\"\"` из числовых/строковых типов\n- Паттерн `== null` — ловит и `null`, и `undefined` одновременно\n- Двойное отрицание `!!` — конвертирует в boolean",
+      "difficulty": "interview",
+      "tags": ["Сужение типов"]
+    },
+    {
+      "id": "ts-discriminated-unions",
+      "slug": "discriminated-unions",
+      "question": "Что такое дискриминированные объединения (Discriminated Unions) и как их использовать?",
+      "answer": "- Все варианты union имеют общее поле с литеральным типом (дискриминант)\n- Проверка дискриминанта автоматически сужает тип всего объекта\n- Идеально для: стейт-машин, Redux actions, ответов API\n- Паттерн: `type State = { status: \"idle\" } | { status: \"loading\" } | { status: \"success\"; data: T } | { status: \"error\"; error: Error }`\n- Исчерпывающие проверки с `never` в `default`/`else`\n- Несколько дискриминантов для более точного контроля",
+      "difficulty": "interview",
+      "tags": ["Сужение типов", "Паттерны типизации"]
+    },
+    {
+      "id": "ts-type-guards",
+      "slug": "type-guards",
+      "question": "Как создавать пользовательские Type Guards и что такое `asserts`?",
+      "answer": "- **Type Predicate**: `function isString(x: unknown): x is string { return typeof x === \"string\" }` — сужает тип при `true`\n- **Assertion**: `function assertString(x: unknown): asserts x is string { if (typeof x !== \"string\") throw new Error() }` — сужает или бросает ошибку\n- **Condition**: `function assert(cond: unknown): asserts cond { if (!cond) throw new Error() }` — утверждение инварианта\n- Type predicate работает с `.filter()`: `arr.filter(isNonNull)` возвращает массив без null",
+      "difficulty": "interview",
+      "tags": ["Сужение типов"]
+    },
+    {
+      "id": "ts-satisfies",
+      "slug": "satisfies",
+      "question": "Что такое оператор `satisfies` (TS 4.9+) и чем он отличается от аннотации типа?",
+      "answer": "- Проверяет соответствие типу **без расширения** (сохраняет литеральные типы)\n- Аннотация типа (`const x: Type`) — проверяет и **расширяет** до указанного типа\n- `satisfies` — проверяет и **сохраняет** выведенный (узкий) тип\n- Защищает от лишних свойств (excess property check)\n- Идеально для конфигурационных объектов: проверить форму, но сохранить точные типы значений",
+      "difficulty": "interview",
+      "tags": ["Система типов", "Сужение типов"]
+    },
+    {
+      "id": "ts-exhaustiveness",
+      "slug": "exhaustiveness",
+      "question": "Как работает исчерпывающая проверка (Exhaustiveness Checking) в TypeScript?",
+      "answer": "- Если все члены union обработаны, остаток имеет тип `never`\n- Паттерн: `const _: never = value` в default/else — ошибка компиляции при пропуске варианта\n- `assertNever(value: never): never` — функция-утверждение для проверки\n- Работает в `switch` и `if/else` цепочках\n- При добавлении нового члена union — ошибка компиляции во всех необработанных местах\n- `Record<Type, Handler>` — маппинг как альтернатива switch",
+      "difficulty": "interview",
+      "tags": ["Сужение типов", "Паттерны типизации"]
+    },
+    {
+      "id": "ts-type-assertion",
+      "slug": "type-assertion",
+      "question": "Что такое утверждение типа (Type Assertion) и чем оно отличается от проверок?",
+      "answer": "- Явная подсказка компилятору: `value as Type` — не меняет рантайм-значение\n- Уголочные скобки `<Type>value` недоступны в `.tsx` из-за JSX\n- Двойное утверждение `value as unknown as Type` — обход проверки совместимости (опасно)\n- `as const` — фиксация литеральных типов\n- Non-null assertion `value!` — утверждение, что значение не null/undefined\n- Предпочитайте type guards и проверки вместо assertions",
+      "difficulty": "interview",
+      "tags": ["Система типов"]
+    },
+    {
+      "id": "ts-literal-types",
+      "slug": "literal-types",
+      "question": "Что такое литеральные типы в TypeScript и как работает расширение типов (widening)?",
+      "answer": "- Литеральный тип — конкретное значение как тип: `\"hello\"`, `42`, `true`\n- `const x = \"hello\"` → тип `\"hello\"` (литеральный, без расширения)\n- `let y = \"hello\"` → тип `string` (расширенный, т.к. можно переприсвоить)\n- `as const` — предотвращает расширение для объектов и массивов, делает глубокий readonly\n- Литеральные типы часто используются как дискриминанты в union types\n- Template Literal Types: ``\\`hello-${string}\\` ``",
+      "difficulty": "interview",
+      "tags": ["Система типов"]
+    },
+    {
+      "id": "ts-enum",
+      "slug": "enum",
+      "question": "Как работают `enum` в TypeScript и какие виды существуют?",
+      "answer": "- **Числовой enum**: автоинкремент от 0 (или указанного значения). Поддерживает обратный маппинг: `Enum[0] → \"Name\"`\n- **Строковой enum**: каждый член инициализирован строкой. Без обратного маппинга.\n- **Гетерогенный enum**: смешанные строковые и числовые значения (не рекомендуется)\n- **`const enum`**: полностью стирается при компиляции, значения инлайнятся. Несовместим с `isolatedModules`.\n- Альтернатива: `as const` объект + `typeof obj[keyof typeof obj]`",
+      "difficulty": "interview",
+      "tags": ["Система типов"]
+    },
+    {
+      "id": "ts-tuples",
+      "slug": "tuples",
+      "question": "Что такое кортежи (Tuples) в TypeScript и какие у них особенности?",
+      "answer": "- Массив фиксированной длины с типизированными позициями: `[string, number]`\n- Именованные элементы (labeled): `[name: string, age: number]`\n- Опциональные элементы: `[string, number?]`\n- Rest-элементы: `[string, ...number[]]`\n- `readonly` кортежи: `readonly [string, number]`\n- Вариадические кортежи (TS 4.0+): `[...T, U]` — spread типов в кортежах\n- Извлечение head/tail/last через `infer`",
+      "difficulty": "interview",
+      "tags": ["Система типов", "Продвинутые типы"]
+    },
+    {
+      "id": "ts-template-literal-types",
+      "slug": "template-literal-types",
+      "question": "Что такое шаблонные литеральные типы (Template Literal Types)?",
+      "answer": "- Строковые шаблоны на уровне типов: ``\\`${string}\\` ``\n- Декартово произведение union'ов: ``\\`${\"get\" | \"set\"}-${\"id\" | \"name\"}\\` `` → `\"get-id\" | \"get-name\" | \"set-id\" | \"set-name\"`\n- Модификаторы регистра: `Uppercase`, `Lowercase`, `Capitalize`, `Uncapitalize` — intrinsic типы\n- Рекурсивный парсинг: извлечение параметров из маршрутов `/users/:id`\n- Комбинация с `infer`: `T extends \\`${infer H}/${infer R}\\` ? ...`",
+      "difficulty": "interview",
+      "tags": ["Продвинутые типы"]
+    },
+    {
+      "id": "ts-variadic-tuples",
+      "slug": "variadic-tuples",
+      "question": "Что такое вариадические кортежи (Variadic Tuple Types) и где они полезны?",
+      "answer": "- Spread в кортежах: `[...T, U]` — позволяет конкатенировать типы кортежей\n- Извлечение head, tail, last элементов через `infer`\n- Типизированные `concat`, `push`, `unshift` на уровне типов\n- Именованные элементы: `[start: number, end: number]`\n- Rest в параметрах: `function f<T extends unknown[]>(...args: [...T, callback: () => void])`\n- Паттерн `Parameters<T>` использует вариадические кортежи",
+      "difficulty": "deep",
+      "tags": ["Продвинутые типы"]
+    },
+    {
+      "id": "ts-branded-types",
+      "slug": "branded-types",
+      "question": "Что такое брендированные типы (Branded Types) и зачем они нужны?",
+      "answer": "- Имитация номинативной типизации в структурной системе TypeScript\n- Паттерн: `type UserId = number & { readonly __brand: \"UserId\" }`\n- Предотвращает смешение семантически разных типов (UserId и OrderId, обе number)\n- Валидация на границах: фабричная функция проверяет и «брендирует» значение\n- Альтернатива: `unique symbol` как бренд\n- Утилита для снятия бренда: `type Unbrand<T> = T extends infer U & { __brand: any } ? U : T`",
+      "difficulty": "deep",
+      "tags": ["Паттерны типизации", "Продвинутые типы"]
+    },
+    {
+      "id": "ts-recursive-types",
+      "slug": "recursive-types",
+      "question": "Как работают рекурсивные типы в TypeScript?",
+      "answer": "- Типы, ссылающиеся сами на себя: `type ListNode<T> = { value: T; next: ListNode<T> | null }`\n- Применения: связные списки, деревья, JSON (`type JSON = string | number | boolean | null | JSON[] | { [key: string]: JSON }`)\n- Глубокие трансформации: `DeepPartial`, `DeepReadonly`, `DeepRequired`\n- Лимит глубины ~50 уровней, ~1000 с хвостовой оптимизацией (TS 4.5+)\n- Ошибка `Type instantiation is excessively deep` при превышении\n- Рекурсивные условные типы (TS 4.1+)",
+      "difficulty": "deep",
+      "tags": ["Продвинутые типы"]
+    },
+    {
+      "id": "ts-utility-partial-required",
+      "slug": "utility-partial-required",
+      "question": "Как работают `Partial<T>`, `Required<T>` и `Readonly<T>`?",
+      "answer": "- `Partial<T>` = `{ [P in keyof T]?: T[P] }` — все свойства опциональны\n- `Required<T>` = `{ [P in keyof T]-?: T[P] }` — все свойства обязательны (`-?` удаляет опциональность)\n- `Readonly<T>` = `{ [P in keyof T]: +readonly T[P] }` — все свойства только для чтения\n- Все три — **поверхностные** (shallow), не действуют на вложенные объекты\n- Для глубоких вариантов используют рекурсивные mapped types: `DeepPartial`, `DeepReadonly`",
+      "difficulty": "interview",
+      "tags": ["Утилитарные типы"]
+    },
+    {
+      "id": "ts-utility-pick-omit",
+      "slug": "utility-pick-omit",
+      "question": "В чём разница между `Pick<T, K>` и `Omit<T, K>`?",
+      "answer": "- `Pick<T, K extends keyof T>` — выбирает указанные свойства. K **строго** проверяется: ключ должен существовать в T.\n- `Omit<T, K extends keyof any>` — исключает указанные свойства. K **нестрого** проверяется: любой строковый литерал (можно допустить опечатку).\n- Это **намеренная** разница — `Omit` гибче для generic-контекстов.\n- `Record<K, V>` = `{ [P in K]: V }` — создаёт объектный тип с ключами K и значениями V",
+      "difficulty": "interview",
+      "tags": ["Утилитарные типы"]
+    },
+    {
+      "id": "ts-utility-exclude-extract",
+      "slug": "utility-exclude-extract",
+      "question": "Как работают `Exclude<T, U>` и `Extract<T, U>` и что такое дистрибутивность?",
+      "answer": "- `Exclude<T, U>` = `T extends U ? never : T` — убирает из union T те типы, которые совместимы с U\n- `Extract<T, U>` = `T extends U ? T : never` — оставляет только совместимые с U\n- **Дистрибутивность**: условие применяется к каждому члену union отдельно\n- Пример: `Exclude<\"a\" | \"b\" | \"c\", \"a\" | \"c\">` → `\"b\"`\n- `NonNullable<T>` = `Exclude<T, null | undefined>`\n- Работает только с «голым» типовым параметром (не обёрнутым в кортеж/массив)",
+      "difficulty": "interview",
+      "tags": ["Утилитарные типы"]
+    },
+    {
+      "id": "ts-utility-return-params",
+      "slug": "utility-return-params",
+      "question": "Как работают `ReturnType<T>`, `Parameters<T>` и `InstanceType<T>`?",
+      "answer": "- `ReturnType<T>` — извлекает тип возвращаемого значения функции через `infer R`\n- `Parameters<T>` — извлекает типы параметров как кортеж: `Parameters<(a: string, b: number) => void>` → `[string, number]`\n- `ConstructorParameters<T>` — параметры конструктора класса\n- `InstanceType<T>` — тип экземпляра класса (тип, который возвращает `new`)\n- `ThisParameterType<T>` — извлекает тип `this` из функции\n- `OmitThisParameter<T>` — удаляет параметр `this`",
+      "difficulty": "interview",
+      "tags": ["Утилитарные типы"]
+    },
+    {
+      "id": "ts-utility-awaited",
+      "slug": "utility-awaited",
+      "question": "Как работает `Awaited<T>` и зачем он нужен?",
+      "answer": "- Рекурсивно разворачивает Promise: `Awaited<Promise<Promise<string>>>` → `string`\n- Проверяет наличие метода `then` (thenable-протокол)\n- Извлекает тип из `onfulfilled` колбэка\n- Рекурсивно применяет себя для вложенных Promise\n- Используется в типизации `async/await` и `Promise.all`",
+      "difficulty": "interview",
+      "tags": ["Утилитарные типы"]
+    },
+    {
+      "id": "ts-utility-string-manipulation",
+      "slug": "utility-string-manipulation",
+      "question": "Какие утилитарные типы для строк существуют в TypeScript?",
+      "answer": "- `Uppercase<T>` — приводит строковый литерал к верхнему регистру\n- `Lowercase<T>` — к нижнему регистру\n- `Capitalize<T>` — первую букву к верхнему\n- `Uncapitalize<T>` — первую букву к нижнему\n- Это **intrinsic** типы — реализованы в компиляторе, не определяются пользователем\n- Работают только со **строковыми литеральными типами**, не с `string`\n- Дистрибутивны по union: `Uppercase<\"a\" | \"b\">` = `\"A\" | \"B\"`",
+      "difficulty": "interview",
+      "tags": ["Утилитарные типы", "Продвинутые типы"]
+    },
+    {
+      "id": "ts-utility-noinfer",
+      "slug": "utility-noinfer",
+      "question": "Что делает `NoInfer<T>` (TS 5.4+) и когда его использовать?",
+      "answer": "- Предотвращает вывод типа из определённой позиции\n- Пример: `function createFSM<S>(initial: S, states: NoInfer<S>[])` — S выводится ТОЛЬКО из initial, не из states\n- Ловит опечатки в допустимых значениях\n- Полезно при нескольких позициях вывода, когда нужно контролировать, откуда выводится тип\n- Реализован как intrinsic тип в компиляторе",
+      "difficulty": "deep",
+      "tags": ["Утилитарные типы", "Дженерики"]
+    },
+    {
+      "id": "ts-classes-access-modifiers",
+      "slug": "classes-access-modifiers",
+      "question": "Какие модификаторы доступа есть в классах TypeScript и в чём их различия?",
+      "answer": "- `public` (по умолчанию) — доступен отовсюду\n- `private` — только внутри класса (compile-time проверка, обходится через `obj[\"private\"]`)\n- `protected` — внутри класса и наследников (compile-time)\n- ES `#private` — runtime-настоящий приватный, недоступен извне ни через что\n- Ключевое отличие: TypeScript `private` — проверка на этапе компиляции; ES `#` — на этапе выполнения",
+      "difficulty": "interview",
+      "tags": ["Классы"]
+    },
+    {
+      "id": "ts-classes-parameter-properties",
+      "slug": "classes-parameter-properties",
+      "question": "Что такое параметрические свойства (Parameter Properties) в классах TypeScript?",
+      "answer": "- Сокращённый синтаксис: `constructor(public name: string, private age: number)`\n- Автоматически создаёт свойство и присваивает значение из конструктора\n- Раскрывается в: объявление свойства + присваивание в конструкторе\n- Работает с модификаторами: `public`, `private`, `protected`, `readonly`\n- Можно комбинировать: `constructor(public readonly id: string)`",
+      "difficulty": "interview",
+      "tags": ["Классы"]
+    },
+    {
+      "id": "ts-classes-abstract",
+      "slug": "classes-abstract",
+      "question": "Что такое абстрактные классы и методы в TypeScript?",
+      "answer": "- `abstract class` — нельзя инстанцировать напрямую\n- Может содержать как абстрактные методы (без реализации), так и конкретные (с реализацией)\n- Наследник **обязан** реализовать все абстрактные члены\n- Используются как базовый контракт с частичной реализацией\n- Отличие от interface: может содержать реализацию и состояние",
+      "difficulty": "interview",
+      "tags": ["Классы"]
+    },
+    {
+      "id": "ts-classes-override",
+      "slug": "classes-override",
+      "question": "Что делает ключевое слово `override` и флаг `noImplicitOverride`?",
+      "answer": "- `override` — явно отмечает переопределение метода родителя\n- `noImplicitOverride` — требует explicit `override` при переопределении\n- Ловит ошибки рефакторинга: если родительский метод переименован, TS выдаст ошибку\n- Без флага переопределение может произойти случайно без предупреждения",
+      "difficulty": "interview",
+      "tags": ["Классы"]
+    },
+    {
+      "id": "ts-classes-polymorphic-this",
+      "slug": "classes-polymorphic-this",
+      "question": "Что такое полиморфный `this` в классах и для чего используется?",
+      "answer": "- `this` как тип возвращаемого значения ссылается на **фактический** тип экземпляра\n- Необходим для fluent API с цепочками вызовов при наследовании\n- `class Builder { where(): this { return this; } }` — метод возвращает тип наследника, не базового класса\n- Type guard: `isCircle(): this is Circle` — сужение типа через метод\n- `typeof Class` — тип конструктора (включая static члены), не экземпляра",
+      "difficulty": "deep",
+      "tags": ["Классы"]
+    },
+    {
+      "id": "ts-classes-singleton",
+      "slug": "classes-singleton",
+      "question": "Как реализовать паттерн Singleton в TypeScript?",
+      "answer": "```typescript\nclass AppConfig {\n  private static instance: AppConfig;\n  private constructor() {}\n  static getInstance() {\n    return this.instance ??= new AppConfig();\n  }\n}\n```\n- `private constructor` предотвращает создание экземпляров извне\n- Статический метод `getInstance()` контролирует доступ\n- Единственный экземпляр хранится в статическом свойстве",
+      "difficulty": "interview",
+      "tags": ["Классы", "Паттерны типизации"]
+    },
+    {
+      "id": "ts-function-overloads",
+      "slug": "function-overloads",
+      "question": "Как объявлять перегрузки функций (Function Overloads) в TypeScript?",
+      "answer": "- Несколько сигнатур перегрузки (видимы вызывающему) + одна сигнатура реализации (не видима)\n- Порядок: от более узких к более общим\n- Реализация должна покрывать все перегрузки с runtime-проверками\n- Сигнатура реализации не может вызываться напрямую\n- Intellisense показывает каждую перегрузку отдельно\n- Альтернатива: union-аргументы + conditional return type (если выходной тип зависит от входного)",
+      "difficulty": "interview",
+      "tags": ["Перегрузки и сигнатуры"]
+    },
+    {
+      "id": "ts-overloads-vs-union",
+      "slug": "overloads-vs-union",
+      "question": "Когда использовать перегрузки функций, а когда union типы?",
+      "answer": "- **Union** достаточен, если тип результата НЕ зависит от типа аргумента\n- **Перегрузки** необходимы для точного маппинга: конкретный входной тип → конкретный выходной тип\n- Conditional return type как альтернатива перегрузкам\n- Перегрузки перегружают Intellisense — показывают все варианты вызова\n- Перегрузки удобнее при нескольких разных сигнатурах с разным количеством параметров",
+      "difficulty": "interview",
+      "tags": ["Перегрузки и сигнатуры"]
+    },
+    {
+      "id": "ts-this-parameter",
+      "slug": "this-parameter",
+      "question": "Как типизировать параметр `this` в функциях TypeScript?",
+      "answer": "- Явная типизация: `function(this: Type, ...args)` — первый параметр `this` не является реальным аргументом\n- `this: void` — функция не использует `this`\n- `ThisParameterType<T>` — извлечение типа `this` из сигнатуры\n- `OmitThisParameter<T>` — удаление параметра `this`\n- Стрелочные функции или `.bind()` для предотвращения потери контекста",
+      "difficulty": "interview",
+      "tags": ["Перегрузки и сигнатуры"]
+    },
+    {
+      "id": "ts-call-construct-signatures",
+      "slug": "call-construct-signatures",
+      "question": "Что такое сигнатуры вызова (Call Signatures) и конструирования (Construct Signatures)?",
+      "answer": "- Call signature: `interface Fn { (x: string): number }` — описывает вызываемый объект\n- Construct signature: `interface Ctor { new (x: string): MyClass }` — описывает конструктор\n- Гибридный тип: вызываемый объект со свойствами `{ (x: string): number; description: string }`\n- Комбинация call + construct (как Date): `{ (s: string): Date; new (s: string): Date }`\n- Перегрузки в call signatures для разных вариантов вызова",
+      "difficulty": "deep",
+      "tags": ["Перегрузки и сигнатуры", "Интерфейсы и типы"]
+    },
+    {
+      "id": "ts-rest-params-spread",
+      "slug": "rest-params-spread",
+      "question": "Как типизировать rest-параметры и spread в TypeScript?",
+      "answer": "- Типизированный rest: `...args: T[]`\n- Кортежный rest: `...args: [x: string, y: number]` — фиксированные параметры через rest\n- Именованные элементы кортежа (labeled): `[start: number, end: number]`\n- Вариадические кортежи: `[...T, U]` — spread типов\n- `Parameters<T>` — извлечение параметров функции как кортежа\n- Rest в перегрузках для разных вариантов аргументов",
+      "difficulty": "interview",
+      "tags": ["Перегрузки и сигнатуры"]
+    },
+    {
+      "id": "ts-modules",
+      "slug": "modules",
+      "question": "Как работает модульная система TypeScript?",
+      "answer": "- ES Modules с проверкой типов: `import/export`\n- `moduleDetection`: auto/legacy/force — как TS определяет, что файл является модулем\n- Side-effect imports: `import './polyfills'`\n- Re-exports: `export { X } from './module'`\n- Type-only imports (TS 3.8+): `import type { X }` — стираются при компиляции\n- Inline type imports (TS 4.5+): `import { type X, Y }`\n- `verbatimModuleSyntax` (TS 5.0+): что написано — то и в выходном коде",
+      "difficulty": "interview",
+      "tags": ["Модули"]
+    },
+    {
+      "id": "ts-type-only-imports",
+      "slug": "type-only-imports",
+      "question": "Что такое type-only импорты и зачем они нужны?",
+      "answer": "- `import type { X }` — импорт стирается при компиляции, не попадает в JS\n- Inline: `import { type X, Y }` (TS 4.5+) — X стирается, Y остаётся\n- `verbatimModuleSyntax` (TS 5.0+): требует явного указания `type` для типов\n- `isolatedModules`: требует явных re-exports с `type`\n- Предотвращает побочные эффекты от импорта модулей, содержащих только типы\n- Улучшает tree-shaking и размер бандла",
+      "difficulty": "interview",
+      "tags": ["Модули"]
+    },
+    {
+      "id": "ts-declaration-files",
+      "slug": "declaration-files",
+      "question": "Что такое файлы деклараций (.d.ts) и для чего они нужны?",
+      "answer": "- Файлы только с типами, без реализации — описывают форму JS-кода\n- `declare function`, `declare class`, `declare interface` — ambient declarations\n- `declare module 'name'` — описание типов целого модуля\n- `declare global` — расширение глобальных типов из файлов-модулей\n- Triple-slash directives: `/// <reference types=\"...\" />`\n- `@types/*` пакеты из DefinitelyTyped для сторонних библиотек\n- Ambient modules для ассетов: `declare module '*.svg'`",
+      "difficulty": "interview",
+      "tags": ["Модули"]
+    },
+    {
+      "id": "ts-module-augmentation",
+      "slug": "module-augmentation",
+      "question": "Как работает Module Augmentation и расширение сторонних типов?",
+      "answer": "- `declare module 'express' { interface Request { user: User } }` — расширение типов сторонней библиотеки\n- Работает из файлов-модулей (с `import`/`export`)\n- `declare global { ... }` — расширение глобальных типов\n- Основано на Declaration Merging для interfaces\n- Используется для добавления кастомных свойств к Request, Window и т.д.",
+      "difficulty": "interview",
+      "tags": ["Модули"]
+    },
+    {
+      "id": "ts-module-resolution",
+      "slug": "module-resolution",
+      "question": "Какие стратегии разрешения модулей (Module Resolution) существуют в TypeScript?",
+      "answer": "- **classic** — устаревшая, не рекомендуется\n- **node** — имитация Node.js CJS разрешения\n- **node16/nodenext** — строгий ESM: обязательные расширения файлов, поле `exports` в package.json\n- **bundler** — разрешает bare imports без расширений, предполагает наличие бандлера\n- `paths` — алиасы для импортов (только для тайпчекера, runtime требует отдельной настройки)\n- `baseUrl` — корень для не-относительных импортов",
+      "difficulty": "interview",
+      "tags": ["Модули", "Конфигурация"]
+    },
+    {
+      "id": "ts-namespaces",
+      "slug": "namespaces",
+      "question": "Что такое `namespace` в TypeScript и стоит ли их использовать?",
+      "answer": "- `namespace X { export ... }` — компилируется в IIFE\n- Legacy-механизм организации кода\n- Полезны для declaration merging и расширения типов\n- **Не рекомендуются** для нового кода — предпочитайте ES Modules\n- Всё ещё используются в `.d.ts` файлах и для глобальных библиотек",
+      "difficulty": "interview",
+      "tags": ["Модули"]
+    },
+    {
+      "id": "ts-decorators",
+      "slug": "decorators",
+      "question": "Что такое декораторы в TypeScript и какие два стандарта существуют?",
+      "answer": "- **Legacy** (`experimentalDecorators: true`): API `(target, key, descriptor)` — устаревший стандарт\n- **TC39 Stage 3** (TS 5.0+): API `(value, context)` — новый стандарт, без `experimentalDecorators`\n- TC39 не поддерживает декораторы параметров\n- Применимы к: классам, методам, свойствам, аксессорам\n- Декоратор-фабрика: функция, возвращающая декоратор (для параметризации)",
+      "difficulty": "interview",
+      "tags": ["Декораторы"]
+    },
+    {
+      "id": "ts-decorator-order",
+      "slug": "decorator-order",
+      "question": "В каком порядке выполняются декораторы в TypeScript?",
+      "answer": "**Фаза вычисления**: фабрики вызываются **сверху вниз**\n**Фаза применения**: декораторы применяются **снизу вверх**\n\nПолный порядок применения в классе:\n1. Декораторы параметров инстанс-методов\n2. Декораторы инстанс-методов/свойств/аксессоров\n3. Декораторы параметров статических методов\n4. Декораторы статических методов/свойств/аксессоров\n5. Декораторы параметров конструктора\n6. Декоратор класса",
+      "difficulty": "deep",
+      "tags": ["Декораторы"]
+    },
+    {
+      "id": "ts-decorator-factory",
+      "slug": "decorator-factory",
+      "question": "Что такое фабрика декораторов и как она отличается от простого декоратора?",
+      "answer": "- Простой: `function sealed(constructor) { ... }` — применяется напрямую\n- Фабрика: `function Entity(name) { return function(constructor) { ... } }` — возвращает декоратор\n- Фабрика позволяет передавать параметры: `@Entity(\"users\")`\n- Простой декоратор: `@sealed` (без вызова)\n- Важно для конфигурируемого поведения: `@Log({ level: \"debug\" })`",
+      "difficulty": "interview",
+      "tags": ["Декораторы"]
+    },
+    {
+      "id": "ts-tsconfig-basics",
+      "slug": "tsconfig-basics",
+      "question": "Что такое `tsconfig.json` и какие основные секции он содержит?",
+      "answer": "- Конфигурационный файл проекта TypeScript\n- `compilerOptions` — опции компилятора (target, module, strict и др.)\n- `include` — glob-паттерны файлов для компиляции (по умолчанию `[\"**/*\"]`)\n- `exclude` — glob-паттерны для исключения (по умолчанию `node_modules`)\n- `files` — явный список файлов (наивысший приоритет)\n- `extends` — наследование от базовой конфигурации\n- `references` — ссылки на другие проекты (monorepo)",
+      "difficulty": "interview",
+      "tags": ["Конфигурация"]
+    },
+    {
+      "id": "ts-target-lib",
+      "slug": "target-lib",
+      "question": "В чём разница между `target` и `lib` в tsconfig?",
+      "answer": "- **`target`** — в какую версию JS **транспилировать** синтаксис (ES5, ES2022 и т.д.)\n- **`lib`** — какие **определения типов** доступны глобально (ES2020, DOM и т.д.)\n- Они **независимы**: можно `target: \"ES5\"` с `lib: [\"ES2020\"]` (пользователь отвечает за полифиллы)\n- `target` влияет на выходной код; `lib` влияет только на проверку типов",
+      "difficulty": "interview",
+      "tags": ["Конфигурация"]
+    },
+    {
+      "id": "ts-module-moduleresolution",
+      "slug": "module-moduleresolution",
+      "question": "В чём разница между `module` и `moduleResolution` в tsconfig?",
+      "answer": "- **`module`** — формат выходных import/export (CommonJS, ESNext, Node16 и т.д.)\n- **`moduleResolution`** — алгоритм **поиска** импортируемых модулей\n- `moduleResolution: \"bundler\"` — для фронтенда с бандлерами (Webpack, Vite)\n- `moduleResolution: \"node16\"` — для Node.js (строгий ESM)\n- Оба нужны для корректной настройки модульной системы",
+      "difficulty": "interview",
+      "tags": ["Конфигурация"]
+    },
+    {
+      "id": "ts-strict-mode",
+      "slug": "strict-mode",
+      "question": "Что включает `strict: true` в tsconfig?",
+      "answer": "Мета-флаг, включающий:\n1. `strictNullChecks` — null/undefined не совместимы с другими типами\n2. `strictFunctionTypes` — строгая проверка типов параметров функций\n3. `strictBindCallApply` — строгая проверка bind/call/apply\n4. `strictPropertyInitialization` — все свойства класса должны быть инициализированы\n5. `noImplicitAny` — ошибка при неявном `any`\n6. `noImplicitThis` — ошибка при неявном `this`\n7. `useUnknownInCatchVariables` — catch(e) имеет тип `unknown`, а не `any`\n8. `alwaysStrict` — добавляет `\"use strict\"` в каждый файл\n\nНовые флаги могут добавляться в будущих версиях TS",
+      "difficulty": "interview",
+      "tags": ["Конфигурация"]
+    },
+    {
+      "id": "ts-no-unchecked-indexed",
+      "slug": "no-unchecked-indexed",
+      "question": "Что делает флаг `noUncheckedIndexedAccess`?",
+      "answer": "- Без флага: `arr[10]` имеет тип `string` (опасно — может быть undefined)\n- С флагом: `arr[10]` имеет тип `string | undefined` (корректно!)\n- Применяется к массивам и объектам с индексными сигнатурами\n- Требует проверки на undefined перед использованием\n- Рекомендуется включать для повышения безопасности",
+      "difficulty": "interview",
+      "tags": ["Конфигурация"]
+    },
+    {
+      "id": "ts-isolated-modules",
+      "slug": "isolated-modules",
+      "question": "Что делает `isolatedModules` и `verbatimModuleSyntax`?",
+      "answer": "**`isolatedModules`:**\n- Для пофайловой транспиляции (Babel, esbuild)\n- Запрещает: const enum, re-export типов без `type`\n- Каждый файл должен быть независимо транспилируем\n\n**`verbatimModuleSyntax`** (TS 5.0+):\n- Проще: что написано — то и в выходном коде\n- Автоматически удаляет `import type`, сохраняет `import`\n- Предпочтительнее `isolatedModules` в TS 5.0+",
+      "difficulty": "interview",
+      "tags": ["Конфигурация"]
+    },
+    {
+      "id": "ts-project-references",
+      "slug": "project-references",
+      "question": "Что такое Project References и `composite` в tsconfig?",
+      "answer": "- Monorepo-фича: каждый подпроект получает свой tsconfig\n- `composite: true` — включает инкрементальные сборки и `.tsbuildinfo`\n- `references` — массив ссылок на зависимые проекты\n- `tsc --build` — компилирует в порядке зависимостей, пропускает неизменённые\n- `composite` форсирует `declaration: true` и строгий `rootDir`\n- `.tsbuildinfo` — файл с хешами для инкрементальной компиляции",
+      "difficulty": "deep",
+      "tags": ["Конфигурация"]
+    },
+    {
+      "id": "ts-isolated-declarations",
+      "slug": "isolated-declarations",
+      "question": "Что такое `isolatedDeclarations` (TS 5.5+)?",
+      "answer": "- Требует явных аннотаций типов на всех экспортах\n- Позволяет генерировать `.d.ts` без полного тайпчекинга\n- Параллельная/независимая генерация деклараций внешними инструментами\n- Полезно для масштабирования в monorepo\n- Каждый файл может генерировать декларации изолированно",
+      "difficulty": "deep",
+      "tags": ["Конфигурация"]
+    },
+    {
+      "id": "ts-paths-baseurl",
+      "slug": "paths-baseurl",
+      "question": "Как работают `baseUrl` и `paths` в tsconfig?",
+      "answer": "- `baseUrl` — корень для не-относительных импортов\n- `paths` — маппинг алиасов: `{ \"@app/*\": [\"src/app/*\"] }`\n- **Важно**: TypeScript НЕ переписывает импорты, только проверяет типы\n- Для runtime нужна дополнительная настройка: бандлер или `tsconfig-paths`\n- `${configDir}` (TS 5.5+) — разрешает пути относительно конфиг-файла, а не CWD",
+      "difficulty": "interview",
+      "tags": ["Конфигурация"]
+    },
+    {
+      "id": "ts-skip-lib-check",
+      "slug": "skip-lib-check",
+      "question": "Что делает `skipLibCheck` и стоит ли его включать?",
+      "answer": "- Пропускает проверку типов в `.d.ts` файлах (`node_modules`)\n- Значительно ускоряет компиляцию\n- Рекомендуется для проектов (пропускает неиспользуемые определения типов)\n- НЕ рекомендуется для библиотек (баги зависимостей не будут обнаружены)\n- Компромисс: скорость vs полнота проверки",
+      "difficulty": "interview",
+      "tags": ["Конфигурация"]
+    },
+    {
+      "id": "ts-tsconfig-node-backend",
+      "slug": "tsconfig-node-backend",
+      "question": "Какой tsconfig рекомендуется для Node.js бэкенда?",
+      "answer": "```json\n{\n  \"compilerOptions\": {\n    \"target\": \"ES2022\",\n    \"module\": \"node16\",\n    \"moduleResolution\": \"node16\",\n    \"strict\": true,\n    \"noUncheckedIndexedAccess\": true,\n    \"declaration\": true,\n    \"outDir\": \"./dist\",\n    \"verbatimModuleSyntax\": true\n  }\n}\n```\n- `node16` для нативного ESM с строгим разрешением\n- `strict: true` обязательно\n- `noUncheckedIndexedAccess` для безопасности",
+      "difficulty": "interview",
+      "tags": ["Конфигурация"]
+    },
+    {
+      "id": "ts-tsconfig-react",
+      "slug": "tsconfig-react",
+      "question": "Какой tsconfig рекомендуется для React/Next.js фронтенда?",
+      "answer": "```json\n{\n  \"compilerOptions\": {\n    \"target\": \"ES2022\",\n    \"lib\": [\"ES2022\", \"DOM\", \"DOM.Iterable\"],\n    \"module\": \"esnext\",\n    \"moduleResolution\": \"bundler\",\n    \"noEmit\": true,\n    \"jsx\": \"react-jsx\",\n    \"isolatedModules\": true,\n    \"verbatimModuleSyntax\": true\n  }\n}\n```\n- `bundler` для работы с Webpack/Vite\n- `noEmit: true` — бандлер занимается компиляцией\n- `jsx: \"react-jsx\"` — новый трансформ React 17+",
+      "difficulty": "interview",
+      "tags": ["Конфигурация"]
+    },
+    {
+      "id": "ts-pattern-builder",
+      "slug": "pattern-builder",
+      "question": "Как реализовать типобезопасный Builder-паттерн в TypeScript?",
+      "answer": "- Дженерик-параметр отслеживает установленные поля: `Builder<Set extends string = never>`\n- Каждый `.set()` добавляет поле к union: `Builder<Set | \"name\">`\n- `.build()` доступен только когда все обязательные поля установлены: `Set extends RequiredFields`\n- Полиморфный `this` для fluent API цепочек\n- Compile-time проверка: забыл поле → ошибка компиляции",
+      "difficulty": "deep",
+      "tags": ["Паттерны типизации"]
+    },
+    {
+      "id": "ts-pattern-event-emitter",
+      "slug": "pattern-event-emitter",
+      "question": "Как создать типобезопасный Event Emitter в TypeScript?",
+      "answer": "- Event map: `interface Events { click: MouseEvent; change: string }`\n- `on<K extends keyof Events>(event: K, handler: (payload: Events[K]) => void)`\n- `emit<K extends keyof Events>(event: K, payload: Events[K])`\n- Полное автодополнение имён событий и типов payload\n- Ключ события связан с типом данных через indexed access type",
+      "difficulty": "deep",
+      "tags": ["Паттерны типизации"]
+    },
+    {
+      "id": "ts-pattern-api-client",
+      "slug": "pattern-api-client",
+      "question": "Как типизировать API-клиент в TypeScript?",
+      "answer": "- Endpoints map: маршрут → `{ response, params?, body?, query? }`\n- Извлечение параметров из URL: `/users/:id` → `{ id: string }`\n- Условные аргументы: params/body/query передаются только если определены в типе\n- Полная типобезопасность для каждого эндпоинта\n- Template Literal Types для парсинга путей с параметрами",
+      "difficulty": "deep",
+      "tags": ["Паттерны типизации"]
+    },
+    {
+      "id": "ts-inference-patterns",
+      "slug": "inference-patterns",
+      "question": "Какие паттерны вывода типов (Inference Patterns) полезны на практике?",
+      "answer": "- `const X = [...] as const` + `typeof X[number]` → union из элементов массива\n- `typeof arr[number]` — тип элемента массива\n- `ComponentProps<typeof Button>` — пропсы React-компонента\n- `typeof import('module')` — тип модуля\n- `ReturnType<typeof fn>` — тип возвращаемого значения\n- `satisfies` — проверка типа с сохранением литералов",
+      "difficulty": "interview",
+      "tags": ["Паттерны типизации", "Система типов"]
+    },
+    {
+      "id": "ts-conditional-patterns",
+      "slug": "conditional-patterns",
+      "question": "Какие полезные паттерны на основе условных типов существуют?",
+      "answer": "- `IsNever<T>` = `[T] extends [never] ? true : false` — детектор never\n- `IsAny<T>` = `0 extends (1 & T) ? true : false` — детектор any\n- `Equals<A, B>` — точное сравнение типов (проверяет модификаторы)\n- `UnionToIntersection<U>` — через контравариантность: union → intersection\n- `TupleToUnion<T>` = `T[number]` — кортеж → union\n- `StringToUnion<S>` — строка → union символов через рекурсию",
+      "difficulty": "deep",
+      "tags": ["Паттерны типизации", "Продвинутые типы"]
+    },
+    {
+      "id": "ts-anti-patterns",
+      "slug": "anti-patterns",
+      "question": "Какие антипаттерны типизации стоит избегать?",
+      "answer": "1. Чрезмерное использование `any` — используйте `unknown` вместо этого\n2. Type assertions, скрывающие ошибки — предпочитайте type guards\n3. Двойные assertions (`as unknown as T`) — допустимы только в тестах\n4. `@ts-ignore` — используйте `@ts-expect-error` (самоочищается при исправлении)\n5. Сверхсложные типы — разбивайте на именованные вспомогательные типы\n6. Избыточные аннотации — доверяйте выводу типов\n7. `Object` с большой буквы — используйте `object` (маленькая) или конкретный тип",
+      "difficulty": "interview",
+      "tags": ["Паттерны типизации"]
+    },
+    {
+      "id": "ts-variance",
+      "slug": "variance",
+      "question": "Что такое аннотации вариантности (Variance Annotations, TS 4.7+)?",
+      "answer": "- `out T` — ковариантный (только на выходе): `Producer<Dog> extends Producer<Animal>`\n- `in T` — контравариантный (только на входе): `Consumer<Animal> extends Consumer<Dog>`\n- `in out T` — инвариантный (и вход, и выход)\n- Влияет на совместимость типов: Dog extends Animal\n- Оптимизация производительности: пропуск структурного анализа",
+      "difficulty": "deep",
+      "tags": ["Дженерики", "Система типов"]
+    },
+    {
+      "id": "ts-excess-property-checking",
+      "slug": "excess-property-checking",
+      "question": "Как работает проверка избыточных свойств (Excess Property Checking)?",
+      "answer": "- Применяется **только** к «свежим» объектным литералам, переданным напрямую в типизированный контекст\n- Присвоение из переменной → проверка НЕ применяется\n- Предотвращает опечатки в именах свойств\n- Weak Types (все свойства опциональны) — требуют хотя бы одно совпадение\n- `satisfies` — альтернатива для проверки формы с сохранением литеральных типов",
+      "difficulty": "interview",
+      "tags": ["Система типов", "Интерфейсы и типы"]
+    },
+    {
+      "id": "ts-contravariance",
+      "slug": "contravariance",
+      "question": "Что такое контравариантность параметров функций?",
+      "answer": "- Параметры функций контравариантны: более широкий тип параметра → более узкий тип функции\n- `(x: Animal) => void` **совместим** с `(x: Dog) => void`? Нет — наоборот!\n- Функция, принимающая `Event`, НЕ может быть подставлена вместо функции, принимающей `MouseEvent`\n- `strictFunctionTypes: true` — включает строгую проверку контравариантности\n- Без этого флага: бивариантность параметров (менее безопасно)\n- `infer` в контравариантной позиции даёт intersection, в ковариантной — union",
+      "difficulty": "deep",
+      "tags": ["Система типов", "Дженерики"]
+    },
+    {
+      "id": "ts-union-to-intersection",
+      "slug": "union-to-intersection",
+      "question": "Как работает паттерн `UnionToIntersection` в TypeScript?",
+      "answer": "```typescript\ntype UnionToIntersection<U> = \n  (U extends any ? (x: U) => void : never) extends \n  (x: infer I) => void ? I : never;\n```\n- Использует контравариантность параметров функций\n- Дистрибутивно создаёт union функций: `((x: A) => void) | ((x: B) => void)`\n- `infer` в контравариантной позиции извлекает intersection: `A & B`\n- Применение: слияние типов, превращение union в объединённый объект",
+      "difficulty": "deep",
+      "tags": ["Продвинутые типы", "Паттерны типизации"]
+    },
+    {
+      "id": "ts-deep-utility-types",
+      "slug": "deep-utility-types",
+      "question": "Как реализовать Deep-варианты утилитарных типов (`DeepPartial`, `DeepReadonly`)?",
+      "answer": "```typescript\ntype DeepPartial<T> = T extends object\n  ? { [P in keyof T]?: DeepPartial<T[P]> }\n  : T;\n\ntype DeepReadonly<T> = T extends object\n  ? { readonly [P in keyof T]: DeepReadonly<T[P]> }\n  : T;\n\ntype DeepRequired<T> = T extends object\n  ? { [P in keyof T]-?: DeepRequired<T[P]> }\n  : T;\n```\n- Рекурсивные mapped types: применяются к каждому вложенному уровню\n- Остановка рекурсии на не-объектных типах\n- Полезно для: deep merge, immutable state, конфигурационные объекты",
+      "difficulty": "deep",
+      "tags": ["Утилитарные типы", "Продвинутые типы"]
+    },
+    {
+      "id": "ts-pick-by-type",
+      "slug": "pick-by-type",
+      "question": "Как создать `PickByType` и `OmitByType` — фильтрацию свойств по типу значения?",
+      "answer": "```typescript\ntype PickByType<T, U> = {\n  [K in keyof T as T[K] extends U ? K : never]: T[K]\n};\n\ntype OmitByType<T, U> = {\n  [K in keyof T as T[K] extends U ? never : K]: T[K]\n};\n```\n- Использует key remapping (TS 4.1+): `as` в mapped types\n- Фильтрация через `never`: ключ, ремапленный в `never`, исключается\n- Пример: `PickByType<User, string>` — только строковые свойства",
+      "difficulty": "deep",
+      "tags": ["Утилитарные типы", "Продвинутые типы"]
+    },
+    {
+      "id": "ts-pattern-matching-types",
+      "slug": "pattern-matching-types",
+      "question": "Как использовать паттерн-матчинг на уровне типов для строк?",
+      "answer": "- Разделение строк: `T extends \\`${infer H}/${infer R}\\` ? ...`\n- TrimLeft/TrimRight/Trim: рекурсивное удаление пробелов\n- Парсинг маршрутов: извлечение `:param` имён из `/users/:id/posts/:postId`\n- CamelCase → kebab-case конвертация\n- Split: разбиение строки по разделителю в кортеж\n- Рекурсивная обработка символов строки",
+      "difficulty": "deep",
+      "tags": ["Продвинутые типы"]
+    },
+    {
+      "id": "ts-async-typing",
+      "slug": "async-typing",
+      "question": "Как правильно типизировать асинхронные функции и `Promise` в TypeScript?",
+      "answer": "- `async function f(): Promise<R>` — всегда возвращает `Promise<R>`\n- `return` внутри async автоматически оборачивается в `Promise.resolve`\n- Поддерживается `PromiseLike<T>` — для любых thenable-объектов\n- Ошибки не типизируются: catch(e) — тип `unknown` (с `useUnknownInCatchVariables`)\n- `Awaited<T>` — рекурсивное разворачивание Promise\n- `Promise.all` возвращает кортеж типов: `Promise<[A, B, C]>`",
+      "difficulty": "interview",
+      "tags": ["Система типов"]
+    },
+    {
+      "id": "ts-using-disposable",
+      "slug": "using-disposable",
+      "question": "Что такое Explicit Resource Management (`using`/`await using`) в TypeScript?",
+      "answer": "- `using` — автоматический вызов `[Symbol.dispose]()` при выходе из блока (как `defer` или `try-finally`)\n- `await using` — асинхронная версия с `[Symbol.asyncDispose]()`\n- Интерфейсы: `Disposable` и `AsyncDisposable`\n- Применение: закрытие файлов, соединений с БД, освобождение ресурсов\n- Требует `lib: [\"ESNext\"]` или полифиллы\n- TC39 Stage 3, доступно в TS 5.2+",
+      "difficulty": "deep",
+      "tags": ["Система типов"]
+    },
+    {
+      "id": "ts-super-in-classes",
+      "slug": "super-in-classes",
+      "question": "Для чего используется `super` в классах TypeScript?",
+      "answer": "- `super()` — вызов конструктора базового класса (обязателен в наследнике перед `this`)\n- `super.method()` — вызов метода базового класса\n- Доступ к членам базового класса из переопределённого метода\n- В конструкторе наследника `this` нельзя использовать до `super()`",
+      "difficulty": "interview",
+      "tags": ["Классы"]
+    },
+    {
+      "id": "ts-array-element-type",
+      "slug": "array-element-type",
+      "question": "Как вывести тип элемента массива или кортежа?",
+      "answer": "- `T[number]` — тип элемента массива/кортежа\n- Для кортежа учитывает литеральные позиции: `[string, number][number]` → `string | number`\n- `T[0]` — тип первого элемента кортежа\n- `typeof arr[number]` — тип элемента из значения массива\n- `const arr = [\"a\", \"b\"] as const; type T = typeof arr[number]` → `\"a\" | \"b\"`",
+      "difficulty": "interview",
+      "tags": ["Система типов", "Продвинутые типы"]
+    },
+    {
+      "id": "ts-accessor-keyword",
+      "slug": "accessor-keyword",
+      "question": "Что такое ключевое слово `accessor` (auto-accessor) в TypeScript?",
+      "answer": "- Автоматически создаёт пару getter/setter с backing-полем\n- `accessor name: string` → компилируется в `get name()` + `set name()`\n- Основное применение: работа с TC39 декораторами для перехвата доступа\n- Удобно для: реактивности, валидации, логирования обращений к свойствам\n- Доступно с TS 4.9+",
+      "difficulty": "deep",
+      "tags": ["Классы", "Декораторы"]
+    }
+  ]
+}

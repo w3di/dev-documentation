@@ -1,0 +1,1065 @@
+{
+  "section": {
+    "id": "nextjs",
+    "name": "Next.js",
+    "slug": "nextjs"
+  },
+  "questions": [
+    {
+      "id": "nextjs-default-js-what-is",
+      "slug": "default-js-what-is",
+      "question": "Что такое `default.js` и зачем он нужен в `Parallel Routes`?",
+      "answer": "`default.js` — это файл, который рендерится как `fallback` для слота, когда Next.js не может восстановить его активное состояние после жёсткой навигации (`full-page load`). Он нужен, чтобы слоты, не совпадающие с текущим URL, не показывали 404, а отображали заглушку",
+      "difficulty": "interview",
+      "tags": ["default.js"]
+    },
+    {
+      "id": "nextjs-default-js-when-used",
+      "slug": "default-js-when-used",
+      "question": "В каких случаях Next.js использует `default.js`?",
+      "answer": "- При `hard navigation` (`F5` или прямой переход по ссылке)\n- Когда активное состояние слота не может быть восстановлено из URL\n- Для subpages, которые не совпадают с текущим URL",
+      "difficulty": "interview",
+      "tags": ["default.js"]
+    },
+    {
+      "id": "nextjs-default-js-soft-vs-hard-navigation",
+      "slug": "default-js-soft-vs-hard-navigation",
+      "question": "Чем отличается поведение слотов при `soft navigation` и `hard navigation`?",
+      "answer": "- Soft navigation: Next.js отслеживает состояние каждого слота и рендерит его как есть\n- Hard navigation: Next.js не знает активное состояние слотов, поэтому для слотов без совпадения с URL рендерится `default.js` (или 404, если `default.js` нет)",
+      "difficulty": "interview",
+      "tags": ["default.js"]
+    },
+    {
+      "id": "nextjs-default-js-missing-fallback",
+      "slug": "default-js-missing-fallback",
+      "question": "Что произойдёт, если слот не имеет `default.js` и Next.js не может восстановить его состояние?",
+      "answer": "В таком случае Next.js рендерит 404 внутри этого слота",
+      "difficulty": "interview",
+      "tags": ["default.js"]
+    },
+    {
+      "id": "nextjs-default-js-implicit-slot-children",
+      "slug": "default-js-implicit-slot-children",
+      "question": "Почему нужно создавать `default.js` для implicit slot children?",
+      "answer": "",
+      "difficulty": "interview",
+      "tags": ["default.js"]
+    },
+    {
+      "id": "nextjs-dynamic-segments-what-is",
+      "slug": "dynamic-segments-what-is",
+      "question": "Что такое `Dynamic Route Segment` и как он создаётся?",
+      "answer": "Dynamic Segment используется, когда имена сегментов маршрута заранее неизвестны и определяются динамически. Создаётся с помощью квадратных скобок:",
+      "difficulty": "interview",
+      "tags": ["Dynamic Segments"]
+    },
+    {
+      "id": "nextjs-dynamic-segments-params-passing",
+      "slug": "dynamic-segments-params-passing",
+      "question": "Как передаются dynamic `params` в компонент?",
+      "answer": "- В `Server Components` они приходят через проп `params` (как promise).\n- В `Client Components` можно:\n    - использовать `use`(`params`) для получения значения;\n    - использовать хук `useParams`() в любом месте дерева клиента.",
+      "difficulty": "interview",
+      "tags": ["Dynamic Segments"]
+    },
+    {
+      "id": "nextjs-dynamic-segments-catch-all",
+      "slug": "dynamic-segments-catch-all",
+      "question": "Что такое Catch-all Segments?",
+      "answer": "Catch-all [...slug] захватывает все последующие части пути в `Dynamic Route Segment`",
+      "difficulty": "interview",
+      "tags": ["Dynamic Segments"]
+    },
+    {
+      "id": "nextjs-dynamic-segments-catch-all-vs-optional",
+      "slug": "dynamic-segments-catch-all-vs-optional",
+      "question": "Чем отличаются Catch-all и Optional Catch-all?",
+      "answer": "- [...slug] → требует хотя бы один сегмент.\n- [[...slug]] → может быть без сегмента (/shop тоже матчится).",
+      "difficulty": "interview",
+      "tags": ["Dynamic Segments"]
+    },
+    {
+      "id": "nextjs-dynamic-segments-generate-static-params",
+      "slug": "dynamic-segments-generate-static-params",
+      "question": "Что делает `generateStaticParams`?",
+      "answer": "Функция `generateStaticParams` позволяет заранее (на этапе сборки) сгенерировать динамические маршруты.",
+      "difficulty": "interview",
+      "tags": ["Dynamic Segments"]
+    },
+    {
+      "id": "nextjs-error-js-what-is",
+      "slug": "error-js-what-is",
+      "question": "Что такое `error.js` и зачем он нужен в Next.js?",
+      "answer": "это специальный файл, который позволяет обрабатывать неожиданные runtime-ошибки и показывать `fallback` UI вместо того, чтобы страница падала полностью. Он работает как React `Error Boundary`, оборачивая сегмент маршрута и его дочерние элементы.",
+      "difficulty": "interview",
+      "tags": ["error.js"]
+    },
+    {
+      "id": "nextjs-error-js-client-component",
+      "slug": "error-js-client-component",
+      "question": "Почему `error.js` должен быть Client Component?",
+      "answer": "Error Boundaries в React могут быть реализованы только в `Client Components`. Поэтому `error.js` всегда должен начинаться с '`use client`'",
+      "difficulty": "interview",
+      "tags": ["error.js"]
+    },
+    {
+      "id": "nextjs-error-js-how-works",
+      "slug": "error-js-how-works",
+      "question": "Как работает `error.js` внутри сегмента маршрута?",
+      "answer": "- Каждый сегмент маршрута может иметь свой `error.js`.\n- Если в сегменте или его дочерних компонентах происходит ошибка, Next.js рендерит `error.js` вместо содержимого сегмента\n- Если нужно, ошибка может \"проброситься\" выше к родительскому `error.js`",
+      "difficulty": "interview",
+      "tags": ["error.js"]
+    },
+    {
+      "id": "nextjs-error-js-props",
+      "slug": "error-js-props",
+      "question": "Какие пропсы получает `error.js` и что они означают?",
+      "answer": "- error — объект ошибки\n    - В dev-режиме включает сообщение ошибки (для удобной отладки)\n    - В продакшене ошибки из `Server Components` передаются как безопасный объект с `digest` (чтобы не утекли чувствительные данные).\n    - Ошибки из `Client Components` показывают оригинальное сообщение\n- reset — функция, которая позволяет попробовать перерисовать сегмент:",
+      "difficulty": "interview",
+      "tags": ["error.js"]
+    },
+    {
+      "id": "nextjs-error-js-client-vs-server-errors",
+      "slug": "error-js-client-vs-server-errors",
+      "question": "Чем отличаются ошибки из `Client Components` и `Server Components` в том, как они передаются в `error.js`?",
+      "answer": "- `Client Components` → передаётся оригинальное сообщение ошибки\n- `Server Components` → передаётся обезличенное сообщение + `digest`, чтобы исключить утечку приватных данных.",
+      "difficulty": "interview",
+      "tags": ["error.js"]
+    },
+    {
+      "id": "nextjs-error-js-reset-function",
+      "slug": "error-js-reset-function",
+      "question": "Что делает функция reset() в `error.js`?",
+      "answer": "Она инициирует повторный рендер сегмента маршрута.",
+      "difficulty": "interview",
+      "tags": ["error.js"]
+    },
+    {
+      "id": "nextjs-global-error-js-difference",
+      "slug": "global-error-js-difference",
+      "question": "Чем global.js отличается от global.jsx и что и когда нужно применять?",
+      "answer": "- `error.js` → обрабатывает ошибки локально, внутри конкретного сегмента и его дочерних страниц.\n- global-`error.js`x → глобальный обработчик, заменяющий root layout или template при ошибке. Используется для критических ошибок, которые ломают всё приложение",
+      "difficulty": "interview",
+      "tags": ["global-error.js"]
+    },
+    {
+      "id": "nextjs-global-error-js-html-body",
+      "slug": "global-error-js-html-body",
+      "question": "Почему в global-error нужно определять свои <html> и <body>?",
+      "answer": "global-`error.js`x заменяет root layout, у него нет доступа к общим обёрткам (layout, template)",
+      "difficulty": "interview",
+      "tags": ["global-error.js"]
+    },
+    {
+      "id": "nextjs-instrumentation-js-what-is",
+      "slug": "instrumentation-js-what-is",
+      "question": "Что такое `instrumentation.js` и зачем он нужен в Next.js?",
+      "answer": "`instrumentation.js` — это специальный файл для интеграции серверных инструментов наблюдаемости (observability) в Next.js. Он позволяет подключать системы вроде `OpenTelemetry`, `Sentry` или кастомные логгеры для отслеживания производительности, логирования ошибок и отладки в продакшене.",
+      "difficulty": "interview",
+      "tags": ["instrumentation.js"]
+    },
+    {
+      "id": "nextjs-instrumentation-js-location",
+      "slug": "instrumentation-js-location",
+      "question": "Где должен находиться файл `instrumentation.js`|ts?",
+      "answer": "В корне проекта",
+      "difficulty": "interview",
+      "tags": ["instrumentation.js"]
+    },
+    {
+      "id": "nextjs-instrumentation-js-register",
+      "slug": "instrumentation-js-register",
+      "question": "Когда вызывается функция `register`() и что в ней обычно делают?",
+      "answer": "`register`() вызывается один раз при инициализации нового экземпляра сервера Next.js. Обычно внутри неё подключают и настраивают библиотеку наблюдаемости, например `OpenTelemetry` или кастомный логгер",
+      "difficulty": "interview",
+      "tags": ["instrumentation.js"]
+    },
+    {
+      "id": "nextjs-instrumentation-js-on-request-error",
+      "slug": "instrumentation-js-on-request-error",
+      "question": "Для чего используется `onRequestError` и какие параметры он принимает?",
+      "answer": "- `onRequestError` вызывается, когда Next.js сервер зафиксировал ошибку. Обычно его используют, чтобы отправить информацию об ошибках в сторонние сервисы\n- error — объект ошибки + `digest` (уникальный идентификатор ошибки).\n- request — данные запроса (path, method, `headers`).\n- context — контекст ошибки (тип роутера, сегмент, где упало: render, route, action, middleware).",
+      "difficulty": "interview",
+      "tags": ["instrumentation.js"]
+    },
+    {
+      "id": "nextjs-instrumentation-js-digest",
+      "slug": "instrumentation-js-digest",
+      "question": "Что такое `digest` у ошибки в `onRequestError`?",
+      "answer": "`digest` — уникальный хэш ошибки, который помогает связать ошибку в клиенте с соответствующими логами на сервере",
+      "difficulty": "interview",
+      "tags": ["instrumentation.js"]
+    },
+    {
+      "id": "nextjs-instrumentation-js-runtime-split",
+      "slug": "instrumentation-js-runtime-split",
+      "question": "Как можно разделить реализацию `register` и `onRequestError` для `Node.js` и `Edge` рантаймов?",
+      "answer": "Через process.env.`NEXT_RUNTIME`",
+      "difficulty": "interview",
+      "tags": ["instrumentation.js"]
+    },
+    {
+      "id": "nextjs-instrumentation-client-js-what-is",
+      "slug": "instrumentation-client-js-what-is",
+      "question": "Что такое `instrumentation-client.js` и для чего он используется?",
+      "answer": "`instrumentation-client.js`|ts — это файл для добавления клиентских инструментов наблюдаемости таких как аналитики, трекинга производительности, отслеживания ошибок, полифиллов и других side-effects, которые должны работать до того, как React станет интерактивным",
+      "difficulty": "interview",
+      "tags": ["instrumentation-client.js"]
+    },
+    {
+      "id": "nextjs-instrumentation-client-js-location",
+      "slug": "instrumentation-client-js-location",
+      "question": "Где должен находиться файл `instrumentation-client.js`|ts?",
+      "answer": "в корне приложения",
+      "difficulty": "interview",
+      "tags": ["instrumentation-client.js"]
+    },
+    {
+      "id": "nextjs-instrumentation-client-js-lifecycle",
+      "slug": "instrumentation-client-js-lifecycle",
+      "question": "В какой момент жизненного цикла приложения выполняется код из `instrumentation-client.js`?",
+      "answer": "после загрузки HTML но до гидратации React и возможности взаимодействия пользователя",
+      "difficulty": "interview",
+      "tags": ["instrumentation-client.js"]
+    },
+    {
+      "id": "nextjs-instrumentation-client-js-router-transition",
+      "slug": "instrumentation-client-js-router-transition",
+      "question": "Для чего используется `onRouterTransitionStart` и какие параметры она получает?",
+      "answer": "- Функция вызывается при начале навигации внутри приложения\n- url: string — URL, на который происходит переход.\n- avigationType: 'push' | 'replace' | 'traverse' — тип навигации",
+      "difficulty": "interview",
+      "tags": ["instrumentation-client.js"]
+    },
+    {
+      "id": "nextjs-intercepting-routes-what-is",
+      "slug": "intercepting-routes-what-is",
+      "question": "Что такое `Intercepting Routes` и для чего они используются?",
+      "answer": "`Intercepting Routes` позволяют загружать маршрут из другой части приложения в текущем layout. Это полезно, когда нужно показать контент без переключения основного контекста страницы",
+      "difficulty": "interview",
+      "tags": ["Intercepting Routes"]
+    },
+    {
+      "id": "nextjs-intercepting-routes-soft-vs-hard",
+      "slug": "intercepting-routes-soft-vs-hard",
+      "question": "В чём разница между `soft navigation` и `hard navigation` при использовании `Intercepting Routes`?",
+      "answer": "- Soft navigation — при клиентской навигации (например, клик по фото в ленте) маршрут перехватывается, URL маскируется, и фото показывается в модальном окне.\n- Hard navigation — при обновлении страницы или переходе по прямой ссылке весь маршрут рендерится как полноценная страница без перехвата.",
+      "difficulty": "interview",
+      "tags": ["Intercepting Routes"]
+    },
+    {
+      "id": "nextjs-intercepting-routes-conventions",
+      "slug": "intercepting-routes-conventions",
+      "question": "Как работает (.), (..), (..)(..), и (...) при определении перехватываемых маршрутов?",
+      "answer": "- (.) — перехватывает сегменты на том же уровне.\n- (..) — перехватывает сегменты на один уровень выше.\n- (..)(..) — на два уровня выше.\n- (...) — перехватывает сегменты начиная с корня app",
+      "difficulty": "interview",
+      "tags": ["Intercepting Routes"]
+    },
+    {
+      "id": "nextjs-intercepting-routes-segments-not-filesystem",
+      "slug": "intercepting-routes-segments-not-filesystem",
+      "question": "Почему ( .. ) работает по сегментам маршрута, а не по файловой системе?",
+      "answer": "Потому что Next.js ориентируется на сегменты маршрутов, а не на структуру папок. Например, @slot в `Parallel Routes` не считается сегментом, поэтому относительность определяется только по route segments",
+      "difficulty": "interview",
+      "tags": ["Intercepting Routes"]
+    },
+    {
+      "id": "nextjs-layout-js-what-is",
+      "slug": "layout-js-what-is",
+      "question": "Что такое `layout.js` и для чего он используется в Next.js?",
+      "answer": "Layout — компонент, определяющий структуру интерфейса сегмента маршрута. Оборачивает дочерние сегменты и переиспользует общий UI",
+      "difficulty": "interview",
+      "tags": ["layout.js"]
+    },
+    {
+      "id": "nextjs-layout-js-root-layout",
+      "slug": "layout-js-root-layout",
+      "question": "Что такое root layout и чем он отличается от обычного layout?",
+      "answer": "Root layout — верхний layout в app/. Обязан содержать <html> и <body>, задаёт глобальный UI для всего приложения. Вложенные layouts применяются к своим сегментам.",
+      "difficulty": "interview",
+      "tags": ["layout.js"]
+    },
+    {
+      "id": "nextjs-layout-js-props",
+      "slug": "layout-js-props",
+      "question": "Какие пропсы получает layout и как их использовать?",
+      "answer": "- children — обязательный, содержит дочерние сегменты.\n- `params` — опциональный промис с динамическими параметрами от корневого сегмента до текущего layout.",
+      "difficulty": "interview",
+      "tags": ["layout.js"]
+    },
+    {
+      "id": "nextjs-layout-js-layout-props-typing",
+      "slug": "layout-js-layout-props-typing",
+      "question": "Как использовать `LayoutProps` для типизации layout?",
+      "answer": "`LayoutProps` предоставляет типы для children, `params` и именованных слотов (@slot) на основе структуры директорий.",
+      "difficulty": "interview",
+      "tags": ["layout.js"]
+    },
+    {
+      "id": "nextjs-layout-js-rerender",
+      "slug": "layout-js-rerender",
+      "question": "Могут ли layouts перерендериваться при навигации и почему?",
+      "answer": "Нет. Layouts сохраняются между переходами, чтобы избегать лишних запросов и вычислений; кэшируются на клиенте.",
+      "difficulty": "interview",
+      "tags": ["layout.js"]
+    },
+    {
+      "id": "nextjs-layout-js-data-fetching",
+      "slug": "layout-js-data-fetching",
+      "question": "Как layout может работать с данными?",
+      "answer": "Может выполнять `fetch` и отображать данные внутри себя. Непосредственно передавать данные дочерним страницам нельзя. Запросы дочерних страниц дедуплицируются.",
+      "difficulty": "interview",
+      "tags": ["layout.js"]
+    },
+    {
+      "id": "nextjs-layout-js-query-params",
+      "slug": "layout-js-query-params",
+      "question": "Как layout работает с query `params` и pathname?",
+      "answer": "- Layouts не обновляются на навигации и не получают новые query `params` или pathname напрямую.\n- Для работы используют `use`SearchParams и `use`Pathname в `Client Components`.\n- Актуальное состояние обеспечивают дочерние страницы или клиентские компоненты внутри layout.",
+      "difficulty": "interview",
+      "tags": ["layout.js"]
+    },
+    {
+      "id": "nextjs-layout-js-child-segments",
+      "slug": "layout-js-child-segments",
+      "question": "Как layout может взаимодействовать с дочерними сегментами?",
+      "answer": "Прямого доступа нет. Для определения активного сегмента используют `use`SelectedLayoutSegment или `use`SelectedLayoutSegments в `Client Components`.",
+      "difficulty": "interview",
+      "tags": ["layout.js"]
+    },
+    {
+      "id": "nextjs-layout-js-client-component",
+      "slug": "layout-js-client-component",
+      "question": "Может ли layout быть клиентским (`CSR`)?",
+      "answer": "- Root layout — нет; должен быть серверным и содержать <html> и <body>.\n- Вложенные layouts — да; можно сделать клиентскими с '`use client`'.\n- Ограничения клиентского layout: нет доступа к `headers`()/`cookies`()/`draftMode`(), нельзя делать серверный `fetch`, увеличивается размер бандла и время гидратации.",
+      "difficulty": "interview",
+      "tags": ["layout.js"]
+    },
+    {
+      "id": "nextjs-loading-js-what-is",
+      "slug": "loading-js-what-is",
+      "question": "Что такое `loading.js` и для чего он используется в Next.js?",
+      "answer": "`loading.js` — это специальный файл, который позволяет создавать понятный Loading UI с использованием React `Suspense`. Он показывает мгновенное состояние загрузки (`instant loading state`) с сервера, пока контент сегмента маршрута подгружается, и автоматически заменяет его на основной контент после завершения загрузки.",
+      "difficulty": "interview",
+      "tags": ["loading.js"]
+    },
+    {
+      "id": "nextjs-loading-js-placement",
+      "slug": "loading-js-placement",
+      "question": "Где нужно размещать файл `loading.js` внутри маршрута?",
+      "answer": "Файл `loading.js` размещается в папке сегмента маршрута, внутри которого вы хотите показать состояние загрузки",
+      "difficulty": "interview",
+      "tags": ["loading.js"]
+    },
+    {
+      "id": "nextjs-loading-js-component-type",
+      "slug": "loading-js-component-type",
+      "question": "Какой тип компонента по умолчанию имеет `loading.js` и можно ли его сделать Client Component?",
+      "answer": "По умолчанию `loading.js` является Server Component, но его можно сделать Client Component, добавив директиву '`use client`' в начале файла",
+      "difficulty": "interview",
+      "tags": ["loading.js"]
+    },
+    {
+      "id": "nextjs-loading-js-params",
+      "slug": "loading-js-params",
+      "question": "Какие параметры принимает компонент `loading.js`?",
+      "answer": "Компонент `loading.js` не принимает никаких параметров",
+      "difficulty": "interview",
+      "tags": ["loading.js"]
+    },
+    {
+      "id": "nextjs-loading-js-instant-loading-state",
+      "slug": "loading-js-instant-loading-state",
+      "question": "Что такое `instant loading state` и как его использовать?",
+      "answer": "Instant loading state — это UI, который показывается мгновенно при навигации, например скелетоны, спиннеры или небольшая часть будущего экрана. Он помогает пользователю понять, что приложение отвечает, и улучшает UX. Для этого создается `loading.js` с легковесным интерфейсом загрузки внутри соответствующего сегмента",
+      "difficulty": "interview",
+      "tags": ["loading.js"]
+    },
+    {
+      "id": "nextjs-loading-js-interaction-with-layout",
+      "slug": "loading-js-interaction-with-layout",
+      "question": "Как `loading.js` взаимодействует с `layout.js` и `page.js` внутри сегмента маршрута?",
+      "answer": "`loading.js` автоматически оборачивает `page.js` и всех его потомков внутри <`Suspense`> границы, если находится в одной папке с `layout.js`. То есть при загрузке нового сегмента UI `fallback` из `loading.js` показывается до полного рендеринга страницы",
+      "difficulty": "interview",
+      "tags": ["loading.js"]
+    },
+    {
+      "id": "nextjs-loading-js-static-export",
+      "slug": "loading-js-static-export",
+      "question": "Можно ли использовать `loading.js` при статическом экспорте сайта?",
+      "answer": "Нет, `loading.js` не поддерживается при статическом экспорте",
+      "difficulty": "interview",
+      "tags": ["loading.js"]
+    },
+    {
+      "id": "nextjs-loading-js-manual-suspense",
+      "slug": "loading-js-manual-suspense",
+      "question": "Как вручную создавать `Suspense` Boundaries для своих компонентов и как это соотносится с `loading.js`?",
+      "answer": "Можно вручную обернуть любой асинхронный компонент в <`Suspense` `fallback`={...}>. В этом случае `fallback` UI работает аналогично `loading.js`, показывая UI пока выполняется асинхронное действие",
+      "difficulty": "interview",
+      "tags": ["loading.js"]
+    },
+    {
+      "id": "nextjs-loading-js-suspense-benefits",
+      "slug": "loading-js-suspense-benefits",
+      "question": "Какие преимущества дает использование `Suspense` вместе с `loading.js`?",
+      "answer": "- `Streaming Server Rendering` — прогрессивный рендеринг HTML с сервера на клиент\n- `Selective Hydration` — React делает интерактивными компоненты приоритетно, в зависимости от взаимодействия пользовател\n- Автоматическое отображение `fallback` UI и плавная замена его на основной контент",
+      "difficulty": "interview",
+      "tags": ["loading.js"]
+    },
+    {
+      "id": "nextjs-not-found-js-purpose",
+      "slug": "not-found-js-purpose",
+      "question": "Для чего используется файл `not-found.js` в Next.js?",
+      "answer": "Он рендерит UI, когда внутри сегмента маршрута вызывается `notFound`(). Используется для обработки 404 на уровне конкретного сегмента.",
+      "difficulty": "interview",
+      "tags": ["not-found.js"]
+    },
+    {
+      "id": "nextjs-not-found-js-vs-global",
+      "slug": "not-found-js-vs-global",
+      "question": "Чем отличается `not-found.js` от global-`not-found.js`?",
+      "answer": "- `not-found.js` работает в пределах сегмента и зависит от маршрута.\n- global-`not-found.js` используется для глобальной 404-страницы, если URL вообще не совпал ни с одним маршрутом.",
+      "difficulty": "interview",
+      "tags": ["not-found.js"]
+    },
+    {
+      "id": "nextjs-not-found-js-status-code",
+      "slug": "not-found-js-status-code",
+      "question": "Какой статус код возвращает Next.js при использовании `not-found.js`?",
+      "answer": "- Для стриминговых ответов → 200.\n- Для нестриминговых → 404.",
+      "difficulty": "interview",
+      "tags": ["not-found.js"]
+    },
+    {
+      "id": "nextjs-not-found-js-global-when",
+      "slug": "not-found-js-global-when",
+      "question": "В каких случаях стоит использовать global-`not-found.js`?",
+      "answer": "- Когда в приложении есть несколько root layout'ов.\n- Когда root layout определён с динамическими сегментами (например, app/[country]/`layout.js`).",
+      "difficulty": "interview",
+      "tags": ["not-found.js"]
+    },
+    {
+      "id": "nextjs-not-found-js-global-full-html",
+      "slug": "not-found-js-global-full-html",
+      "question": "Почему global-`not-found.js` должен возвращать полный HTML-документ?",
+      "answer": "Потому что он обходит обычный процесс рендеринга приложения, и Next.js ожидает полный HTML (с <html> и <body>).",
+      "difficulty": "interview",
+      "tags": ["not-found.js"]
+    },
+    {
+      "id": "nextjs-not-found-js-props",
+      "slug": "not-found-js-props",
+      "question": "Какие props принимают компоненты `not-found.js` и global-`not-found.js`?",
+      "answer": "Они не принимают никаких props",
+      "difficulty": "interview",
+      "tags": ["not-found.js"]
+    },
+    {
+      "id": "nextjs-not-found-js-server-fetch",
+      "slug": "not-found-js-server-fetch",
+      "question": "Можно ли в `not-found.js` выполнять серверный `fetch`?",
+      "answer": "Да, он является серверным компонентом и может быть `async`. Можно, например, использовать `headers`() и загружать данные для отображения кастомного 404-UI",
+      "difficulty": "interview",
+      "tags": ["not-found.js"]
+    },
+    {
+      "id": "nextjs-not-found-js-metadata",
+      "slug": "not-found-js-metadata",
+      "question": "Какие метаданные автоматически добавляет Next.js для страниц с 404?",
+      "answer": "Автоматически вставляется <`meta` name=\"`robots`\" content=\"`noindex`\" />, чтобы такие страницы не индексировались поисковиками.",
+      "difficulty": "interview",
+      "tags": ["not-found.js"]
+    },
+    {
+      "id": "nextjs-page-js-purpose",
+      "slug": "page-js-purpose",
+      "question": "Для чего используется файл `page.js` в Next.js?",
+      "answer": "Файл `page.js` используется для определения UI, уникального для маршрута. Это конечная точка (leaf) дерева маршрутов, которая делает сегмент публично доступным.",
+      "difficulty": "interview",
+      "tags": ["page.js"]
+    },
+    {
+      "id": "nextjs-page-js-required",
+      "slug": "page-js-required",
+      "question": "Является ли `page.js` обязательным для того, чтобы сегмент маршрута был публично доступен?",
+      "answer": "Да, без `page.js` сегмент маршрута не будет доступен пользователю напрямую.",
+      "difficulty": "interview",
+      "tags": ["page.js"]
+    },
+    {
+      "id": "nextjs-page-js-leaf",
+      "slug": "page-js-leaf",
+      "question": "Что означает, что страница всегда является листом (leaf) дерева маршрутов?",
+      "answer": "Это значит, что страница (`page.js`) всегда находится на нижнем уровне маршрута — она не может иметь вложенных сегментов под собой Вложенные сегменты должны определяться выше.",
+      "difficulty": "interview",
+      "tags": ["page.js"]
+    },
+    {
+      "id": "nextjs-page-js-default-component-type",
+      "slug": "page-js-default-component-type",
+      "question": "Какой компонент по умолчанию является `page.js` — серверным или клиентским? Можно ли его изменить?",
+      "answer": "По умолчанию `page.js` — Server Component, но его можно сделать Client Component, добавив директиву \"`use client`\" в начале файла.",
+      "difficulty": "interview",
+      "tags": ["page.js"]
+    },
+    {
+      "id": "nextjs-page-js-extensions",
+      "slug": "page-js-extensions",
+      "question": "Какие расширения файлов поддерживает Next.js для страниц?",
+      "answer": "Поддерживаются расширения: .js || .jsx || .tsx",
+      "difficulty": "interview",
+      "tags": ["page.js"]
+    },
+    {
+      "id": "nextjs-page-js-props",
+      "slug": "page-js-props",
+      "question": "Какие props доступны в `page.js` и для чего они нужны?",
+      "answer": "- `params` — объект (`Promise`), содержащий динамические параметры маршрута ([slug], [id] и т.п.).\n- `searchParams` — объект (`Promise`), содержащий параметры строки запроса (?a=1&b=2).",
+      "difficulty": "interview",
+      "tags": ["page.js"]
+    },
+    {
+      "id": "nextjs-page-js-params-v15-vs-v14",
+      "slug": "page-js-params-v15-vs-v14",
+      "question": "В какой форме передаются `params` и `searchParams` в Next.js 15 и как они отличаются от версии 14?",
+      "answer": "В Next.js 15: `params` и `searchParams` передаются как `Promise`, их нужно обрабатывать через `await` или React `use`, В Next.js 14 и ниже: они были синхронными объектами",
+      "difficulty": "interview",
+      "tags": ["page.js"]
+    },
+    {
+      "id": "nextjs-page-js-server-params",
+      "slug": "page-js-server-params",
+      "question": "Как получить значения из `params` и `searchParams` в серверном компоненте?",
+      "answer": "Использовать `async`/`await`:",
+      "difficulty": "interview",
+      "tags": ["page.js"]
+    },
+    {
+      "id": "nextjs-page-js-client-params",
+      "slug": "page-js-client-params",
+      "question": "Как получить значения из `params` и `searchParams` в клиентском компоненте, где нельзя использовать `async`?",
+      "answer": "В клиентском компоненте можно использовать React-хук `use` для чтения `Promise`",
+      "difficulty": "interview",
+      "tags": ["page.js"]
+    },
+    {
+      "id": "nextjs-page-js-search-params-rendering",
+      "slug": "page-js-search-params-rendering",
+      "question": "Что происходит при использовании `searchParams` в странице относительно рендера (статический или динамический)?",
+      "answer": "Использование `searchParams` переводит страницу в динамический рендеринг на уровне запроса, так как их значения нельзя предсказать заранее.",
+      "difficulty": "interview",
+      "tags": ["page.js"]
+    },
+    {
+      "id": "nextjs-page-js-search-params-vs-url",
+      "slug": "page-js-search-params-vs-url",
+      "question": "Чем отличается `searchParams` от стандартного объекта `URLSearchParams`?",
+      "answer": "- `searchParams` — это обычный JS-объект ({ a: '1', b: '2' }), а не экземпляр `URLSearchParams`.\n- Значения могут быть строкой или массивом строк (string | string[]).",
+      "difficulty": "interview",
+      "tags": ["page.js"]
+    },
+    {
+      "id": "nextjs-page-js-page-props-helper",
+      "slug": "page-js-page-props-helper",
+      "question": "Что такое `PageProps` helper и зачем его использовать?",
+      "answer": "`PageProps` — это глобально доступный TypeScript-хелпер, который позволяет типизировать `params` и `searchParams` на основе буквального маршрута, добавляет автодополнение ключей и строгую типизацию, автоматически генерируется при next dev, next build или next typegen.",
+      "difficulty": "interview",
+      "tags": ["page.js"]
+    },
+    {
+      "id": "nextjs-parallel-routes-purpose",
+      "slug": "parallel-routes-purpose",
+      "question": "Для чего нужны `Parallel Routes`?",
+      "answer": "Они позволяют одновременно или условно рендерить несколько страниц в одном layout. Это особенно полезно для динамических разделов, например, дашбордов или соцсетевых лент.",
+      "difficulty": "interview",
+      "tags": ["Parallel Routes"]
+    },
+    {
+      "id": "nextjs-parallel-routes-slots",
+      "slug": "parallel-routes-slots",
+      "question": "Что такое слоты и как они создаются?",
+      "answer": "Слоты — это именованные области внутри layout, создаваемые через папки с префиксом @. Например, @analytics или @team. Они передаются как пропсы в общий layout.",
+      "difficulty": "interview",
+      "tags": ["Parallel Routes"]
+    },
+    {
+      "id": "nextjs-parallel-routes-slots-url",
+      "slug": "parallel-routes-slots-url",
+      "question": "Влияют ли слоты на URL?",
+      "answer": "Нет. Слоты не формируют часть маршрута. Например, app/@analytics/views будет доступен по адресу /views.",
+      "difficulty": "interview",
+      "tags": ["Parallel Routes"]
+    },
+    {
+      "id": "nextjs-parallel-routes-implicit-slot",
+      "slug": "parallel-routes-implicit-slot",
+      "question": "Что такое implicit slot (children)?",
+      "answer": "children — это встроенный слот, который всегда присутствует. Файл app/`page.js` эквивалентен app/@children/`page.js`.",
+      "difficulty": "interview",
+      "tags": ["Parallel Routes"]
+    },
+    {
+      "id": "nextjs-parallel-routes-default-js",
+      "slug": "parallel-routes-default-js",
+      "question": "Для чего используется `default.js`?",
+      "answer": "`default.js` задаёт контент по умолчанию для слота, если при загрузке страницы или обновлении браузера Next.js не может восстановить активное состояние слота. Если файла нет — будет показан 404.",
+      "difficulty": "interview",
+      "tags": ["Parallel Routes"]
+    },
+    {
+      "id": "nextjs-parallel-routes-soft-vs-hard",
+      "slug": "parallel-routes-soft-vs-hard",
+      "question": "Soft navigation vs Hard navigation",
+      "answer": "- Soft navigation (клиентская навигация) сохраняет состояние всех слотов, меняя только активный.\n- Hard navigation (перезагрузка страницы) сбрасывает состояние, и для неподходящих слотов рендерится `default.js` или 404.",
+      "difficulty": "interview",
+      "tags": ["Parallel Routes"]
+    },
+    {
+      "id": "nextjs-parallel-routes-parallel-routes-key",
+      "slug": "parallel-routes-parallel-routes-key",
+      "question": "Зачем нужен parallelRoutesKey в `use`SelectedLayoutSegment(s)?",
+      "answer": "Он позволяет определить активный сегмент маршрута внутри конкретного слота. Например, чтобы узнать, открыт ли /login в @auth.",
+      "difficulty": "interview",
+      "tags": ["Parallel Routes"]
+    },
+    {
+      "id": "nextjs-parallel-routes-conditional-render",
+      "slug": "parallel-routes-conditional-render",
+      "question": "Как использовать `Parallel Routes` для условного рендера?",
+      "answer": "Можно отобразить разные слоты в зависимости от условий (например, роли пользователя: `use`r или admin).",
+      "difficulty": "interview",
+      "tags": ["Parallel Routes"]
+    },
+    {
+      "id": "nextjs-parallel-routes-tab-groups",
+      "slug": "parallel-routes-tab-groups",
+      "question": "Что такое Tab Groups?",
+      "answer": "Это слоты с собственным layout, который позволяет пользователю переключаться между вложенными страницами, как между вкладками.",
+      "difficulty": "interview",
+      "tags": ["Parallel Routes"]
+    },
+    {
+      "id": "nextjs-parallel-routes-modals",
+      "slug": "parallel-routes-modals",
+      "question": "Как `Parallel Routes` помогают реализовать модальные окна?",
+      "answer": "Они позволяют открыть модальное окно через слот и `Intercepting Routes`, сохранив корректный URL, deep linking и восстановление состояния после обновления страницы.",
+      "difficulty": "interview",
+      "tags": ["Parallel Routes"]
+    },
+    {
+      "id": "nextjs-parallel-routes-intercepting-dot",
+      "slug": "parallel-routes-intercepting-dot",
+      "question": "Зачем нужен (.) в `Intercepting Routes`?",
+      "answer": "(.) указывает на перехват маршрута внутри слота (intercepting route), позволяя рендерить, например, модалку поверх текущей страницы.",
+      "difficulty": "interview",
+      "tags": ["Parallel Routes"]
+    },
+    {
+      "id": "nextjs-parallel-routes-close-modal",
+      "slug": "parallel-routes-close-modal",
+      "question": "Как закрывать модальное окно в `Parallel Routes`?",
+      "answer": "Через `router.back`(), через `Link` или подменяя слот компонентом, возвращающим null.",
+      "difficulty": "interview",
+      "tags": ["Parallel Routes"]
+    },
+    {
+      "id": "nextjs-parallel-routes-catch-all-slot",
+      "slug": "parallel-routes-catch-all-slot",
+      "question": "Когда нужен catch-all слот ([...catchAll])?",
+      "answer": "Когда нужно закрывать слот (например, модальное окно) при навигации на любые маршруты, которые не должны отображать его.",
+      "difficulty": "interview",
+      "tags": ["Parallel Routes"]
+    },
+    {
+      "id": "nextjs-parallel-routes-loading-error",
+      "slug": "parallel-routes-loading-error",
+      "question": "Можно ли определить отдельные loading и error состояния для каждого слота?",
+      "answer": "Да. Каждый слот может иметь собственные `loading.js` и `error.js`, которые обрабатываются независимо.",
+      "difficulty": "interview",
+      "tags": ["Parallel Routes"]
+    },
+    {
+      "id": "nextjs-public-folder-purpose",
+      "slug": "public-folder-purpose",
+      "question": "Для чего используется папка `public` в Next.js?",
+      "answer": "Для хранения статических файлов, которые нужно отдать напрямую без обработки.",
+      "difficulty": "interview",
+      "tags": ["public Folder"]
+    },
+    {
+      "id": "nextjs-public-folder-access",
+      "slug": "public-folder-access",
+      "question": "Как можно обратиться к файлу, находящемуся внутри `public`?",
+      "answer": "По пути, начиная с /. Например, `public`/avatars/me.png доступен по адресу /avatars/me.png.",
+      "difficulty": "interview",
+      "tags": ["public Folder"]
+    },
+    {
+      "id": "nextjs-public-folder-cache-header",
+      "slug": "public-folder-cache-header",
+      "question": "Какой HTTP-заголовок кэширования применяется к файлам из `public` по умолчанию?",
+      "answer": "`Cache-Control`: `public`, max-age=0",
+      "difficulty": "interview",
+      "tags": ["public Folder"]
+    },
+    {
+      "id": "nextjs-public-folder-no-long-cache",
+      "slug": "public-folder-no-long-cache",
+      "question": "Почему Next.js не кэширует файлы в `public` на длительное время?",
+      "answer": "Потому что содержимое файлов в `public` может изменяться, и Next.js не может безопасно гарантировать их долговременное кэширование.",
+      "difficulty": "interview",
+      "tags": ["public Folder"]
+    },
+    {
+      "id": "nextjs-public-folder-metadata-files",
+      "slug": "public-folder-metadata-files",
+      "question": "Где рекомендуется хранить статические метаданные (`robots.txt`, `fav`icon`.ico` и т.п.) в новых проектах Next.js?",
+      "answer": "Внутри специальных `meta`data-файлов в папке app, а не в `public`",
+      "difficulty": "interview",
+      "tags": ["public Folder"]
+    },
+    {
+      "id": "nextjs-route-groups-what-is",
+      "slug": "route-groups-what-is",
+      "question": "Что такое `Route Groups` в Next.js?",
+      "answer": "Это соглашение для организации маршрутов в папки, которые не влияют на URL.",
+      "difficulty": "interview",
+      "tags": ["Route Groups"]
+    },
+    {
+      "id": "nextjs-route-groups-creation",
+      "slug": "route-groups-creation",
+      "question": "Как создаётся группа маршрутов в файловой структуре?",
+      "answer": "Папку нужно обернуть в скобки, например: (shop) или (marketing).",
+      "difficulty": "interview",
+      "tags": ["Route Groups"]
+    },
+    {
+      "id": "nextjs-route-groups-url-impact",
+      "slug": "route-groups-url-impact",
+      "question": "Влияет ли название группы маршрутов (в скобках) на конечный URL?",
+      "answer": "Нет, оно используется только для организации структуры и не попадает в путь",
+      "difficulty": "interview",
+      "tags": ["Route Groups"]
+    },
+    {
+      "id": "nextjs-route-groups-use-cases",
+      "slug": "route-groups-use-cases",
+      "question": "Для чего обычно используют `Route Groups`?",
+      "answer": "- для организации маршрутов по фичам или командам,\n- для создания нескольких root layouts,\n- разделить набор страниц по разным layout, не смешивая их",
+      "difficulty": "interview",
+      "tags": ["Route Groups"]
+    },
+    {
+      "id": "nextjs-route-groups-multiple-root-layouts",
+      "slug": "route-groups-multiple-root-layouts",
+      "question": "Можно ли с помощью `Route Groups` определить несколько root layout?",
+      "answer": "Да, каждая группа может иметь свой собственный root layout.",
+      "difficulty": "interview",
+      "tags": ["Route Groups"]
+    },
+    {
+      "id": "nextjs-route-groups-full-reload",
+      "slug": "route-groups-full-reload",
+      "question": "Что произойдёт при навигации между страницами, которые используют разные root layout?",
+      "answer": "Это приведёт к полной перезагрузке страницы (full page reload).",
+      "difficulty": "interview",
+      "tags": ["Route Groups"]
+    },
+    {
+      "id": "nextjs-route-groups-conflict",
+      "slug": "route-groups-conflict",
+      "question": "Какая проблема может возникнуть, если маршруты в разных группах разрешаются в один и тот же путь?",
+      "answer": "Возникнет конфликт: разные файлы будут пытаться отрендерить один и тот же URL, что вызовет ошибку.",
+      "difficulty": "interview",
+      "tags": ["Route Groups"]
+    },
+    {
+      "id": "nextjs-route-groups-no-top-level-layout",
+      "slug": "route-groups-no-top-level-layout",
+      "question": "Что нужно учитывать при использовании нескольких root layout и отсутствии общего top-level `layout.js`?",
+      "answer": "Нужно, чтобы маршрут / был определён хотя бы в одной из групп, например в app/(marketing)/`page.js`.",
+      "difficulty": "interview",
+      "tags": ["Route Groups"]
+    },
+    {
+      "id": "nextjs-src-folder-purpose",
+      "slug": "src-folder-purpose",
+      "question": "Для чего используется папка `src` в Next.js и чем она удобна?",
+      "answer": "Папка `src` используется как альтернатива размещению специальных папок app или pages в корне проекта, она отделяет код приложения от конфигурационных файлов проекта, которые обычно находятся в корне.",
+      "difficulty": "interview",
+      "tags": ["src Folder"]
+    },
+    {
+      "id": "nextjs-src-folder-special-folders",
+      "slug": "src-folder-special-folders",
+      "question": "Какие специальные папки можно перенести в `src`?",
+      "answer": "/`src`/app || `src`/pages и другие папки с кодом приложения",
+      "difficulty": "interview",
+      "tags": ["src Folder"]
+    },
+    {
+      "id": "nextjs-src-folder-simultaneous",
+      "slug": "src-folder-simultaneous",
+      "question": "Можно ли использовать одновременно app или pages в корне и в `src`?",
+      "answer": "Нет, `src`/app или `src`/pages будут проигнорированы, если app или pages присутствуют в корневой директории так как Next.js приоритизирует папки в корне проекта над папками в `src`.",
+      "difficulty": "interview",
+      "tags": ["src Folder"]
+    },
+    {
+      "id": "nextjs-src-folder-public",
+      "slug": "src-folder-public",
+      "question": "Где должна оставаться папка /`public`, если используется структура с `src`?",
+      "answer": "Папка /`public` должна оставаться в корне проекта.",
+      "difficulty": "interview",
+      "tags": ["src Folder"]
+    },
+    {
+      "id": "nextjs-src-folder-root-files",
+      "slug": "src-folder-root-files",
+      "question": "Какие файлы должны оставаться в корне проекта при использовании `src`?",
+      "answer": "/`public` и конфигурационыне файлы",
+      "difficulty": "interview",
+      "tags": ["src Folder"]
+    },
+    {
+      "id": "nextjs-template-js-what-is",
+      "slug": "template-js-what-is",
+      "question": "Что такое `template.js` и чем он отличается от `layout.js`?",
+      "answer": "`template.js` — это файл, похожий на `layout.js`, который оборачивает layout или page. В отличие от layouts, которые сохраняются между маршрутами и поддерживают состояние, templates получают уникальный ключ, что означает, что дочерние `Client Components` сбрасывают своё состояние при навигации.",
+      "difficulty": "interview",
+      "tags": ["template.js"]
+    },
+    {
+      "id": "nextjs-template-js-purpose",
+      "slug": "template-js-purpose",
+      "question": "Для чего используется `template.js`?",
+      "answer": "- Для повторной синхронизации `use`Effect при навигации\n- Для сброса состояния дочерних `Client Components` при навигации (например, поля ввода)\n- Для изменения поведения фреймворка по умолчанию (например, `Suspense` boundaries в layouts показывают `fallback` только при первой загрузке, а в templates — при каждой навигации)",
+      "difficulty": "interview",
+      "tags": ["template.js"]
+    },
+    {
+      "id": "nextjs-template-js-render-order",
+      "slug": "template-js-render-order",
+      "question": "Какой порядок рендеринга у `template.js` в иерархии компонентов?",
+      "answer": "- `template.js` рендерится между layout и его дочерними элементами\n- Структура: <Layout><Template key={routeParam}>{children}</Template></Layout>",
+      "difficulty": "interview",
+      "tags": ["template.js"]
+    },
+    {
+      "id": "nextjs-template-js-props",
+      "slug": "template-js-props",
+      "question": "Какие пропсы принимает `template.js`?",
+      "answer": "children (обязательный) — дочерние элементы",
+      "difficulty": "interview",
+      "tags": ["template.js"]
+    },
+    {
+      "id": "nextjs-template-js-default-type",
+      "slug": "template-js-default-type",
+      "question": "Какой тип компонента по умолчанию имеет `template.js`?",
+      "answer": "По умолчанию templates являются `Server Components`",
+      "difficulty": "interview",
+      "tags": ["template.js"]
+    },
+    {
+      "id": "nextjs-template-js-navigation",
+      "slug": "template-js-navigation",
+      "question": "Что происходит с `template.js` при навигации?",
+      "answer": "- Templates получают уникальный ключ автоматически\n- Переход на новый маршрут вызывает перемонтирование template и его дочерних элементов",
+      "difficulty": "interview",
+      "tags": ["template.js"]
+    },
+    {
+      "id": "nextjs-template-js-vs-layout-navigation",
+      "slug": "template-js-vs-layout-navigation",
+      "question": "В чём основное отличие поведения `template.js` от `layout.js` при навигации?",
+      "answer": "- Layouts сохраняются между маршрутами и поддерживают состояние\n- Templates перемонтируются при каждой навигации и сбрасывают состояние",
+      "difficulty": "interview",
+      "tags": ["template.js"]
+    },
+    {
+      "id": "nextjs-template-js-state-reset-benefits",
+      "slug": "template-js-state-reset-benefits",
+      "question": "Какие преимущества даёт использование `template.js` для сброса состояния?",
+      "answer": "- Автоматический сброс состояния всех `Client Components` внутри template\n- Перезапуск `use`Effect при навигации\n- Полное пересоздание DOM элементов",
+      "difficulty": "interview",
+      "tags": ["template.js"]
+    },
+    {
+      "id": "nextjs-template-js-suspense",
+      "slug": "template-js-suspense",
+      "question": "Как `template.js` влияет на поведение `Suspense` boundaries?",
+      "answer": "- `Suspense` boundaries внутри layouts показывают `fallback` только при первой загрузке\n- `Suspense` boundaries внутри templates показывают `fallback` при каждой навигации",
+      "difficulty": "interview",
+      "tags": ["template.js"]
+    },
+    {
+      "id": "nextjs-template-js-unique-key",
+      "slug": "template-js-unique-key",
+      "question": "Что означает \"уникальный ключ\" для `template.js`?",
+      "answer": "- Next.js автоматически присваивает template уникальный ключ на основе параметров маршрута\n- Это заставляет React перемонтировать компонент при изменении ключа",
+      "difficulty": "interview",
+      "tags": ["template.js"]
+    },
+    {
+      "id": "nextjs-template-js-client-component",
+      "slug": "template-js-client-component",
+      "question": "Можно ли сделать `template.js` клиентским компонентом?",
+      "answer": "Да, можно добавить директиву '`use client`' в начало файла",
+      "difficulty": "interview",
+      "tags": ["template.js"]
+    },
+    {
+      "id": "nextjs-template-js-dom-navigation",
+      "slug": "template-js-dom-navigation",
+      "question": "Как `template.js` влияет на DOM элементы при навигации?",
+      "answer": "DOM элементы внутри template полностью пересоздаются при навигации",
+      "difficulty": "interview",
+      "tags": ["template.js"]
+    },
+    {
+      "id": "nextjs-template-js-when-to-use",
+      "slug": "template-js-when-to-use",
+      "question": "В каких случаях стоит использовать `template.js` вместо `layout.js`?",
+      "answer": "- Когда нужно сбрасывать состояние форм при навигации\n- Когда нужно перезапускать `use`Effect при каждой навигации\n- Когда нужно изменить поведение `Suspense` boundaries",
+      "difficulty": "interview",
+      "tags": ["template.js"]
+    },
+    {
+      "id": "nextjs-template-js-use-effect",
+      "slug": "template-js-use-effect",
+      "question": "Что происходит с `use`Effect в `Client Components` внутри `template.js` при навигации?",
+      "answer": "`use`Effect перезапускается, так как компонент перемонтируется",
+      "difficulty": "interview",
+      "tags": ["template.js"]
+    },
+    {
+      "id": "nextjs-template-js-server-components",
+      "slug": "template-js-server-components",
+      "question": "Как `template.js` работает с `Server Components`?",
+      "answer": "- По умолчанию `template.js` является Server Component\n- Может содержать `Server Components` внутри себя",
+      "difficulty": "interview",
+      "tags": ["template.js"]
+    },
+    {
+      "id": "nextjs-template-js-with-layout",
+      "slug": "template-js-with-layout",
+      "question": "Можно ли использовать `template.js` и `layout.js` одновременно в одном сегменте?",
+      "answer": "Да, `template.js` рендерится между layout и его дочерними элементами",
+      "difficulty": "interview",
+      "tags": ["template.js"]
+    },
+    {
+      "id": "nextjs-template-js-form-state",
+      "slug": "template-js-form-state",
+      "question": "Что происходит с состоянием формы в `template.js` при навигации?",
+      "answer": "Состояние формы полностью сбрасывается при навигации",
+      "difficulty": "interview",
+      "tags": ["template.js"]
+    },
+    {
+      "id": "nextjs-template-js-performance",
+      "slug": "template-js-performance",
+      "question": "Как `template.js` влияет на производительность приложения?",
+      "answer": "- Может снижать производительность из-за постоянного перемонтирования компонентов\n- Увеличивает количество рендеров при навигации",
+      "difficulty": "interview",
+      "tags": ["template.js"]
+    },
+    {
+      "id": "nextjs-template-js-limitations",
+      "slug": "template-js-limitations",
+      "question": "Какие ограничения есть у `template.js` по сравнению с `layout.js`?",
+      "answer": "- Постоянное перемонтирование может быть нежелательным для производительности\n- Не подходит для компонентов, которые должны сохранять состояние между навигациями",
+      "difficulty": "interview",
+      "tags": ["template.js"]
+    },
+    {
+      "id": "nextjs-rendering-types",
+      "slug": "rendering-types",
+      "question": "какие существуют виды рендеринга в next.js?",
+      "answer": "- SSG (Static Site Generation)\n- SSR (Server-Side Rendering)\n- CSR (Client-Side Rendering)\n- ISR (Incremental Static Regeneration)\n- PPR (Partial Prerendering)",
+      "difficulty": "interview",
+      "tags": ["Рендеринг"]
+    },
+    {
+      "id": "nextjs-rendering-ssg-process",
+      "slug": "rendering-ssg-process",
+      "question": "Как происходит полный процесс отображения интерфейса при SSG от начало до конца?",
+      "answer": "- Билд (сервер): выполняются серверные компоненты и функции generateStaticParams.\n- Билд (сервер): формируется HTML и RSC payload (данные для React Server Components), сохраняются в .next → деплой на CDN.\n- Запрос пользователя (сервер/CDN): отдаётся готовый HTML + JS-бандлы.\n- Загрузка в браузере (клиент): браузер получает HTML и бандлы.\n- Гидратация (клиент): React связывает HTML с интерактивными клиентскими компонентами; гидратируются только клиентские компоненты (серверные не гидратируются).\n- Все пользователи получают один и тот же статический результат до следующего билда.",
+      "difficulty": "interview",
+      "tags": ["Рендеринг"]
+    },
+    {
+      "id": "nextjs-rendering-ssr-process",
+      "slug": "rendering-ssr-process",
+      "question": "Как происходит полный процесс отображения интерфейса при SSR от начало до конца?",
+      "answer": "- Запрос пользователя (клиент): пользователь открывает страницу /page.\n- Запрос на сервер (сервер): сервер вызывает серверные компоненты, выполняет fetch с cache: \"no-store\" или revalidate: 0.\n- Рендеринг (сервер): React рендерит RSC дерево → формирует HTML-поток и RSC Flight payload.\n- Ответ пользователю (сервер → клиент): сервер отправляет HTML и RSC Flight payload клиенту (streaming по мере готовности).\n- Гидратация (клиент): React связывает HTML с интерактивными клиентскими компонентами; гидратируются только клиентские компоненты.\n- Повторяется при каждом запросе (сервер): новые данные пересоздаются на сервере.",
+      "difficulty": "interview",
+      "tags": ["Рендеринг"]
+    },
+    {
+      "id": "nextjs-rendering-csr-process",
+      "slug": "rendering-csr-process",
+      "question": "Как происходит полный процесс отображения интерфейса при CSR от начало до конца?",
+      "answer": "- Запрос пользователя (клиент): браузер запрашивает страницу.\n- Ответ сервера (сервер): сервер/CDN отдает минимальный HTML с корневым контейнером (<div id=\"root\">) или server-rendered shell (в Next.js), и JS-бандл.\n- Загрузка JS (клиент): браузер загружает JS-бандлы.\n- Запрос данных (клиент): React выполняет fetch для динамических данных.\n- Отрисовка DOM (клиент): React строит DOM в браузере.\n- Переходы между страницами (клиент): роутинг выполняется на клиенте без участия сервера; `next/link` может префетчить ресурсы.",
+      "difficulty": "interview",
+      "tags": ["Рендеринг"]
+    },
+    {
+      "id": "nextjs-rendering-isr-process",
+      "slug": "rendering-isr-process",
+      "question": "Как происходит полный процесс отображения интерфейса при ISR от начало до конца?",
+      "answer": "- Билд (сервер): создаются статические HTML-файлы, как в SSG.\n- Запрос пользователя (сервер/CDN): отдаётся кешированная версия HTML.\n- Фоновая пересборка (сервер): если истекло время revalidate или пришёл on-demand revalidation (webhook/API), Next.js асинхронно генерирует новую страницу.\n- Пользователь получает старую версию (сервер/CDN → клиент): до завершения пересборки (stale-while-revalidate).\n- Замена на новую версию (сервер/CDN): после завершения пересборки.\n- Следующие запросы (сервер/CDN): пользователи получают обновленный HTML.\n- Гидратация (клиент): React связывает HTML с интерактивными компонентами.",
+      "difficulty": "interview",
+      "tags": ["Рендеринг"]
+    },
+    {
+      "id": "nextjs-rendering-ppr-process",
+      "slug": "rendering-ppr-process",
+      "question": "Как происходит полный процесс отображения интерфейса при PPR от начало до конца?",
+      "answer": "- Билд (сервер): предрендеринг статической части страницы (layout, header, footer).\n- Маркировка динамических частей (сервер): динамические компоненты остаются как placeholder.\n- Запрос пользователя (сервер/CDN → клиент): отдается HTML shell.\n- Фоновый рендеринг динамических частей (сервер): сервер рендерит динамические компоненты и отправляет поток HTML и RSC чанков (streaming).\n- Постепенная отрисовка (клиент): браузер вставляет динамические части по мере их получения.\n- Гидратация (клиент): React связывает DOM с интерактивностью клиентских компонентов внутри динамических частей (серверные компоненты не гидратируются).",
+      "difficulty": "interview",
+      "tags": ["Рендеринг"]
+    },
+    {
+      "id": "nextjs-rendering-when-to-use",
+      "slug": "rendering-when-to-use",
+      "question": "Когда какой тип рендеринга использовать?",
+      "answer": "- SSG: статические страницы с редкими изменениями, критичный SEO и быстрый TTFB (лендинги, блог, статичные разделы). Данные одинаковы для всех пользователей.\n- ISR: как SSG, но с периодическими обновлениями без полного билда (каталоги, страницы товара, новости). Подходит при больших объёмах страниц и on-demand публикациях.\n- SSR: персонализация/сессия, часто меняющиеся данные, запрет кэширования, строгие требования к SEO на «свежих» данных (аккаунт, корзина, paywall, гео/локализация).\n- CSR: пост-логин интерфейсы, админки, дашборды, когда SEO не важен/закрыт, максимум интерактивности на клиенте, офлайн/SPA-поведение.\n- PPR: страницы с стабильным статическим каркасом и тяжёлыми динамическими виджетами; нужен быстрый TTFB (shell) и постепенная подгрузка динамики через streaming/RSC.",
+      "difficulty": "interview",
+      "tags": ["Рендеринг"]
+    },
+    {
+      "id": "nextjs-rendering-implementation",
+      "slug": "rendering-implementation",
+      "question": "Как реализовать каждый тип рендеринга? (App Router, Next.js 15+)",
+      "answer": "- SSG: в `app/` по умолчанию статично; используйте `export const dynamic = 'force-static'` при необходимости; `export const revalidate = false`; `generateStaticParams` для динамических сегментов; `fetch` без `no-store`.\n- ISR: `export const revalidate = <SECONDS>` в странице/сегменте; избегайте `cache: 'no-store'`; on-demand через `revalidatePath('/path')`/`revalidateTag('tag')` в серверных действий (Server Actions) или маршрутах.\n- SSR: `export const dynamic = 'force-dynamic'` или `fetch(..., { cache: 'no-store' })`/`{ next: { revalidate: 0 } }`; чтение `cookies()/headers()` делает сегмент динамическим; результат стримится RSC/HTML.\n- CSR: компоненты с `'use client'`, фетчи в браузере (`useEffect`/`use`) или `next/dynamic(..., { ssr: false })` для отдельных виджетов; навигация `next/link`/`useRouter`.\n- PPR: статичный shell (layout, header, footer) + динамические секции под `Suspense`; серверные компоненты стримятся как RSC чанки; при необходимости комбинируйте с ISR/SSR на уровне поддеревьев.",
+      "difficulty": "interview",
+      "tags": ["Рендеринг"]
+    },
+    {
+      "id": "nextjs-runtime-environments",
+      "slug": "runtime-environments",
+      "question": "в какой среде может работать next.js?",
+      "answer": "Node.js и Edge Runtime (изоляторы на базе V8, напр. Vercel Edge). Также поддерживаются serverless-провайдеры.",
+      "difficulty": "interview",
+      "tags": ["Runtime"]
+    },
+    {
+      "id": "nextjs-runtime-edge-vs-nodejs",
+      "slug": "runtime-edge-vs-nodejs",
+      "question": "В чем отличие edge от node js?",
+      "answer": "Edge: быстрые холодные старты, ограничения API (нет полноценного fs, ограниченные модули Node), короткое время выполнения, ориентирован на стриминг и низкую задержку ближе к пользователю. Node: полная среда Node API, доступ к файловой системе/модулям, более длительные задачи, традиционные серверы/серверлесс функции.",
+      "difficulty": "interview",
+      "tags": ["Runtime"]
+    },
+    {
+      "id": "nextjs-optimization-high-traffic",
+      "slug": "optimization-high-traffic",
+      "question": "как оптимизировать сервер next.js приложения для ситуаций когда сайтом в день пользуются 10000 юзеров и сервер не выдерживает",
+      "answer": "- Включить SSG/ISR для кэшируемых страниц, снизив долю SSR.\n- Вынести тяжёлые запросы в CDN/edge кэш, использовать `Cache-Control`, `revalidate`.\n- Использовать PPR/стриминг для ускорения TTFB и инкрементальной отрисовки.\n- Оптимизировать БД: индексы, connection pooling, дедупликация fetch (Next.js Request Memoization), очереди.\n- Включить CDN для статических ассетов и изображений (`next/image`).\n- Горизонтально масштабировать (автоскейлинг), использовать serverless/edge где уместно.\n- Профилировать и убирать блокирующие операции, уменьшить бандлы, внедрить RUM/метрики.",
+      "difficulty": "interview",
+      "tags": ["Оптимизация"]
+    }
+  ]
+}

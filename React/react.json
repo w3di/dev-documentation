@@ -1,0 +1,769 @@
+{
+  "section": {
+    "id": "react",
+    "name": "React",
+    "slug": "react"
+  },
+  "questions": [
+    {
+      "id": "react-vdom",
+      "slug": "virtual-dom",
+      "question": "Что такое Virtual DOM в React и зачем он нужен?",
+      "answer": "Virtual DOM - это абстрактное представление UI в виде дерева обычных JavaScript-объектов, которые отражают структуру реального DOM. React использует его, чтобы оптимизировать и контролировать обновления интерфейса.",
+      "difficulty": "interview",
+      "tags": ["Virtual DOM и Reconciliation"]
+    },
+    {
+      "id": "react-vdom-process",
+      "slug": "vdom-process",
+      "question": "Как работает Virtual DOM в React — от создания до обновления реального DOM?",
+      "answer": "- Компонент возвращает JSX которое затем превращается в дерево Virtual DOM\n- При изменении состояния или пропсов React создаёт новое дерево VDOM\n- React сравнивает новое и старое дерево (алгоритм diff)\n- Вычисляется минимальный набор изменений (patch)\n- Реальный DOM обновляется точечно, на основе diff-а",
+      "difficulty": "interview",
+      "tags": ["Virtual DOM и Reconciliation"]
+    },
+    {
+      "id": "react-vdom-triggers",
+      "slug": "vdom-triggers",
+      "question": "Какие события в React приводят к пересозданию/обновлению Virtual DOM?",
+      "answer": "- Изменение props компонента\n- Изменение реактивных состояния\n- Изменении контекста",
+      "difficulty": "interview",
+      "tags": ["Virtual DOM и Reconciliation"]
+    },
+    {
+      "id": "react-vdom-memory",
+      "slug": "vdom-memory",
+      "question": "Где выполняется Virtual DOM в React (в какой среде/памяти)?",
+      "answer": "Virtual DOM работает в памяти JavaScript-движка, то есть в оперативной памяти (RAM) браузера, внутри JavaScript-окружения",
+      "difficulty": "interview",
+      "tags": ["Virtual DOM и Reconciliation"]
+    },
+    {
+      "id": "react-vdom-structure",
+      "slug": "vdom-structure",
+      "question": "Из каких структур данных состоит Virtual DOM в React?",
+      "answer": "Virtual DOM состоит из JavaScript-объектов, каждый из которых представляет один UI-элемент (аналог узла DOM)",
+      "difficulty": "interview",
+      "tags": ["Virtual DOM и Reconciliation"]
+    },
+    {
+      "id": "react-vdom-efficiency",
+      "slug": "vdom-efficiency",
+      "question": "Почему Virtual DOM эффективнее прямых манипуляций с DOM?",
+      "answer": "- Прямые манипуляции с DOM вызывают дорогостоящие затраты браузера на layout/repaint\n- Virtual DOM работает с UI в памяти\n- Обновления происходят в памяти, что позволяет вычислять минимальный набор изменений (diffing) и применять их пакетно, снижая количество дорогостоящих операций с реальным DOM",
+      "difficulty": "interview",
+      "tags": ["Virtual DOM и Reconciliation"]
+    },
+    {
+      "id": "react-diffing",
+      "slug": "diffing",
+      "question": "Как работает алгоритм diffing в React при сравнении изменений в Virtual DOM и какова его сложность?",
+      "answer": "- React использует эффективный алгоритм diffing с линейной сложностью O(n)\n- Сравнивает элементы сверху вниз и слева направо\n- Если у элементов разный type, React полностью заменяет соответствующее поддерево\n- Если type совпадает, React сравнивает props и рекурсивно переходит к сравнению детей\n- При сравнении детей React ориентируется на позицию элементов и key",
+      "difficulty": "interview",
+      "tags": ["Virtual DOM и Reconciliation"]
+    },
+    {
+      "id": "react-keys",
+      "slug": "keys",
+      "question": "Что такое ключи (key) в React и как они влияют на сравнение элементов в списках?",
+      "answer": "- Ключи (key) — это стабильные идентификаторы для элементов при повторном рендере, с ключами React сравнивает элементы по идентификаторам и может переиспользовать их вместо удаления и создания\n- Без ключей React сравнивает элементы по их позиции (индексу) в массиве, что может приводить не только к лишним обновлениям, но и к потере состояния компонентов",
+      "difficulty": "interview",
+      "tags": ["Virtual DOM и Reconciliation"]
+    },
+    {
+      "id": "react-keys-duplicates",
+      "slug": "keys-duplicates",
+      "question": "Как подбирать key при наличии дублирующихся данных и отсутствии уникальных идентификаторов?",
+      "answer": "1. Для статичных списков можно использовать индекс\n2. Для динамических списков создавать уникальный ключ через комбинацию данных и индекса",
+      "difficulty": "interview",
+      "tags": ["Virtual DOM и Reconciliation"]
+    },
+    {
+      "id": "react-fiber",
+      "slug": "fiber",
+      "question": "Что такое архитектура React Fiber и чем она отличается от прежнего Stack Reconciler?",
+      "answer": "React Fiber - это архитектура React, которая превращает дерево компонентов в связанные узлы:\n- Прерываемость\n- Приоритезация\n- Инкрементальный рендеринг",
+      "difficulty": "interview",
+      "tags": ["Fiber Architecture"]
+    },
+    {
+      "id": "react-stack-reconciler-drawbacks",
+      "slug": "stack-reconciler-drawbacks",
+      "question": "В чём недостатки старого синхронного reconciler'а по сравнению с React Fiber?",
+      "answer": "- Синхронный\n- Отсутствие приоритезации обновлений\n- Нельзя было прервать, отложить или отменить рендеринг, что негативно влияло на отзывчивость интерфейса\n- Отсутствие инкрементального (пошагового) рендеринга",
+      "difficulty": "interview",
+      "tags": ["Fiber Architecture"]
+    },
+    {
+      "id": "react-fiber-linked-list",
+      "slug": "fiber-linked-list",
+      "question": "Почему React Fiber использует связный список для обхода дерева, а не рекурсию?",
+      "answer": "Связный список позволяет React:\n- Выполнять обход дерева итеративно, без глубокого рекурсивного стека\n- Прерывать и возобновлять рендеринг\n- Управлять приоритетами задач и планировать работу по частям\nРекурсия же требует полного прохода и не позволяет прерывать работу посередине",
+      "difficulty": "interview",
+      "tags": ["Fiber Architecture"]
+    },
+    {
+      "id": "react-fiber-traversal",
+      "slug": "fiber-traversal",
+      "question": "Как используется связный список узлов в React Fiber для обхода дерева?",
+      "answer": "Это структура из объектов FiberNode, где каждый узел содержит ссылки:\n- child — на первого потомка\n- sibling — на следующего брата (соседа)\n- return — на родителя\nТак можно пройти всё дерево последовательно, обходя без рекурсии",
+      "difficulty": "interview",
+      "tags": ["Fiber Architecture"]
+    },
+    {
+      "id": "react-fiber-node",
+      "slug": "fiber-node",
+      "question": "Что такое FiberNode в React и как он устроен?",
+      "answer": "FiberNode — это объект, представляющий один узел дерева Fiber. Он содержит всю информацию, необходимую React для управления рендерингом и обновлением конкретного UI-элемента",
+      "difficulty": "interview",
+      "tags": ["Fiber Architecture"]
+    },
+    {
+      "id": "react-fiber-node-fields",
+      "slug": "fiber-node-fields",
+      "question": "Какие ключевые поля содержит объект FiberNode и что каждое из них означает?",
+      "answer": "- stateNode — ссылка на реальный инстанс (DOM-элемент, экземпляр класса, или null для функциональных компонентов)\n- return — ссылка на родительский FiberNode\n- child — ссылка на первый дочерний FiberNode\n- sibling — ссылка на следующий соседний FiberNode\n- flags — битовая маска, указывающая, какие операции нужно выполнить с этим узлом",
+      "difficulty": "interview",
+      "tags": ["Fiber Architecture"]
+    },
+    {
+      "id": "react-fiber-traversal-fields",
+      "slug": "fiber-traversal-fields",
+      "question": "Как поля return, child и sibling в FiberNode обеспечивают безрекурсивный обход дерева Fiber?",
+      "answer": "- child позволяет спуститься вниз по дереву\n- sibling — перейти к соседнему узлу на том же уровне\n- return — подняться вверх к родителю после обхода всех детей\nВместе они реализуют итеративный обход дерева, заменяющий рекурсию",
+      "difficulty": "interview",
+      "tags": ["Fiber Architecture"]
+    },
+    {
+      "id": "react-fiber-flags",
+      "slug": "fiber-flags",
+      "question": "Какие бывают типы флагов (flags) в FiberNode и какие операции они обозначают?",
+      "answer": "flags — это битовая маска, которая сообщает React, какие действия нужно выполнить над узлом на этапе commit:\n- Placement — вставить в DOM\n- Update — обновить props или DOM-атрибуты\n- Deletion — удалить из DOM\n- ChildDeletion — удалить потомков\n- Ref — обновить ref\n- Passive — выполнить эффекты useEffect",
+      "difficulty": "interview",
+      "tags": ["Fiber Architecture"]
+    },
+    {
+      "id": "react-double-buffering",
+      "slug": "double-buffering",
+      "question": "Что такое двойная буферизация (double buffering) в React Fiber и зачем она нужна?",
+      "answer": "Двойная буферизация в Fiber — это хранение двух деревьев (current и working) для безопасного обновления UI без блокировок: изменения делают в рабочем дереве, а после завершения заменяют текущее",
+      "difficulty": "interview",
+      "tags": ["Fiber Architecture"]
+    },
+    {
+      "id": "react-work-loop",
+      "slug": "work-loop",
+      "question": "Что такое work loop в React Fiber и как он организует процесс рендеринга?",
+      "answer": "Work loop в React Fiber — это основной цикл, в котором React пошагово обходит дерево Fiber, создаёт/обновляет FiberNode'ы и готовит дерево к коммиту. Он лежит в основе инкрементального, прерываемого рендеринга",
+      "difficulty": "interview",
+      "tags": ["Fiber Render Process"]
+    },
+    {
+      "id": "react-fiber-interrupt-resume",
+      "slug": "fiber-interrupt-resume",
+      "question": "Как связный список в React Fiber позволяет прерывать и возобновлять рендеринг?",
+      "answer": "Обход дерева — это итеративный процесс с явным хранением текущей позиции, это позволяет просто сохранить состояние обхода (текущий узел), остановить цикл и освободить основной поток для других задач, при следующем вызове React продолжит обход с сохранённого узла",
+      "difficulty": "interview",
+      "tags": ["Fiber Render Process"]
+    },
+    {
+      "id": "react-update-cycle",
+      "slug": "update-cycle",
+      "question": "Как обновляется UI в React Fiber: полный цикл от setState до отрисовки?",
+      "answer": "1. Инициирование обновления — создаётся объект обновления\n2. Приоритезация через систему Lanes\n3. Планирование задачи (Scheduler)\n4. Render-фаза (Reconciliation) — прерываема и инкрементальна\n5. Завершение render-фазы — формируется список эффектов\n6. Commit-фаза (синхронная, непрерываемая) — cleanup эффектов, mutation DOM, useLayoutEffect, useEffect\n7. Рабочее дерево становится текущим",
+      "difficulty": "interview",
+      "tags": ["Fiber Render Process"]
+    },
+    {
+      "id": "react-fiber-phases",
+      "slug": "fiber-phases",
+      "question": "Какие фазы включает процесс обновления в React Fiber?",
+      "answer": "- Reconciliation (render фаза) — прерываемая и инкрементальная\n- Commit фаза — синхронная и непрерываемая",
+      "difficulty": "interview",
+      "tags": ["Fiber Render Process"]
+    },
+    {
+      "id": "react-render-phase",
+      "slug": "render-phase",
+      "question": "Что происходит в React в фазе Render (reconciliation)?",
+      "answer": "- Создаётся новое дерево work-in-progress на основе текущего\n- React обходит дерево итеративно (work loop), создаёт новые или обновляет существующие FiberNode'ы, собирает список эффектов\n- После обхода дерева React формирует полный список эффектов для commit-фазы\n- Фаза может быть прервана и возобновлена",
+      "difficulty": "interview",
+      "tags": ["Fiber Render Process"]
+    },
+    {
+      "id": "react-commit-phase",
+      "slug": "commit-phase",
+      "question": "Что происходит в React в фазе Commit?",
+      "answer": "- Фаза размонтирования эффектов (cleanup useLayoutEffect, затем useEffect)\n- Mutation этап — React применяет изменения в DOM: удаление, вставка, обновление\n- Выполняются функции useLayoutEffect\n- Выполняются функции useEffect\n- Commit-фаза не прерывается, чтобы гарантировать консистентность DOM",
+      "difficulty": "interview",
+      "tags": ["Fiber Render Process"]
+    },
+    {
+      "id": "react-effect-list",
+      "slug": "effect-list",
+      "question": "Что такое Effect List в React Fiber и для чего он используется?",
+      "answer": "- В React 18/19 явный Effect List больше не используется\n- Теперь React помечает изменения через flags и subtreeFlags в каждом FiberNode\n- Во время commit-фазы React делает DFS обход дерева и выполняет эффекты только у узлов с помеченными флагами\n- Такой подход поддерживает concurrent rendering и прерываемый render",
+      "difficulty": "interview",
+      "tags": ["Fiber Render Process"]
+    },
+    {
+      "id": "react-lanes",
+      "slug": "lanes",
+      "question": "Как работает система приоритетов в React Fiber и как она влияет на рендеринг?",
+      "answer": "- Каждое обновление получает приоритет через механизм Lanes\n- React сначала обрабатывает более приоритетные задачи (например, ввод), менее важные — откладывает",
+      "difficulty": "interview",
+      "tags": ["Priority System and Scheduling"]
+    },
+    {
+      "id": "react-lane-model",
+      "slug": "lane-model",
+      "question": "Что такое модель приоритетов Lane в React и как она работает?",
+      "answer": "Lane-модель — система приоритизации обновлений в React Fiber, где каждое обновление относится к одной или нескольким lanes — 32-битовым флагам разного приоритета. Один FiberNode может иметь несколько обновлений с разными lanes, и React объединяет их по приоритету",
+      "difficulty": "interview",
+      "tags": ["Priority System and Scheduling"]
+    },
+    {
+      "id": "react-lane-types",
+      "slug": "lane-types",
+      "question": "Какие типы (lanes) существуют (SyncLane, InputContinuousLane, DefaultLane и др.)?",
+      "answer": "- SyncLane — максимальный приоритет, обновления должны выполниться сразу (например, flushSync)\n- InputContinuousLane — приоритет интерактивного ввода, чтобы UI был отзывчивым\n- DefaultLane — обычные фоновые обновления",
+      "difficulty": "interview",
+      "tags": ["Priority System and Scheduling"]
+    },
+    {
+      "id": "react-scheduler",
+      "slug": "scheduler",
+      "question": "Что такое Scheduler в React и за что он отвечает?",
+      "answer": "Это планировщик задач React, который решает, когда и с каким приоритетом запускать работу по обновлению UI. Он координирует выполнение render-фазы, позволяя прерывать низкоприоритетные задачи ради более важных",
+      "difficulty": "interview",
+      "tags": ["Priority System and Scheduling"]
+    },
+    {
+      "id": "react-flush-sync",
+      "slug": "flush-sync",
+      "question": "Что делает flushSync и как он обходит приоритезацию?",
+      "answer": "flushSync — функция, которая запускает обновление синхронно, игнорируя систему приоритетов и асинхронность Scheduler. Она принудительно выполняет render и commit сразу",
+      "difficulty": "interview",
+      "tags": ["Priority System and Scheduling"]
+    },
+    {
+      "id": "react-concurrent",
+      "slug": "concurrent",
+      "question": "Что такое конкурентный рендеринг (Concurrent Features) в React и чем он отличается от синхронного?",
+      "answer": "Concurrent Mode — новый способ работы React с рендерингом, при котором React не блокирует основной поток на долгое время, а разбивает работу на небольшие части (инкрементальный рендеринг). Для использования нужны concurrent API: startTransition, Suspense, createRoot",
+      "difficulty": "interview",
+      "tags": ["Priority System and Scheduling"]
+    },
+    {
+      "id": "react-time-slicing",
+      "slug": "time-slicing",
+      "question": "Что такое time slicing в React и зачем он нужен?",
+      "answer": "Механизм в React Fiber, который разбивает работу по рендерингу на небольшие части. React выполняет их по очереди, прерываясь по тайм-ауту, чтобы дать браузеру возможность обрабатывать пользовательские события",
+      "difficulty": "interview",
+      "tags": ["Priority System and Scheduling"]
+    },
+    {
+      "id": "react-suspense-interrupt",
+      "slug": "suspense-interrupt",
+      "question": "Как React Suspense использует механизм прерывания рендера?",
+      "answer": "Suspense позволяет React прервать рендеринг компонента, если он «зависает» на асинхронной операции. React отменяет текущую работу по рендеру, показывает fallback UI, а затем возобновляет рендеринг, когда асинхронная операция завершена",
+      "difficulty": "interview",
+      "tags": ["Priority System and Scheduling", "Suspense"]
+    },
+    {
+      "id": "react-initial-render",
+      "slug": "initial-render",
+      "question": "Что такое initial render в React и чем он отличается от обычного render?",
+      "answer": "- Initial render — первый рендер компонента: создаёт DOM, вставляет его, выполняет mount-эффекты\n- Обычный render происходит при изменении props или state: React пересчитывает JSX, сравнивает его с текущим деревом и вносит только нужные изменения в DOM",
+      "difficulty": "interview",
+      "tags": ["Initial Render и Hydration"]
+    },
+    {
+      "id": "react-hydration",
+      "slug": "hydration",
+      "question": "Что такое hydration и чем она отличается от initial render?",
+      "answer": "- Hydration — процесс, при котором React подключает JavaScript-логику к уже существующему HTML, сгенерированному на сервере (SSR или RSC)\n- Initial render создаёт DOM с нуля, а hydration использует уже существующий HTML и лишь прикрепляет к нему реактовскую логику без пересоздания DOM",
+      "difficulty": "interview",
+      "tags": ["Initial Render и Hydration"]
+    },
+    {
+      "id": "react-hydration-process",
+      "slug": "hydration-process",
+      "question": "Как в React работает гидратация (hydration) после серверного рендеринга (SSR)?",
+      "answer": "1. Сервер рендерит HTML и отправляет готовую страницу\n2. Браузер сразу показывает HTML\n3. Когда JS-бандлы загрузились, React запускает гидратацию: создаёт Fiber-дерево, сверяет структуру с HTML, навешивает обработчики событий\n4. React не перерисовывает DOM, если всё совпадает\n5. При несовпадении — hydration mismatch и React может перерисовать узел",
+      "difficulty": "interview",
+      "tags": ["Initial Render и Hydration"]
+    },
+    {
+      "id": "react-hydration-mismatch",
+      "slug": "hydration-mismatch",
+      "question": "Что такое hydration mismatch в React и как его избежать?",
+      "answer": "Hydration mismatch — ситуация, когда серверный HTML не совпадает с клиентским рендером.\nКак избежать:\n- Не использовать Math.random(), Date.now() на сервере\n- Избегать browser-only API (window, document)\n- Условия, зависящие от клиента, переносить в useEffect\n- Использовать useEffect, а не useLayoutEffect для client-only логики",
+      "difficulty": "interview",
+      "tags": ["Initial Render и Hydration"]
+    },
+    {
+      "id": "react-streaming-hydration",
+      "slug": "streaming-hydration",
+      "question": "Что такое Streaming hydration и selective hydration в React?",
+      "answer": "- Streaming hydration — сервер отправляет HTML потоком, React гидратирует его по мере поступления\n- Selective hydration — React гидратирует не всё дерево сразу, а отдельные части в зависимости от приоритетов: взаимодействие пользователя, видимость во viewport, приоритет в scheduler",
+      "difficulty": "interview",
+      "tags": ["Initial Render и Hydration"]
+    },
+    {
+      "id": "react-create-root",
+      "slug": "create-root",
+      "question": "Что такое createRoot, hydrateRoot и legacy ReactDOM.render?",
+      "answer": "1. createRoot — создаёт корень для React 18+, поддерживает Concurrent Mode\n2. hydrateRoot — вариант для гидратации серверного HTML (SSR)\n3. ReactDOM.render — устаревший метод, не поддерживает Concurrent Mode",
+      "difficulty": "interview",
+      "tags": ["Initial Render и Hydration"]
+    },
+    {
+      "id": "react-rsc",
+      "slug": "rsc",
+      "question": "Что такое React Server Components и чем они отличаются от клиентских?",
+      "answer": "React Server Components — компоненты, которые рендерятся на сервере. Они не попадают в клиентский бандл, не запускают JavaScript в браузере. RSC не имеют состояния, эффектов, event listeners. Клиент получает серверный payload (RSC payload), а не HTML",
+      "difficulty": "interview",
+      "tags": ["React Server Components"]
+    },
+    {
+      "id": "react-rsc-bundle",
+      "slug": "rsc-bundle",
+      "question": "Как React Server Components уменьшают размер клиентского бандла?",
+      "answer": "Server Components не включаются в клиентский бандл JavaScript — они полностью рендерятся на сервере и передают клиенту уже готовый HTML",
+      "difficulty": "interview",
+      "tags": ["React Server Components"]
+    },
+    {
+      "id": "react-rsc-payload",
+      "slug": "rsc-payload",
+      "question": "Что такое React Server Components payload?",
+      "answer": "RSC payload — сериализованные структурированные данные дерева серверных компонентов с их пропсами и состоянием, которые сервер отправляет клиенту. На клиенте этот payload используется React для построения виртуального дерева FiberNodes",
+      "difficulty": "interview",
+      "tags": ["React Server Components"]
+    },
+    {
+      "id": "react-use-client",
+      "slug": "use-client",
+      "question": "Что означает директива `use client` в React?",
+      "answer": "`use client` — пометка в начале файла, делающая компонент клиентским: он попадает в бандл, рендерится в браузере и может использовать хуки, эффекты и DOM",
+      "difficulty": "interview",
+      "tags": ["React Server Components"]
+    },
+    {
+      "id": "react-use-server",
+      "slug": "use-server",
+      "question": "Что означает директива `use server` в React?",
+      "answer": "`use server` — пометка для функции, делающая её Server Action: вызовы сериализуются и выполняются только на сервере",
+      "difficulty": "interview",
+      "tags": ["React Server Components"]
+    },
+    {
+      "id": "react-server-actions",
+      "slug": "server-actions",
+      "question": "Что такое серверные функции (Server Actions) в React?",
+      "answer": "Серверные функции (Server Actions) — это функции, которые выполняются на сервере, даже если они вызываются из клиентских компонентов. Позволяют выполнять серверную логику без переноса кода на клиент",
+      "difficulty": "interview",
+      "tags": ["React Server Components"]
+    },
+    {
+      "id": "react-cache",
+      "slug": "cache",
+      "question": "Что такое cache в React и когда его использовать?",
+      "answer": "`cache` — функция для Server Components, создающая мемоизированную версию асинхронной функции. Позволяет кэшировать результаты по аргументам. Используется для запросов к API, БД или тяжёлых вычислений",
+      "difficulty": "interview",
+      "tags": ["React Server Components"]
+    },
+    {
+      "id": "react-rsc-capabilities",
+      "slug": "rsc-capabilities",
+      "question": "Что можно делать в React Server Components, чего нельзя в клиентских?",
+      "answer": "Доступ к БД, файловой системе, секретам, серверным API, выполнение тяжёлых вычислений без отправки кода в браузер, использовать серверные зависимости (fs, pg, bcrypt)",
+      "difficulty": "interview",
+      "tags": ["React Server Components"]
+    },
+    {
+      "id": "react-streaming-ssr",
+      "slug": "streaming-ssr",
+      "question": "Что такое Streaming SSR в React и как он работает?",
+      "answer": "Streaming SSR — возможность React отдавать HTML по мере готовности дерева. Работает через renderToPipeableStream (Node.js) или renderToReadableStream (Edge/Cloud). Streaming SSR + Suspense позволяют отдавать HTML чанками и показывать fallback-и",
+      "difficulty": "interview",
+      "tags": ["React Server Components"]
+    },
+    {
+      "id": "react-suspense-data",
+      "slug": "suspense-data",
+      "question": "Как работает Suspense для данных в React?",
+      "answer": "Suspense приостанавливает рендер компонента, если данные ещё не готовы, бросая Promise. Пока Promise не разрешён, React отображает fallback UI. После завершения асинхронной операции рендер возобновляется с готовыми данными",
+      "difficulty": "interview",
+      "tags": ["Suspense"]
+    },
+    {
+      "id": "react-lazy",
+      "slug": "react-lazy",
+      "question": "Как работают React.lazy и Suspense для динамического импорта компонентов?",
+      "answer": "- React.lazy динамически импортирует компонент через import(), возвращая промис\n- Пока компонент загружается — Suspense показывает fallback UI\n- После загрузки компонент рендерится как обычно\n- Компонент попадает в отдельный чанковый файл, снижая размер начального JavaScript",
+      "difficulty": "interview",
+      "tags": ["Suspense"]
+    },
+    {
+      "id": "react-suspense-cascade",
+      "slug": "suspense-cascade",
+      "question": "Как ведёт себя React при вложенных Suspense и цепочках fallback (suspense cascade)?",
+      "answer": "При вложенных Suspense React строит цепочку fallback'ов: если inner Suspense переходит в состояние ожидания, показывается его fallback. Если fallback тоже вызывает suspend, React поднимается к ближайшему родительскому Suspense выше по компонентному дереву",
+      "difficulty": "interview",
+      "tags": ["Suspense"]
+    },
+    {
+      "id": "react-use-api",
+      "slug": "use-api",
+      "question": "Что такое `use()` в React и как он работает с Promise и контекстом?",
+      "answer": "- `use()` — React API для чтения значения ресурса (Promise, контекст) в теле компонента\n- Promise: приостанавливает рендер до разрешения; при ошибке срабатывает Error Boundary\n- Контекст: возвращает текущее значение, аналогично useContext, но может использоваться внутри условных операторов и циклов",
+      "difficulty": "interview",
+      "tags": ["Suspense"]
+    },
+    {
+      "id": "react-avoid-rerenders",
+      "slug": "avoid-rerenders",
+      "question": "Как React избегает лишних ререндеров?",
+      "answer": "- Virtual DOM и сравнение (reconciliation)\n- Мемоизация с React.memo\n- Хуки useMemo и useCallback\n- Контроль ключей (key) в списках",
+      "difficulty": "interview",
+      "tags": ["Performance Optimization"]
+    },
+    {
+      "id": "react-batching",
+      "slug": "batching",
+      "question": "Как работает batching обновлений состояния в React?",
+      "answer": "Batching — механизм объединения нескольких обновлений состояния в один цикл рендера. В React Automatic Batching работает со всеми асинхронными операциями. flushSync принудительно выполняет обновление синхронно, обходя Automatic Batching",
+      "difficulty": "interview",
+      "tags": ["Performance Optimization"]
+    },
+    {
+      "id": "react-memo",
+      "slug": "memo",
+      "question": "Что такое `memo` в React и как он сравнивает пропсы?",
+      "answer": "- memo позволяет пропускать повторный рендер функционального компонента, если его пропсы не изменились\n- Используется shallow comparison через Object.is\n- Ограничения: объекты, массивы и функции сравниваются по ссылке, изменения контекста игнорируются",
+      "difficulty": "interview",
+      "tags": ["Performance Optimization"]
+    },
+    {
+      "id": "react-compiler",
+      "slug": "compiler",
+      "question": "Что такое React Compiler и как он оптимизирует код?",
+      "answer": "React Compiler — инструмент, который автоматически оптимизирует React код во время компиляции. Он автоматически мемоизирует компоненты и функции, удаляет ненужные ререндеры, оптимизирует пропсы и состояния на уровне компиляции",
+      "difficulty": "interview",
+      "tags": ["Performance Optimization"]
+    },
+    {
+      "id": "react-unidirectional-flow",
+      "slug": "unidirectional-flow",
+      "question": "Как реализуется однонаправленный поток данных в React?",
+      "answer": "Данные всегда идут сверху вниз — от родительских компонентов к дочерним через props. Родитель хранит состояние и передаёт его дочерним, изменения происходят через коллбэки, переданные вниз",
+      "difficulty": "interview",
+      "tags": ["Component Patterns"]
+    },
+    {
+      "id": "react-lifting-state",
+      "slug": "lifting-state",
+      "question": "Что такое \"lifting state up\" и как его правильно использовать?",
+      "answer": "Это когда состояние, нужное нескольким компонентам, поднимается к их ближайшему общему родителю. Состояние централизуется в одном компоненте-родителе, а дочерним передаются через props и коллбэки для изменения",
+      "difficulty": "interview",
+      "tags": ["Component Patterns"]
+    },
+    {
+      "id": "react-controlled-uncontrolled",
+      "slug": "controlled-uncontrolled",
+      "question": "В чём разница между контролируемыми и неконтролируемыми компонентами?",
+      "answer": "- Контролируемые — состояние формы полностью управляется React через state и onChange. Позволяют сразу валидировать и управлять вводом\n- Неконтролируемые — состояние формы хранится в DOM, React получает доступ через ref",
+      "difficulty": "interview",
+      "tags": ["Component Patterns", "Формы"]
+    },
+    {
+      "id": "react-dangerously-set-inner-html",
+      "slug": "dangerously-set-inner-html",
+      "question": "Что такое `dangerouslySetInnerHTML` и когда его используют?",
+      "answer": "Способ вставки сырого HTML в компонент React. Требует осторожности, так как может привести к XSS-уязвимостям",
+      "difficulty": "interview",
+      "tags": ["Component Patterns"]
+    },
+    {
+      "id": "react-synthetic-event",
+      "slug": "synthetic-event",
+      "question": "Как работает система SyntheticEvent в React?",
+      "answer": "SyntheticEvent — обёртка над нативными событиями браузера для обеспечения кроссбраузерного API. Отличия: единый интерфейс, всплытие по иерархии компонентов (а не DOM), совместимость с Concurrent Mode",
+      "difficulty": "interview",
+      "tags": ["Events"]
+    },
+    {
+      "id": "react-stop-prevent",
+      "slug": "stop-prevent",
+      "question": "Как ведут себя stopPropagation и preventDefault в системе SyntheticEvent?",
+      "answer": "- stopPropagation() останавливает всплытие по React-иерархии компонентов, независимо от DOM\n- preventDefault() отменяет стандартное поведение элемента так же, как в нативном событии",
+      "difficulty": "interview",
+      "tags": ["Events"]
+    },
+    {
+      "id": "react-event-pooling",
+      "slug": "event-pooling",
+      "question": "Что такое пул событий (event pooling) и event.persist() в React?",
+      "answer": "- Event Pooling — механизм повторного использования объектов SyntheticEvent для снижения нагрузки на GC\n- После завершения обработчика все свойства события сбрасываются\n- event.persist() отключает механизм пуллинга для конкретного события, позволяя использовать его асинхронно",
+      "difficulty": "interview",
+      "tags": ["Events"]
+    },
+    {
+      "id": "react-error-boundary",
+      "slug": "error-boundary",
+      "question": "Что такое Error Boundary в React и какие ошибки он перехватывает?",
+      "answer": "Error Boundary — компонент-класс с методами static getDerivedStateFromError() и componentDidCatch(), который перехватывает ошибки во время рендера, в методах жизненного цикла и в конструкторах дочерних компонентов",
+      "difficulty": "interview",
+      "tags": ["React Features и APIs"]
+    },
+    {
+      "id": "react-fragment",
+      "slug": "fragment",
+      "question": "Как и зачем применять React.Fragment?",
+      "answer": "Позволяет сгруппировать несколько элементов без добавления лишнего DOM-узла",
+      "difficulty": "interview",
+      "tags": ["React Features и APIs"]
+    },
+    {
+      "id": "react-portals",
+      "slug": "portals",
+      "question": "Когда и как правильно использовать порталы в React?",
+      "answer": "- Используйте порталы, когда UI-элемент должен визуально выходить за пределы текущей иерархии DOM — модальные окна, тултипы, всплывающие меню\n- ReactDOM.createPortal рендерит элемент в другой DOM-узел, но оставляет его частью того же Fiber-дерева\n- События всплывают по React-дереву, а не по DOM",
+      "difficulty": "interview",
+      "tags": ["React Features и APIs"]
+    },
+    {
+      "id": "react-strict-mode",
+      "slug": "strict-mode",
+      "question": "Как ведёт себя React Strict Mode в режиме разработки?",
+      "answer": "В Strict Mode компоненты и хуки специально монтируются, размонтируются и монтируются заново для выявления побочных эффектов. Включается через <React.StrictMode>",
+      "difficulty": "interview",
+      "tags": ["React Features и APIs"]
+    },
+    {
+      "id": "react-jsx-transform",
+      "slug": "jsx-transform",
+      "question": "Как JSX трансформируется в вызовы React.createElement?",
+      "answer": "JSX — это синтаксический сахар, который во время сборки транспилируется в вызовы React.createElement",
+      "difficulty": "interview",
+      "tags": ["React Features и APIs"]
+    },
+    {
+      "id": "react-activity",
+      "slug": "activity",
+      "question": "Что такое `<Activity>` в React и чем он отличается от условного рендеринга?",
+      "answer": "- <Activity> позволяет скрывать и восстанавливать UI и внутреннее состояние без полного размонтирования\n- Conditional Rendering полностью размонтирует компонент → состояние и DOM теряются\n- <Activity> сохраняет DOM и состояние скрытого компонента, размонтирует только эффекты",
+      "difficulty": "interview",
+      "tags": ["React Features и APIs"]
+    },
+    {
+      "id": "react-children-api",
+      "slug": "children-api",
+      "question": "Для чего используется React.Children API (map, forEach, toArray, only, count)?",
+      "answer": "- React.Children.map — применяет функцию к каждому child, корректно обрабатывая одиночные элементы и null\n- React.Children.forEach — перебирает без возврата результата\n- React.Children.toArray — преобразует в массив для сортировки/фильтрации\n- React.Children.only — гарантирует ровно один child\n- React.Children.count — возвращает количество children",
+      "difficulty": "interview",
+      "tags": ["React Features и APIs"]
+    },
+    {
+      "id": "react-clone-element",
+      "slug": "clone-element",
+      "question": "Как применять React.cloneElement?",
+      "answer": "Создаёт копию существующего React-элемента с новыми props и/или дочерними элементами. Используется для передачи дополнительных props потомкам без изменения оригинального элемента",
+      "difficulty": "interview",
+      "tags": ["React Features и APIs"]
+    },
+    {
+      "id": "react-hooks-rules",
+      "slug": "hooks-rules",
+      "question": "Какие правила использования хуков React нужно соблюдать?",
+      "answer": "- Вызывайте на верхнем уровне в теле компонента или пользовательского хука\n- Не вызывайте внутри условий или циклов\n- Не вызывайте после условного return\n- Не вызывайте в обработчиках событий\n- Не вызывайте в компонентах класса\n- Не вызывайте внутри функций, переданных в useMemo, useReducer, useEffect",
+      "difficulty": "interview",
+      "tags": ["Hooks"]
+    },
+    {
+      "id": "react-use-state",
+      "slug": "use-state",
+      "question": "Для чего нужен `useState` и как он работает?",
+      "answer": "- Создаёт локальное состояние в функциональном компоненте\n- Обновление: setState(newValue) или setState(prev => computeNext(prev))\n- setState асинхронен из-за batching\n- React использует Object.is для сравнения — если значение не изменилось, ререндер не произойдёт\n- Ленивая инициализация: useState(() => computeExpensiveInitial())",
+      "difficulty": "interview",
+      "tags": ["Hooks", "useState"]
+    },
+    {
+      "id": "react-use-state-details",
+      "slug": "use-state-details",
+      "question": "В чем разница между `useState(someFunction())`, `useState(someFunction)`, `useState(() => someFunction())`?",
+      "answer": "- someFn() — вызов сразу, значение — результат\n- someFn — функция как значение, не вызовется\n- () => someFn() — ленивый вызов, только при первом рендере",
+      "difficulty": "interview",
+      "tags": ["Hooks", "useState"]
+    },
+    {
+      "id": "react-use-effect",
+      "slug": "use-effect",
+      "question": "Для чего нужен `useEffect` и когда он вызывается?",
+      "answer": "- useEffect используется для выполнения побочных эффектов выходящих за рамки чистого рендера\n- Вызывается после рендера и commit-фазы, асинхронно, уже после того как браузер обновил экран",
+      "difficulty": "interview",
+      "tags": ["Hooks", "useEffect"]
+    },
+    {
+      "id": "react-use-layout-effect",
+      "slug": "use-layout-effect",
+      "question": "Для чего нужен `useLayoutEffect` и чем он отличается от `useEffect`?",
+      "answer": "- useLayoutEffect — синхронный, выполняется в commit-фазе после обновления DOM, но до обновления экрана браузером\n- useEffect — асинхронный, выполняется после отрисовки\n- useLayoutEffect полезен для измерений DOM и синхронных манипуляций",
+      "difficulty": "interview",
+      "tags": ["Hooks", "useEffect"]
+    },
+    {
+      "id": "react-effect-deps",
+      "slug": "effect-deps",
+      "question": "Как работает массив зависимостей у useEffect и useLayoutEffect?",
+      "answer": "- React сравнивает зависимости по Object.is\n- undefined → вызывается после каждого рендера\n- [] → вызывается один раз при монтировании\n- [deps...] → вызывается при изменении зависимостей",
+      "difficulty": "interview",
+      "tags": ["Hooks", "useEffect"]
+    },
+    {
+      "id": "react-effect-cleanup",
+      "slug": "effect-cleanup",
+      "question": "Что такое функция очистки (cleanup) в useEffect и useLayoutEffect?",
+      "answer": "- Функция, которую может возвращать callback эффекта\n- Вызывается перед повторным выполнением эффекта либо при размонтировании\n- Используется для отмены подписок, таймеров, abort-controllers\n- Без cleanup — повторные подписки, дублирование событий, утечка ресурсов",
+      "difficulty": "interview",
+      "tags": ["Hooks", "useEffect"]
+    },
+    {
+      "id": "react-use-ref",
+      "slug": "use-ref",
+      "question": "Для чего нужен `useRef` и чем он отличается от useState?",
+      "answer": "- Хранение значений между рендерами без триггера перерисовки\n- Варианты: доступ к DOM, хранение предыдущего значения, таймеры, флаги\n- Текущее значение: ref.current\n- useRef не вызывает ререндер при изменении, в отличие от useState",
+      "difficulty": "interview",
+      "tags": ["Hooks", "useRef"]
+    },
+    {
+      "id": "react-forward-ref",
+      "slug": "forward-ref",
+      "question": "Как связать useRef родителя с дочерним компонентом?",
+      "answer": "- В старых версиях React для проброса ref к DOM использовался forwardRef\n- В React 18+ прямой ref можно передавать к дочернему компоненту, если он возвращает один DOM-элемент",
+      "difficulty": "interview",
+      "tags": ["Hooks", "useRef"]
+    },
+    {
+      "id": "react-use-memo",
+      "slug": "use-memo",
+      "question": "Что такое хук `useMemo` и для чего он используется?",
+      "answer": "useMemo — хук, который мемоизирует результат вычисления между рендерами. Принимает функцию и массив зависимостей. Полезно при дорогих вычислениях и для стабильных ссылок в зависимостях других хуков",
+      "difficulty": "interview",
+      "tags": ["Hooks", "useMemo и useCallback"]
+    },
+    {
+      "id": "react-use-callback",
+      "slug": "use-callback",
+      "question": "Что такое хук `useCallback` и чем он отличается от useMemo?",
+      "answer": "- useCallback мемоизирует функцию, чтобы её ссылка оставалась стабильной между рендерами\n- useCallback возвращает саму функцию, useMemo возвращает результат вызова\n- Полезен когда функция передаётся в React.memo компоненты или в зависимости эффектов",
+      "difficulty": "interview",
+      "tags": ["Hooks", "useMemo и useCallback"]
+    },
+    {
+      "id": "react-memo-internals",
+      "slug": "memo-internals",
+      "question": "Как устроена мемоизация в useMemo и useCallback под капотом?",
+      "answer": "- React хранит мемоизированное значение внутри структуры Fiber\n- При рендере сравниваются зависимости через Object.is\n- Если зависимость изменилась — пересоздаётся, иначе возвращается то же значение\n- В Concurrent Mode кэш сохраняется только после коммита",
+      "difficulty": "interview",
+      "tags": ["Hooks", "useMemo и useCallback"]
+    },
+    {
+      "id": "react-use-id",
+      "slug": "use-id",
+      "question": "Для чего используется хук `useId`?",
+      "answer": "- Генерирует уникальный и стабильный ID, синхронизированный между сервером и клиентом\n- Используется для привязки label ↔ input, aria-describedby\n- React сохраняет префикс в структуре Fiber\n- Нельзя использовать для ключей (key) в списках",
+      "difficulty": "interview",
+      "tags": ["Hooks", "useId"]
+    },
+    {
+      "id": "react-use-context",
+      "slug": "use-context",
+      "question": "Для чего нужен хук `useContext` и какие у него ограничения?",
+      "answer": "- Позволяет получать текущее значение контекста\n- При изменении значения все потребители перерисовываются\n- Для оптимизации: мемоизировать value, разделить контексты\n- При вложенных провайдерах читается ближайший вверх по дереву\n- Мутирование объекта в value не вызовет ререндер (сравнение по Object.is)",
+      "difficulty": "interview",
+      "tags": ["Hooks", "useContext"]
+    },
+    {
+      "id": "react-use-reducer",
+      "slug": "use-reducer",
+      "question": "Что такое `useReducer` и чем он отличается от `useState`?",
+      "answer": "- Хук для управления сложным состоянием через редьюсер\n- useState — императивное обновление, useReducer — декларативное через dispatch(action)\n- Редьюсер: чистая функция (state, action) => newState\n- Возвращает [state, dispatch]\n- Поддерживает ленивую инициализацию через init(initialArg)",
+      "difficulty": "interview",
+      "tags": ["Hooks", "useReducer"]
+    },
+    {
+      "id": "react-use-insertion-effect",
+      "slug": "use-insertion-effect",
+      "question": "Чем `useInsertionEffect` отличается от `useEffect` и `useLayoutEffect`?",
+      "answer": "- Вызывается до вставки DOM и до useLayoutEffect\n- Используется для синхронной вставки стилей перед рендером\n- Нужен для CSS-in-JS библиотек\n- Нельзя читать DOM внутри — он ещё не обновлён",
+      "difficulty": "interview",
+      "tags": ["Hooks"]
+    },
+    {
+      "id": "react-use-imperative-handle",
+      "slug": "use-imperative-handle",
+      "question": "Как работает `useImperativeHandle` и зачем он нужен?",
+      "answer": "Позволяет кастомизировать объект, который родитель получит через ref. Применяется для императивных действий: scroll, focus, animation trigger",
+      "difficulty": "interview",
+      "tags": ["Hooks"]
+    },
+    {
+      "id": "react-use-debug-value",
+      "slug": "use-debug-value",
+      "question": "Как работает `useDebugValue`?",
+      "answer": "useDebugValue(value, formatFn?) — хук для отладки в React DevTools. Не влияет на поведение компонента, удаляется на продакшн-сборке",
+      "difficulty": "interview",
+      "tags": ["Hooks"]
+    },
+    {
+      "id": "react-use-effect-event",
+      "slug": "use-effect-event",
+      "question": "Что такое `useEffectEvent` и для чего он нужен?",
+      "answer": "- Хук для извлечения нереактивной логики из эффектов\n- Позволяет читать последние значения props/state внутри эффекта без повторного запуска эффекта\n- Вызывать только внутри эффектов\n- Не передавать другим компонентам или хукам",
+      "difficulty": "interview",
+      "tags": ["Hooks"]
+    },
+    {
+      "id": "react-use-sync-external-store",
+      "slug": "use-sync-external-store",
+      "question": "Что делает `useSyncExternalStore` и зачем он нужен?",
+      "answer": "- Хук для синхронизации компонента с внешним источником состояния вне React\n- Гарантирует синхронное чтение данных перед рендером\n- Принимает: subscribe, getSnapshot, getServerSnapshot\n- Типичные кейсы: Redux, Zustand, navigator.onLine, window.matchMedia, localStorage",
+      "difficulty": "interview",
+      "tags": ["Hooks", "useSyncExternalStore"]
+    },
+    {
+      "id": "react-use-optimistic",
+      "slug": "use-optimistic",
+      "question": "Что делает хук `useOptimistic` и как он работает?",
+      "answer": "- useOptimistic(initialState, updateFn) позволяет временно подменять состояние UI, предполагая успешный результат асинхронного действия\n- После завершения операции оптимистическое состояние сбрасывается\n- updateFn(state, optimisticValue) должен возвращать новый объект (иммутабельность)",
+      "difficulty": "interview",
+      "tags": ["Hooks"]
+    },
+    {
+      "id": "react-use-transition",
+      "slug": "use-transition",
+      "question": "Что делает `useTransition` и чем его поведение отличается от обычного обновления состояния?",
+      "answer": "- Позволяет выполнять низкоприоритетные обновления (Transitions), не блокируя критичные части UI\n- Возвращает [isPending, startTransition]\n- Обновления внутри startTransition получают TransitionLane — низкий приоритет\n- Кейсы: большие списки, переключение вкладок, пагинация",
+      "difficulty": "interview",
+      "tags": ["Hooks", "useTransition"]
+    },
+    {
+      "id": "react-use-deferred-value",
+      "slug": "use-deferred-value",
+      "question": "Что делает `useDeferredValue` и чем он отличается от useTransition?",
+      "answer": "- Возвращает отложенную версию значения, обновляемую с низким приоритетом\n- useTransition оборачивает setState, useDeferredValue применяется к уже вычисленному значению\n- Не требует фиксированной задержки в отличие от дебаунса/троттлинга\n- Background render прерываемый: новые изменения отменяют текущий deferred render",
+      "difficulty": "interview",
+      "tags": ["Hooks", "useDeferredValue"]
+    },
+    {
+      "id": "react-use-action-state",
+      "slug": "use-action-state",
+      "question": "Что делает `useActionState` и какие аргументы он принимает?",
+      "answer": "- Обновляет локальное состояние на основе результата асинхронного action\n- Принимает: action(prevState, formData) => newState, initialState, permalink (опционально)\n- Возвращает: state, formAction, isPending\n- Автоматически синхронизирует состояние с результатом последнего вызова action",
+      "difficulty": "interview",
+      "tags": ["Hooks"]
+    }
+  ]
+}

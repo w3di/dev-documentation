@@ -107,9 +107,9 @@ const shadow = element.attachShadow({ mode: 'open' });
 
 **Результат**: текст внутри Shadow DOM будет красного цвета, а глобальный `div` — синего, даже если стили идентичны.
 
-#### 6. **Изоляция событий**
+#### 6. **Поведение событий в Shadow DOM**
 
-Shadow DOM также изолирует события. События, сгенерированные внутри Shadow DOM, не распространяются на внешнее DOM-дерево, если явно не указать всплытие событий.
+Shadow DOM влияет на распространение событий. Встроенные UI-события (например, `click`, `input`) являются `composed: true` — они **всплывают за пределы Shadow DOM**, но при этом происходит **ретаргетинг**: свойство `event.target` для внешних обработчиков будет указывать на shadow host, а не на внутренний элемент. Кастомные события по умолчанию не выходят за границы Shadow DOM, если не указать `composed: true`.
 
 ```html
 <my-element></my-element>
@@ -129,11 +129,17 @@ Shadow DOM также изолирует события. События, сге�
   }
 
   customElements.define('my-element', MyElement);
+
+  // Внешний обработчик СРАБОТАЕТ при клике на кнопку внутри Shadow DOM,
+  // но event.target будет указывать на <my-element>, а не на <button>
+  document.querySelector('my-element').addEventListener('click', (e) => {
+    console.log('External handler:', e.target); // <my-element>
+  });
 </script>
 
 ```
 
-Внешние обработчики событий не сработают на события внутри Shadow DOM, если не произойдет явного всплытия событий.
+Для кастомных событий, которые должны выходить за пределы Shadow DOM, нужно явно указать `composed: true` и `bubbles: true`.
 
 #### 7. **Слоты (Slots) в Shadow DOM**
 

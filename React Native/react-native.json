@@ -1,0 +1,585 @@
+{
+  "section": {
+    "id": "react-native",
+    "name": "React Native",
+    "slug": "react-native"
+  },
+  "questions": [
+    {
+      "id": "rn-what-is",
+      "slug": "what-is-react-native",
+      "question": "Что такое React Native и чем он отличается от WebView-фреймворков (Cordova, Ionic)?",
+      "answer": "- React Native рендерит **настоящие нативные компоненты** (UIView, android.view.View), а не HTML внутри WebView\n- Cordova/Ionic оборачивают веб-приложение в WebView — ограниченная производительность и отсутствие нативного look & feel\n- React Native использует JavaScript для логики, но UI — полностью нативный\n- Один кодовая база для iOS и Android с доступом к платформенным API",
+      "difficulty": "interview",
+      "tags": ["Основы"]
+    },
+    {
+      "id": "rn-vs-flutter",
+      "slug": "rn-vs-flutter",
+      "question": "В чём ключевые различия между React Native и Flutter?",
+      "answer": "- **React Native**: JS/TS, нативные компоненты платформы, React-подход, огромная npm-экосистема\n- **Flutter**: Dart, собственный движок рендеринга (Skia/Impeller), рисует каждый пиксель сам\n- RN: платформенный UI (кнопки выглядят нативно), Flutter: единый кастомный UI на всех платформах\n- RN: Bridge/JSI для связи с нативом, Flutter: AOT-компиляция в машинный код\n- RN: проще для React-разработчиков, Flutter: проще для тех, кто начинает с нуля",
+      "difficulty": "interview",
+      "tags": ["Основы"]
+    },
+    {
+      "id": "rn-core-components",
+      "slug": "core-components",
+      "question": "Какие основные компоненты React Native и их аналоги в вебе?",
+      "answer": "- `<View>` → UIView / android.view.View (аналог `<div>`)\n- `<Text>` → UITextView / TextView (аналог `<p>/<span>`) — **обязателен** для текста\n- `<Image>` → UIImageView / ImageView (аналог `<img>`) — необходимо указать width/height для remote-изображений\n- `<ScrollView>` → UIScrollView / ScrollView (аналог `overflow: scroll`)\n- `<TextInput>` → UITextField / EditText (аналог `<input>`)\n- `<Pressable>` → UIControl / View+Listener (аналог `<button>`) — рекомендуемый компонент для нажатий\n- `<FlatList>` — виртуализированный список для больших данных",
+      "difficulty": "interview",
+      "tags": ["Компоненты и стилизация"]
+    },
+    {
+      "id": "rn-flexbox-differences",
+      "slug": "flexbox-differences",
+      "question": "Чем Flexbox в React Native отличается от веб-CSS?",
+      "answer": "- По умолчанию `flexDirection: 'column'` (в вебе — `row`)\n- `flex: 1` — это пропорция, а не shorthand\n- Единицы: только dp (числа) и %, нет px/em/rem/vw/vh\n- Нет CSS Grid — только Flexbox\n- `display`: только `flex` или `none`\n- Нет `float`, `position: fixed`, `z-index` (только `zIndex`)\n- Нет `overflow: scroll` — используйте `ScrollView`\n- `transform` как массив: `[{ rotate: '45deg' }, { scale: 0.5 }]`\n- **Наследование стилей ограничено**: только `Text` наследует от `Text`, View не каскадирует",
+      "difficulty": "interview",
+      "tags": ["Компоненты и стилизация"]
+    },
+    {
+      "id": "rn-stylesheet-create",
+      "slug": "stylesheet-create",
+      "question": "Зачем использовать `StyleSheet.create()` вместо inline-стилей?",
+      "answer": "- Валидирует стили во время создания (ошибки обнаруживаются раньше)\n- Создаёт оптимизированные статические ссылки (не пересоздаются при каждом рендере)\n- Объект стилей создаётся один раз и переиспользуется\n- Inline-стили создают новый объект при каждом рендере → лишние перерисовки",
+      "difficulty": "interview",
+      "tags": ["Компоненты и стилизация"]
+    },
+    {
+      "id": "rn-platform-specific",
+      "slug": "platform-specific",
+      "question": "Какие способы написания платформенно-специфичного кода существуют?",
+      "answer": "1. `Platform.OS` — проверка: `Platform.OS === 'ios'` или `'android'`\n2. `Platform.select({ ios: ..., android: ..., default: ... })` — условные стили/значения\n3. `Platform.Version` — проверка версии ОС\n4. Платформенные файлы: `Button.ios.js`, `Button.android.js`, `Button.js` (fallback) — Metro автоматически выбирает нужный\n5. Платформенные расширения: `.ios.tsx` / `.android.tsx`",
+      "difficulty": "interview",
+      "tags": ["Компоненты и стилизация"]
+    },
+    {
+      "id": "rn-safe-area",
+      "slug": "safe-area",
+      "question": "Как работать с Safe Area в React Native?",
+      "answer": "- Встроенный `SafeAreaView` работает **только на iOS**\n- **react-native-safe-area-context** — кроссплатформенное решение\n- Хук `useSafeAreaInsets()` возвращает отступы: `{ top, bottom, left, right }`\n- `SafeAreaProvider` оборачивает приложение\n- Учитывает: вырез (notch), динамический остров, нижний индикатор, строку состояния",
+      "difficulty": "interview",
+      "tags": ["Компоненты и стилизация"]
+    },
+    {
+      "id": "rn-pressable",
+      "slug": "pressable",
+      "question": "Чем `Pressable` лучше `TouchableOpacity` и как он работает?",
+      "answer": "- `Pressable` — рекомендуемый компонент (заменяет `Touchable*`)\n- Props: `onPress`, `onLongPress`, `onPressIn`, `onPressOut`\n- `hitSlop` — расширяет область нажатия без визуального изменения\n- `pressRetentionOffset` — насколько палец может отъехать и нажатие всё равно сработает\n- `android_ripple` — нативный ripple-эффект на Android\n- `style` может быть функцией, получающей `{ pressed }` — для визуальной обратной связи\n- Legacy: `TouchableOpacity`, `TouchableHighlight`, `TouchableWithoutFeedback`",
+      "difficulty": "interview",
+      "tags": ["Компоненты и стилизация"]
+    },
+    {
+      "id": "rn-dimensions",
+      "slug": "dimensions",
+      "question": "Как работают единицы измерения и адаптивность в React Native?",
+      "answer": "- Все значения в **dp** (density-independent pixels), не в пикселях\n- `PixelRatio.get()` — плотность экрана (1, 2, 3)\n- `PixelRatio.getFontScale()` — пользовательский масштаб шрифтов\n- `useWindowDimensions()` — хук, реагирует на изменения (поворот экрана)\n- `Dimensions.get('window')` — статичное значение (не обновляется)\n- Адаптивность: процентные значения, `flex`, `useWindowDimensions`",
+      "difficulty": "interview",
+      "tags": ["Компоненты и стилизация"]
+    },
+    {
+      "id": "rn-keyboard-handling",
+      "slug": "keyboard-handling",
+      "question": "Как обрабатывать клавиатуру в React Native?",
+      "answer": "- `KeyboardAvoidingView` — сдвигает контент: `behavior = 'padding' | 'height' | 'position'`\n- `Keyboard.dismiss()` — скрытие клавиатуры программно\n- `ScrollView`: `keyboardShouldPersistTaps='handled'` — нажатие на элемент не скрывает клавиатуру\n- `keyboardDismissMode='on-drag'` — скрытие при скролле\n- На iOS и Android поведение отличается — тестируйте на обеих платформах",
+      "difficulty": "interview",
+      "tags": ["Компоненты и стилизация"]
+    },
+    {
+      "id": "rn-threads",
+      "slug": "threads",
+      "question": "Какие потоки существуют в React Native и за что каждый отвечает?",
+      "answer": "1. **JS Thread**: Hermes, React reconciliation, бизнес-логика, обработчики событий, таймеры\n2. **UI Thread (Main)**: нативный рендеринг, обработка тач-событий, нативные анимации, инерция скролла\n3. **Shadow Thread** (старая архитектура): расчёт лейаута через Yoga\n\n- Нативные анимации (`useNativeDriver: true`) выполняются на UI Thread **независимо от JS Thread**\n- UI Thread не зависит от JS для native-backed анимаций → анимации плавные даже при загруженном JS",
+      "difficulty": "interview",
+      "tags": ["Потоки и рендеринг"]
+    },
+    {
+      "id": "rn-rendering-pipeline",
+      "slug": "rendering-pipeline",
+      "question": "Как устроен pipeline рендеринга в React Native?",
+      "answer": "1. `setState()` → обновление состояния\n2. **Render Phase** (JS Thread): React создаёт Element Tree, diffing\n3. **Commit Phase**: создание C++ Shadow Tree, расчёт лейаута (Yoga)\n4. **Mount Phase** (UI Thread): diff Shadow Tree, создание/обновление/удаление нативных View\n5. Пиксели на экране\n\n- Старая архитектура: JS → Bridge (JSON) → Shadow Thread → UI Thread\n- Новая архитектура (Fabric): JS → JSI (C++) → Shadow Tree → UI Thread",
+      "difficulty": "interview",
+      "tags": ["Потоки и рендеринг"]
+    },
+    {
+      "id": "rn-old-architecture",
+      "slug": "old-architecture",
+      "question": "Как работала старая архитектура React Native (Bridge)?",
+      "answer": "- **Bridge**: асинхронная очередь JSON-сообщений между JS и Native\n- Все данные сериализуются в JSON\n- Сообщения группируются (batching) для снижения накладных расходов\n- Нельзя синхронно читать значения из Native\n\n**Проблемы:**\n1. Только асинхронная коммуникация\n2. Overhead JSON-сериализации на каждое сообщение\n3. Невозможность поддержки React 18+ concurrent features\n4. Eager инициализация модулей увеличивает TTI",
+      "difficulty": "interview",
+      "tags": ["Архитектура"]
+    },
+    {
+      "id": "rn-new-architecture",
+      "slug": "new-architecture",
+      "question": "Что такое новая архитектура React Native (JSI, Fabric, Turbo Modules)?",
+      "answer": "**JSI (JavaScript Interface):**\n- C++ абстракция над JS-движком (Hermes, JSC, V8)\n- **Синхронные прямые C++ вызовы** без JSON-сериализации\n- Host Objects: C++ объекты доступны из JS\n- ~0.01мс на вызов vs ~10мс с Bridge\n\n**Fabric Renderer:**\n- Заменяет UIManager\n- **Иммутабельное C++ Shadow Tree** (copy-on-write)\n- Синхронный лейаут через `useLayoutEffect`\n- Потокобезопасный доступ к Shadow Tree\n\n**Turbo Modules:**\n- Заменяют Legacy Native Modules\n- TypeScript спецификации + Codegen для compile-time типобезопасности\n- **Lazy loading** (загрузка при первом использовании)\n- JSI-коммуникация (синхронная + асинхронная)",
+      "difficulty": "interview",
+      "tags": ["Архитектура"]
+    },
+    {
+      "id": "rn-jsi",
+      "slug": "jsi",
+      "question": "Что такое JSI (JavaScript Interface) и какие проблемы он решает?",
+      "answer": "- C++ абстракция, позволяющая JS напрямую вызывать нативный код без Bridge\n- **Синхронные вызовы**: ~0.01мс vs ~10мс через Bridge\n- **Нет JSON-сериализации**: данные передаются по ссылке через Host Objects\n- **Engine-agnostic**: работает с Hermes, JSC, V8\n- Host Objects: C++ объекты, видимые из JavaScript как обычные объекты\n- Основа для Fabric и Turbo Modules",
+      "difficulty": "interview",
+      "tags": ["Архитектура"]
+    },
+    {
+      "id": "rn-turbo-modules",
+      "slug": "turbo-modules",
+      "question": "Чем Turbo Modules отличаются от Legacy Native Modules?",
+      "answer": "**Legacy Native Modules:**\n- Bridge-based с JSON-сериализацией\n- Eager initialization (все загружаются при старте)\n- Только async коммуникация\n- Нет типобезопасности\n\n**Turbo Modules:**\n- JSI-based (прямые C++ вызовы)\n- **Lazy loading** (загрузка при первом обращении)\n- Sync + Async поддержка\n- TypeScript спеки → Codegen → compile-time типобезопасность\n- Автогенерация бойлерплейта для iOS (Obj-C++/Swift) и Android (Java/Kotlin)",
+      "difficulty": "interview",
+      "tags": ["Архитектура", "Нативные модули"]
+    },
+    {
+      "id": "rn-codegen",
+      "slug": "codegen",
+      "question": "Что такое Codegen и как он работает?",
+      "answer": "- Автоматическая генерация платформенного бойлерплейта из TypeScript спецификаций\n- Маппинг типов: `string → String / NSString`, `number → double`, `Promise<T> → callbacks`\n- Генерирует: Java/Kotlin абстрактные классы (Android), Obj-C протоколы + C++ JSI-привязки (iOS)\n- Обеспечивает compile-time типобезопасность между JS и Native\n- Работает и для Turbo Modules, и для Fabric Native Components",
+      "difficulty": "deep",
+      "tags": ["Архитектура", "Нативные модули"]
+    },
+    {
+      "id": "rn-fabric",
+      "slug": "fabric",
+      "question": "Что такое Fabric Renderer и чем он лучше старого UIManager?",
+      "answer": "- **Иммутабельное C++ Shadow Tree** (copy-on-write обновления)\n- Потокобезопасный доступ к Shadow Tree из нескольких потоков\n- **Синхронный лейаут** через `useLayoutEffect`\n- Поддержка React 18+ concurrent rendering (Suspense, Transitions)\n- Прямая JSI-связь вместо Bridge\n- Более эффективный diffing при монтировании View",
+      "difficulty": "deep",
+      "tags": ["Архитектура"]
+    },
+    {
+      "id": "rn-yoga",
+      "slug": "yoga",
+      "question": "Что такое Yoga Layout Engine?",
+      "answer": "- Реализация Flexbox на C++ (кроссплатформенная)\n- Входные данные: стили React Native → выход: абсолютные координаты, размеры\n- По умолчанию `flexDirection: 'column'` (не `row` как в вебе)\n- Поддерживает: `gap`, `flexWrap`, `alignContent`\n- **НЕ поддерживает** CSS Grid\n- Используется и в старой, и в новой архитектуре",
+      "difficulty": "interview",
+      "tags": ["Архитектура", "Компоненты и стилизация"]
+    },
+    {
+      "id": "rn-hermes",
+      "slug": "hermes",
+      "question": "Что такое Hermes и чем он отличается от JavaScriptCore?",
+      "answer": "- JS-движок, созданный Meta **специально для React Native**, оптимизирован для мобильных устройств\n- **AOT-компиляция**: исходный код → байткод на этапе сборки → бандл с APK/IPA\n- **Нет JIT-компиляции** (намеренно: iOS запрещает writable+executable память, JIT расходует память)\n- **Lazy compilation**: функции компилируются при первом вызове\n- **GenGC**: генерационный сборщик мусора\n\n| | Hermes | JSC |\n|---|---|---|\n| Старт | ~200мс (быстрый) | ~800мс |\n| RAM | Ниже | Выше |\n| Бинарь | Меньше | Больше |\n| Пиковая производительность | Средняя | Выше (JIT) |\n\n- По умолчанию с RN 0.70+",
+      "difficulty": "interview",
+      "tags": ["Архитектура"]
+    },
+    {
+      "id": "rn-hermes-aot",
+      "slug": "hermes-aot",
+      "question": "Как работает AOT-компиляция в Hermes?",
+      "answer": "- Исходный код → **байткод на этапе сборки** → бандлится с APK/IPA\n- Нет парсинга и компиляции в рантайме (в отличие от V8/JSC)\n- Register-based байткод (как Dalvik) vs stack-based — более эффективный\n- Результат: мгновенный старт, меньше потребление памяти\n- Дедупликация строк и ленивая конвертация UTF-16\n- Поддержка ES2015+: let/const, arrow functions, async/await, Map/Set, Symbol, Proxy, optional chaining",
+      "difficulty": "deep",
+      "tags": ["Архитектура"]
+    },
+    {
+      "id": "rn-metro",
+      "slug": "metro",
+      "question": "Что такое Metro Bundler и как он работает?",
+      "answer": "- Кастомный JavaScript-бандлер для React Native (аналог Webpack/Vite для мобильных)\n- Три фазы: **Resolution** (поиск файлов) → **Transformation** (Babel, TS) → **Serialization** (бандл)\n- Debug: бандл загружается с dev-сервера по HTTP с hot reload\n- Release: бандл встраивается в APK/IPA, компилируется в байткод Hermes\n- Конфигурация в `metro.config.js`: resolver, transformer, watchFolders\n- Автоматически вызывает Hermes compiler для release-сборок",
+      "difficulty": "interview",
+      "tags": ["Metro и сборка"]
+    },
+    {
+      "id": "rn-fast-refresh",
+      "slug": "fast-refresh",
+      "question": "Как работает Fast Refresh в React Native?",
+      "answer": "- Hot reloading: перекомпилируется только изменённый модуль\n- **Состояние компонента сохраняется** при изменении компонента\n- Полная перезагрузка при изменении не-компонентного кода\n- Работает через Metro dev-server по HTTP\n- Быстрее, чем полная перезагрузка (обновление за секунды)",
+      "difficulty": "interview",
+      "tags": ["Metro и сборка"]
+    },
+    {
+      "id": "rn-build-android",
+      "slug": "build-android",
+      "question": "Как собирать Android-приложение и в чём разница между APK и AAB?",
+      "answer": "- Debug: `npx react-native run-android` → APK в `android/app/build/outputs/apk/debug/`\n- Release **AAB**: `./gradlew bundleRelease` — для Google Play (оптимизированный формат)\n- Release **APK**: `./gradlew assembleRelease` — для прямой установки\n- **AAB** (Android App Bundle): Google Play генерирует оптимальные APK для каждого устройства\n- ProGuard: обфускация и минификация (`minifyEnabled`, `shrinkResources`)\n- Подпись: **Keystore** файл (НЕВОЗМОЖНО восстановить при утере!)",
+      "difficulty": "interview",
+      "tags": ["Metro и сборка"]
+    },
+    {
+      "id": "rn-build-ios",
+      "slug": "build-ios",
+      "question": "Как собирать и подписывать iOS-приложение?",
+      "answer": "- Debug: `npx react-native run-ios` → Simulator/Device\n- Release: Xcode → Archive → App Store Connect\n- **Code Signing**: Certificate + Provisioning Profile + App ID\n- Development Certificate: для отладки, Ad Hoc: для тестирования, Distribution: для App Store\n- Bundle Identifier: уникальный идентификатор приложения\n- Version + Build number: семантическое версионирование",
+      "difficulty": "interview",
+      "tags": ["Metro и сборка"]
+    },
+    {
+      "id": "rn-ota-updates",
+      "slug": "ota-updates",
+      "question": "Что такое OTA-обновления и как они работают?",
+      "answer": "- **OTA** (Over-The-Air): обновление JS-бандла без публикации в App Store / Google Play\n- Бинарный файл в магазине содержит нативный код\n- JS Bundle на CDN/EAS — можно обновлять независимо\n- Runtime version управляет совместимостью JS и нативного кода\n- **Нельзя** обновить нативный код через OTA — нужен новый релиз в магазин\n- Инструменты: **EAS Update** (Expo), **CodePush** (Microsoft)\n- Обновления JS/изображений/стилей без review магазина",
+      "difficulty": "interview",
+      "tags": ["Metro и сборка"]
+    },
+    {
+      "id": "rn-expo-what",
+      "slug": "expo-what",
+      "question": "Что такое Expo и чем он отличается от чистого React Native?",
+      "answer": "- Expo — это **набор инструментов и сервисов** поверх React Native, НЕ отдельный фреймворк\n- Expo-приложение = стандартное RN-приложение + дополнительные инструменты\n- Экосистема: Expo CLI, Expo SDK, Expo Router, Expo Go, EAS (Build/Submit/Update), Modules API\n- Упрощает: настройку проекта, сборку, публикацию, OTA-обновления\n- Expo SDK: камера, геолокация, уведомления, файловая система и др. — унифицированный API",
+      "difficulty": "interview",
+      "tags": ["Expo"]
+    },
+    {
+      "id": "rn-expo-go-vs-dev-build",
+      "slug": "expo-go-vs-dev-build",
+      "question": "В чём разница между Expo Go и Dev Build?",
+      "answer": "**Expo Go:**\n- Предустановленное приложение из магазинов\n- Ограничено модулями Expo SDK\n- Моментальное тестирование, не требует сборки\n\n**Dev Build:**\n- Кастомно собранное приложение с вашими нативными модулями\n- Требует время на сборку\n- Нужен для: react-native-maps, кастомный Bluetooth, In-App Purchases, нативные шрифты, фоновые задачи\n- Рекомендуется для production-разработки",
+      "difficulty": "interview",
+      "tags": ["Expo"]
+    },
+    {
+      "id": "rn-eas",
+      "slug": "eas",
+      "question": "Что такое EAS (Expo Application Services)?",
+      "answer": "- **EAS Build**: облачные сборки iOS/Android (не нужен Mac для iOS-сборки)\n- **EAS Submit**: публикация в App Store / Google Play\n- **EAS Update**: OTA-обновления JS-бандла (не обновляет нативный код)\n- Конфигурация в `eas.json`: профили сборки (development, preview, production)\n- Автоматизация CI/CD для мобильных приложений",
+      "difficulty": "interview",
+      "tags": ["Expo"]
+    },
+    {
+      "id": "rn-prebuild-cng",
+      "slug": "prebuild-cng",
+      "question": "Что такое Prebuild и CNG (Continuous Native Generation) в Expo?",
+      "answer": "- `npx expo prebuild` — генерирует `ios/` и `android/` папки из `app.json`\n- Эти папки — **генерируемые артефакты**, не ручной код\n- Добавляются в `.gitignore`\n- **Config Plugins** модифицируют нативные конфигурации через JS\n- CNG: нативный код перегенерируется при каждой сборке\n- Преимущество: обновление RN-версии без ручной миграции нативного кода",
+      "difficulty": "interview",
+      "tags": ["Expo"]
+    },
+    {
+      "id": "rn-expo-router",
+      "slug": "expo-router",
+      "question": "Как работает Expo Router?",
+      "answer": "- Файловая маршрутизация: структура файлов = структура навигации\n- Построен поверх React Navigation\n- Автоматический deep linking\n- Универсальный: iOS, Android, Web\n- Динамические маршруты: `[id].tsx`\n- Группы маршрутов: `(tabs)/` для группировки\n- Layout-файлы для настроек экранов\n- `<Link>` компонент, `useRouter()` хук",
+      "difficulty": "interview",
+      "tags": ["Expo", "Навигация"]
+    },
+    {
+      "id": "rn-navigation-types",
+      "slug": "navigation-types",
+      "question": "Какие типы навигаторов существуют в React Navigation?",
+      "answer": "1. **Stack Navigator**: стек экранов (push/pop)\n   - `createNativeStackNavigator` — нативные анимации (UI Thread, рекомендуется)\n   - `createStackNavigator` — JS-анимации\n2. **Tab Navigator**: нижние вкладки (`createBottomTabNavigator`)\n3. **Material Top Tabs**: свайпабельные верхние табы (`createMaterialTopTabNavigator`)\n4. **Drawer Navigator**: боковое меню (`createDrawerNavigator`)\n\nВложенность:\n```\nRoot Stack\n├── Auth Stack\n└── Main (Tabs)\n    ├── Home Stack\n    ├── Search\n    └── Profile Stack\n```",
+      "difficulty": "interview",
+      "tags": ["Навигация"]
+    },
+    {
+      "id": "rn-navigate-vs-push",
+      "slug": "navigate-vs-push",
+      "question": "В чём разница между `navigate()` и `push()` в React Navigation?",
+      "answer": "- `navigate('Screen', params)` — **переиспользует** экземпляр, если он уже в стеке; иначе создаёт новый\n- `push('Screen', params)` — **всегда** создаёт новый экземпляр поверх стека\n- `goBack()` — возврат на предыдущий экран\n- `navigate` удобен для перехода к экрану; `push` — для создания нескольких экземпляров одного экрана (например, вложенные профили)",
+      "difficulty": "interview",
+      "tags": ["Навигация"]
+    },
+    {
+      "id": "rn-deep-linking",
+      "slug": "deep-linking",
+      "question": "Как работает Deep Linking в React Native?",
+      "answer": "**Конфигурация:**\n```js\nlinking: {\n  prefixes: ['myapp://', 'https://myapp.com'],\n  config: { screens: { 'post/:id': 'post/:id' } }\n}\n```\n\n**URL Scheme** (`myapp://`): небезопасно — любое приложение может зарегистрировать такую же схему\n**Universal Links** (iOS) / **App Links** (Android): безопасно — привязка к домену с верификацией\n\n- Никогда не передавайте секреты через URL Scheme\n- Для auth callbacks используйте Universal/App Links",
+      "difficulty": "interview",
+      "tags": ["Навигация"]
+    },
+    {
+      "id": "rn-navigation-performance",
+      "slug": "navigation-performance",
+      "question": "Как оптимизировать производительность навигации?",
+      "answer": "- **Native Stack > JS Stack**: нативные анимации быстрее, выполняются на UI Thread\n- `react-native-screens`: оптимизирует память (отсоединяет неактивные экраны)\n- `lazy: true` для Tab Navigator — рендер вкладки только при первом переключении\n- `freezeOnBlur`: останавливает рендеринг неактивных вкладок\n- TypeScript типизация параметров навигации для безопасности",
+      "difficulty": "interview",
+      "tags": ["Навигация"]
+    },
+    {
+      "id": "rn-animated-api",
+      "slug": "animated-api",
+      "question": "Как работает Animated API в React Native?",
+      "answer": "- `Animated.Value` / `Animated.ValueXY` — анимируемые значения (создавать через `useRef`)\n- Компоненты: `Animated.View`, `Animated.Text`, `Animated.Image`, `Animated.ScrollView`\n- `createAnimatedComponent()` — для кастомных компонентов\n\n**Типы анимаций:**\n- `timing()` — линейная/кривая с easing\n- `spring()` — физическая пружина (friction/tension или stiffness/damping/mass)\n- `decay()` — замедление с начальной скоростью\n\n**Композиция:**\n- `sequence()` — последовательно\n- `parallel()` — одновременно\n- `stagger(delay, [])` — каскадом\n- `loop()` — бесконечное повторение",
+      "difficulty": "interview",
+      "tags": ["Анимации"]
+    },
+    {
+      "id": "rn-use-native-driver",
+      "slug": "use-native-driver",
+      "question": "Что такое `useNativeDriver: true` и какие свойства можно анимировать?",
+      "answer": "- Отправляет описание анимации на Native **один раз**, Native выполняет анимацию **самостоятельно**\n- **Обязательно** для плавных анимаций при загруженном JS Thread\n\n**Поддерживается:**\n- `transform`: translate, scale, rotate, perspective (все оси)\n- `opacity`\n\n**НЕ поддерживается** (требуют пересчёта лейаута):\n- width, height, padding, margin, backgroundColor, borderRadius, fontSize\n\n**Обходной путь**: используйте `transform: [{ scale }]` вместо width/height",
+      "difficulty": "interview",
+      "tags": ["Анимации"]
+    },
+    {
+      "id": "rn-interpolation",
+      "slug": "interpolation",
+      "question": "Как работает интерполяция в Animated API?",
+      "answer": "```jsx\nscrollY.interpolate({\n  inputRange: [0, 100],\n  outputRange: [1, 0],\n  extrapolate: 'clamp' | 'extend' | 'identity'\n})\n```\n- Маппинг входных значений на выходные\n- `clamp` — ограничивает выходной диапазон\n- `extend` — продолжает тренд за пределы\n- `identity` — 1:1 за пределами диапазона\n- Используется для: параллакс, header collapse, opacity fade на скролл",
+      "difficulty": "interview",
+      "tags": ["Анимации"]
+    },
+    {
+      "id": "rn-layout-animation",
+      "slug": "layout-animation",
+      "question": "Как работает `LayoutAnimation` и когда его использовать?",
+      "answer": "- Простой API для анимации изменений лейаута (появление/исчезновение, изменение размера)\n- Вызывать **перед** `setState`\n- Пресеты: `easeInEaseOut`, `linear`, `spring`\n- Кастомные конфигурации: `create`, `update`, `delete`\n- Android: требует `UIManager.setLayoutAnimationEnabledExperimental(true)`\n- Подходит для: добавление/удаление элементов списка, разворачивание/сворачивание секций",
+      "difficulty": "interview",
+      "tags": ["Анимации"]
+    },
+    {
+      "id": "rn-reanimated",
+      "slug": "reanimated",
+      "question": "Что такое Reanimated и чем он лучше стандартного Animated API?",
+      "answer": "- **Worklets**: JS-функции, компилируемые для выполнения на **UI Thread**\n- `useSharedValue` — значение, доступное из JS и UI потоков одновременно\n- `useAnimatedStyle` — стили, вычисляемые на UI Thread\n- Анимации: `withTiming`, `withSpring`, `withDecay`, `withSequence`, `withRepeat`\n- **Интеграция с Gesture Handler**: Pan, Pinch, LongPress → обновления на UI Thread\n\n| | Animated API | Reanimated |\n|---|---|---|\n| Выполнение | JS Thread / Native Driver | **UI Thread** |\n| Layout-анимации | Нет | Да |\n| Жесты | Ограниченно | Полная интеграция |\n| Условная логика | Нет | Да (worklets) |",
+      "difficulty": "interview",
+      "tags": ["Анимации"]
+    },
+    {
+      "id": "rn-animation-performance",
+      "slug": "animation-performance",
+      "question": "Как добиться 60 FPS в анимациях React Native?",
+      "answer": "- 60 FPS = 16.67мс на кадр\n- `useNativeDriver: true` для стандартных анимаций\n- Reanimated worklets для сложных анимаций\n- Избегайте лейаут-анимаций (width/height)\n- `requestAnimationFrame` для тяжёлых операций\n- Не анимируйте во время тяжёлых рендеров\n- Анимируйте `transform` (scale, translate) вместо `width`/`height`\n- Используйте `Animated.event` для маппинга скролл-событий без JS",
+      "difficulty": "interview",
+      "tags": ["Анимации", "Производительность"]
+    },
+    {
+      "id": "rn-flatlist",
+      "slug": "flatlist",
+      "question": "Как работает `FlatList` и его ключевые оптимизации?",
+      "answer": "- Виртуализированный список: рендерит только **видимые элементы** + буфер\n- 10,000 элементов → ~10-20 View в памяти\n\n**Обязательные props**: `data`, `renderItem`, `keyExtractor`\n\n**Ключевые оптимизации:**\n- `getItemLayout` — для фиксированной высоты (критическая оптимизация, позволяет мгновенный `scrollToIndex`)\n- `React.memo` для `renderItem` — предотвращение ре-рендеров\n- `useCallback` для функции `renderItem`\n- `keyExtractor` — стабильные уникальные ID (не индекс!)\n\n**Props настройки:**\n- `initialNumToRender`: 10 (по умолчанию)\n- `maxToRenderPerBatch`: 10\n- `windowSize`: 21 (количество экранов для буфера)\n- `extraData` — для внешнего состояния, влияющего на рендер\n\n**Важно**: FlatList использует PureComponent → ре-рендерится только при изменении `data`/`extraData`",
+      "difficulty": "interview",
+      "tags": ["Списки и производительность"]
+    },
+    {
+      "id": "rn-flatlist-features",
+      "slug": "flatlist-features",
+      "question": "Какие дополнительные возможности есть у FlatList?",
+      "answer": "- `refreshing` + `onRefresh` — pull-to-refresh\n- `onEndReached` + `onEndReachedThreshold` — бесконечный скролл\n- `ItemSeparatorComponent` — разделитель между элементами\n- `ListEmptyComponent` — что показывать при пустом списке\n- `ListHeaderComponent` / `ListFooterComponent` — шапка и подвал\n- `numColumns` — многоколоночный лейаут\n- `horizontal` — горизонтальный скролл\n- `SectionList` — для секционированных данных с заголовками",
+      "difficulty": "interview",
+      "tags": ["Списки и производительность"]
+    },
+    {
+      "id": "rn-flashlist",
+      "slug": "flashlist",
+      "question": "Чем FlashList (@shopify/flash-list) лучше FlatList?",
+      "answer": "- Использует **рециклирование** вместо виртуализации\n- Переиспользует нативные View (не размонтирует, а переиспользует)\n- Быстрее FlatList, избегает «белых зон» при быстром скролле\n- `estimatedItemSize` — обязательный prop\n- **Legend List** — ещё одна альтернатива с рециклированием\n- Рекомендуется для длинных списков с однородными элементами",
+      "difficulty": "interview",
+      "tags": ["Списки и производительность"]
+    },
+    {
+      "id": "rn-general-performance",
+      "slug": "general-performance",
+      "question": "Какие основные практики оптимизации производительности React Native?",
+      "answer": "1. **Тестировать в RELEASE-сборке** (debug в 2-5 раз медленнее)\n2. `FlatList`/`FlashList` для длинных списков (не `ScrollView`)\n3. `React.memo` для компонентов с одинаковыми props\n4. `useMemo`/`useCallback` для тяжёлых вычислений\n5. `useNativeDriver: true` для анимаций\n6. Удаление `console.log` в production (`babel-plugin-transform-remove-console`)\n7. Inline Requires (ленивая загрузка модулей)\n8. Hermes включён\n9. Правильные размеры изображений + кэширование (`expo-image`)\n10. `requestAnimationFrame` для блокирующих операций",
+      "difficulty": "interview",
+      "tags": ["Производительность"]
+    },
+    {
+      "id": "rn-image-optimization",
+      "slug": "image-optimization",
+      "question": "Как оптимизировать работу с изображениями?",
+      "answer": "- Запрашивайте правильный размер с сервера (не 4000×3000 для отображения 200×150)\n- Кэширование: `expo-image` или `react-native-fast-image`\n- `resizeMode`: `'cover'` | `'contain'` | `'stretch'` | `'center'`\n- Анимируйте `transform: scale` (не width/height)\n- Для списков изображений используйте FlatList с `getItemLayout`",
+      "difficulty": "interview",
+      "tags": ["Производительность"]
+    },
+    {
+      "id": "rn-profiling",
+      "slug": "profiling",
+      "question": "Какие инструменты профилирования доступны в React Native?",
+      "answer": "**Performance Monitor (встроенный):**\n- JS FPS: цель 60, < 30 = перегрузка JS Thread\n- UI FPS: цель 60, < 30 = слишком много View / тяжёлые эффекты\n- Views: минимум, > 500 = возможная утечка\n- RAM: стабильный, растёт = утечка памяти\n\n**React DevTools Profiler**: flamegraph, время компонентов, причины ре-рендеров\n\n**Hermes Profiler**: `HermesInternal.enableSamplingProfiler()`, `createHeapSnapshot()`\n\n**Native**: Xcode Instruments (iOS), Android Studio Profiler",
+      "difficulty": "interview",
+      "tags": ["Производительность", "Отладка"]
+    },
+    {
+      "id": "rn-native-modules-when",
+      "slug": "native-modules-when",
+      "question": "Когда нужны нативные модули и в чём разница между Native Module и Native Component?",
+      "answer": "**Когда нужны:**\n- Платформенные API (камера, Bluetooth, NFC, биометрия)\n- Нативные SDK (Firebase, платежи, аналитика)\n- CPU-интенсивные задачи\n- Файловая система, Keychain/Keystore\n\n**Native Module** — логика, API (получить GPS-координаты, читать файл)\n**Native Component** — UI-элемент (карта, видеоплеер, кастомный View)",
+      "difficulty": "interview",
+      "tags": ["Нативные модули"]
+    },
+    {
+      "id": "rn-turbo-module-creation",
+      "slug": "turbo-module-creation",
+      "question": "Как создать Turbo Module в 5 шагов?",
+      "answer": "1. **TypeScript Spec** (`specs/NativeDeviceInfo.ts`):\n```ts\nexport interface Spec extends TurboModule {\n  getDeviceName(): string;\n  getBatteryLevel(): Promise<number>;\n}\n```\n2. **package.json** → `codegenConfig`: имя, директория спеков, платформы\n3. **Android** (Kotlin): наследование от `NativeDeviceInfoSpec`, реализация методов\n4. **iOS** (Obj-C++): реализация `NativeDeviceInfoSpec`, `getTurboModule` возвращает JSI-привязку\n5. **Использование в JS**:\n```js\nconst name = NativeDeviceInfo.getDeviceName(); // Sync!\nconst battery = await NativeDeviceInfo.getBatteryLevel(); // Async\n```",
+      "difficulty": "deep",
+      "tags": ["Нативные модули"]
+    },
+    {
+      "id": "rn-storage-options",
+      "slug": "storage-options",
+      "question": "Какие варианты хранения данных есть в React Native и когда какой использовать?",
+      "answer": "| Вариант | Тип | Скорость | Шифрование | Когда |\n|---|---|---|---|---|\n| AsyncStorage | Key-Value | Медленно | Нет | Простые настройки |\n| **MMKV** | Key-Value | **Очень быстро** | Опционально | Настройки, кэш |\n| SecureStore | Key-Value | Средне | **Да** | Токены, пароли |\n| SQLite | Реляционное | Быстро | Нет | Сложные запросы |\n| FileSystem | Файлы | Разная | Нет | Файлы, логи |\n\n- MMKV **в 30 раз** быстрее AsyncStorage и **синхронный**\n- SecureStore: iOS Keychain / Android Keystore (аппаратное шифрование)",
+      "difficulty": "interview",
+      "tags": ["Хранение данных"]
+    },
+    {
+      "id": "rn-mmkv",
+      "slug": "mmkv",
+      "question": "Чем MMKV лучше AsyncStorage?",
+      "answer": "- **В 30 раз быстрее** AsyncStorage\n- **Синхронный** (не нужен `await`!)\n- Поддерживает: string, number, boolean, Buffer (не только строки)\n- Опциональное шифрование (`encryptionKey`)\n- Библиотека от WeChat/Tencent\n- Интеграция с Zustand для персистентного состояния\n- AsyncStorage: async, только строки, 6МБ лимит на Android, не шифрован",
+      "difficulty": "interview",
+      "tags": ["Хранение данных"]
+    },
+    {
+      "id": "rn-secure-storage",
+      "slug": "secure-storage",
+      "question": "Как безопасно хранить чувствительные данные?",
+      "answer": "- **expo-secure-store**: простое async key-value хранилище\n- **react-native-keychain**: больше возможностей, включая биометрическую защиту\n- iOS: Keychain Services (аппаратное шифрование через Secure Enclave)\n- Android: Encrypted SharedPreferences (Android Keystore)\n\n**Что хранить:**\n- Access tokens, Refresh tokens\n- Пароли, API ключи\n- Приватные ключи\n\n**НЕ хранить в AsyncStorage/MMKV** — доступны на rooted/jailbroken устройствах",
+      "difficulty": "interview",
+      "tags": ["Хранение данных", "Безопасность"]
+    },
+    {
+      "id": "rn-sqlite",
+      "slug": "sqlite",
+      "question": "Когда использовать SQLite в React Native?",
+      "answer": "- **Реляционные данные**: User → Posts → Comments\n- **Большие объёмы**: тысячи записей\n- **Сложные запросы**: фильтрация, сортировка, JOIN\n- Async API: `runAsync()`, `getAllAsync()`, `getFirstAsync()`\n- SQL-запросы с параметрами\n- `expo-sqlite` — рекомендуемая библиотека\n- Для простого key-value — используйте MMKV вместо SQLite",
+      "difficulty": "interview",
+      "tags": ["Хранение данных"]
+    },
+    {
+      "id": "rn-security-secrets",
+      "slug": "security-secrets",
+      "question": "Как безопасно работать с API-ключами и секретами?",
+      "answer": "- **НИКОГДА** не захардкоживайте API-ключи (JS-бандл извлекаем)\n- Используйте бэкенд-прокси: App → HTTPS → Backend (с API-ключом) → External API\n- Access Tokens в **Secure Store** (Keychain iOS, Android Keystore)\n- Refresh Tokens в **Secure Store**\n- Hermes bytecode (.hbc) в release — не настоящая обфускация, но сложнее читать\n- ProGuard для обфускации Android Java/Kotlin кода",
+      "difficulty": "interview",
+      "tags": ["Безопасность"]
+    },
+    {
+      "id": "rn-security-auth",
+      "slug": "security-auth",
+      "question": "Как правильно реализовать аутентификацию в мобильном приложении?",
+      "answer": "- **OAuth2 + PKCE** обязательно для мобильных (предотвращает перехват auth code)\n- Биометрическая аутентификация: `expo-local-authentication`\n- Короткоживущие access tokens + персистентные refresh tokens\n- Токены хранить **только** в Secure Store\n- Для auth callbacks: Universal Links (iOS) / App Links (Android) — не URL Scheme\n- URL Scheme (`myapp://callback`) = **НЕБЕЗОПАСНО** (другие приложения могут перехватить)",
+      "difficulty": "interview",
+      "tags": ["Безопасность"]
+    },
+    {
+      "id": "rn-security-network",
+      "slug": "security-network",
+      "question": "Какие меры сетевой безопасности важны для React Native?",
+      "answer": "- **HTTPS only** (iOS App Transport Security блокирует HTTP по умолчанию)\n- **SSL/Certificate pinning** для высокозащищённых приложений\n- Ротация сертификатов до истечения срока\n- Никогда не передавайте секреты через URL\n- Source maps загружать отдельно для crash reporting (не включать в бандл)",
+      "difficulty": "interview",
+      "tags": ["Безопасность"]
+    },
+    {
+      "id": "rn-security-checklist",
+      "slug": "security-checklist",
+      "question": "Какой чеклист безопасности для React Native приложения?",
+      "answer": "1. API-ключи на сервере, не в коде приложения\n2. Токены в Secure Store\n3. HTTPS only\n4. Universal/App Links для auth callbacks\n5. ProGuard включён\n6. Нет `console.log` в production\n7. Source maps отдельно от бандла\n8. OAuth2 + PKCE для аутентификации\n9. Root/Jailbreak detection (react-native-jail-monkey)\n10. Certificate Pinning для критичных API",
+      "difficulty": "interview",
+      "tags": ["Безопасность"]
+    },
+    {
+      "id": "rn-debugging-tools",
+      "slug": "debugging-tools",
+      "question": "Какие инструменты отладки доступны в React Native?",
+      "answer": "**Dev Menu**: Cmd+D (iOS Sim), Cmd+M/Ctrl+M (Android Emu), встряхивание (устройство)\n\n**React Native DevTools:**\n- Console (logs, errors, table)\n- React Components Inspector (дерево, props, state, подсветка ре-рендеров)\n- Profiler (flamegraph, время коммитов, причины ре-рендеров)\n- Breakpoints (debugger, Sources)\n- Network inspection\n\n**LogBox:**\n- Жёлтый: предупреждения (можно закрыть)\n- Красный: фатальные ошибки\n- `LogBox.ignoreLogs([patterns])`\n\n**Native**: Xcode (iOS), Android Studio / Logcat (Android)",
+      "difficulty": "interview",
+      "tags": ["Отладка и тестирование"]
+    },
+    {
+      "id": "rn-testing",
+      "slug": "testing",
+      "question": "Какие уровни тестирования существуют для React Native?",
+      "answer": "**Unit Testing (Jest):**\n- Чистые функции, утилиты, хуки\n- Моки нативных модулей: `jest.mock('react-native/Libraries/...')`\n\n**Component Testing (React Native Testing Library):**\n- `render()`, `screen`, `fireEvent`, `waitFor`\n- Запросы: `getByText`, `getByPlaceholderText`, `getByTestId`\n- Тестируйте **поведение**, не реализацию\n\n**E2E Testing:**\n- **Maestro**: простой, YAML-based, лёгкая настройка\n- **Detox (Wix)**: мощнее, JavaScript, быстрее Maestro\n- **Appium**: кроссплатформенный, но медленнее\n\n**Crash Reporting:**\n- Sentry: `captureException()`, breadcrumbs\n- Firebase Crashlytics: `recordError()`",
+      "difficulty": "interview",
+      "tags": ["Отладка и тестирование"]
+    },
+    {
+      "id": "rn-crash-reporting",
+      "slug": "crash-reporting",
+      "question": "Как настроить crash reporting в React Native?",
+      "answer": "- **Sentry**: `Sentry.init()`, `captureException()`, автоматические breadcrumbs\n- **Firebase Crashlytics**: `crashlytics().recordError()`\n- **Source maps**: загружать отдельно для читаемых stack traces (Hermes bytecode → исходный код)\n- Отслеживание: нативные крэши + JS-ошибки + unhandled Promise rejections\n- Важно для production — без crash reporting невозможно отлавливать ошибки у пользователей",
+      "difficulty": "interview",
+      "tags": ["Отладка и тестирование"]
+    },
+    {
+      "id": "rn-concurrent-rendering",
+      "slug": "concurrent-rendering",
+      "question": "Как работает Concurrent Rendering в React Native (новая архитектура)?",
+      "answer": "- React 18+ поддержка благодаря Fabric\n- React может **прерывать** render phase для более приоритетных обновлений\n- `useTransition` — пометить обновление как низкоприоритетное\n- `Suspense` — приостановить рендеринг до загрузки данных\n- Автоматический batching из нативных событий\n- Старая архитектура (Bridge) не поддерживала concurrent features",
+      "difficulty": "deep",
+      "tags": ["Архитектура", "Потоки и рендеринг"]
+    },
+    {
+      "id": "rn-frame-metrics",
+      "slug": "frame-metrics",
+      "question": "Как измерять и интерпретировать метрики производительности?",
+      "answer": "- **60 FPS** = 16.67мс на кадр\n- **JS FPS**: скорость завершения работы JS Thread. < 30 = перегрузка бизнес-логикой\n- **UI FPS**: скорость рендеринга кадров UI Thread. < 30 = слишком много View или тяжёлые эффекты\n- **Views count**: минимальное количество. > 500 = возможная утечка\n- **RAM**: должен быть стабильным. Рост = утечка памяти\n- Debug-режим в **2-5 раз медленнее** release — всегда тестируйте production-сборку",
+      "difficulty": "interview",
+      "tags": ["Производительность"]
+    },
+    {
+      "id": "rn-heavy-computation",
+      "slug": "heavy-computation",
+      "question": "Как обрабатывать тяжёлые вычисления в React Native без блокировки UI?",
+      "answer": "- `requestAnimationFrame` — отложить выполнение после анимации/рендера\n- **Chunking**: обработка порциями с RAF между ними\n- Нативные модули для CPU-интенсивных задач\n- `InteractionManager.runAfterInteractions()` — выполнить после завершения анимаций\n- `useNativeDriver: true` — анимации не зависят от JS Thread\n- Избегайте `console.log` в production (сериализация данных)\n- Web Workers не поступны в RN, но есть `react-native-multithreading` (Reanimated worklets)",
+      "difficulty": "interview",
+      "tags": ["Производительность"]
+    },
+    {
+      "id": "rn-batching",
+      "slug": "batching",
+      "question": "Как работает batching в старой и новой архитектурах?",
+      "answer": "**Старая архитектура (Bridge):**\n- Bridge группирует сообщения\n- Вместо: createView → Bridge → updateView → Bridge\n- Группирует: [createView, updateView, ...] → Bridge (один раз)\n\n**Новая архитектура (Fabric + React 18):**\n- Автоматический batching всех обновлений состояния\n- Batching из нативных событий (не только из React-обработчиков)\n- setState вызовы в одном event handler группируются в один ре-рендер",
+      "difficulty": "deep",
+      "tags": ["Потоки и рендеринг"]
+    },
+    {
+      "id": "rn-code-signing",
+      "slug": "code-signing",
+      "question": "Как работает подпись кода (Code Signing) для iOS и Android?",
+      "answer": "**iOS:**\n- Certificate (Developer/Distribution) + Provisioning Profile + App ID\n- Development: для отладки\n- Ad Hoc: для тестирования на конкретных устройствах\n- Distribution: для App Store\n\n**Android:**\n- Keystore файл (.jks/.keystore)\n- **НЕВОЗМОЖНО восстановить** при утере — хранить надёжно!\n- `signingConfigs` в `build.gradle`\n\n**EAS Build** автоматизирует управление сертификатами/профилями",
+      "difficulty": "interview",
+      "tags": ["Metro и сборка"]
+    },
+    {
+      "id": "rn-file-system",
+      "slug": "file-system",
+      "question": "Как работать с файловой системой в React Native?",
+      "answer": "- `expo-file-system` — рекомендуемая библиотека\n- `documentDirectory` — постоянное хранилище\n- `cacheDirectory` — может быть очищено ОС\n- `writeAsStringAsync()` / `readAsStringAsync()` — чтение/запись текстовых файлов\n- `downloadAsync()` — загрузка файлов\n- `getInfoAsync()` — метаданные файла\n- `deleteAsync()` — удаление\n- Для больших файлов: потоковое чтение/запись",
+      "difficulty": "interview",
+      "tags": ["Хранение данных"]
+    },
+    {
+      "id": "rn-expo-packages",
+      "slug": "expo-packages",
+      "question": "Какие ключевые пакеты входят в Expo SDK?",
+      "answer": "- `expo-camera` — доступ к камере\n- `expo-image-picker` — выбор фото/видео из галереи\n- `expo-location` — геолокация\n- `expo-notifications` — push-уведомления\n- `expo-secure-store` — безопасное хранение\n- `expo-file-system` — файловая система\n- `expo-sqlite` — локальная база данных\n- `expo-image` — оптимизированное отображение изображений (с кэшированием)\n- `expo-av` — аудио/видео\n- `expo-haptics` — тактильная обратная связь\n- `expo-local-authentication` — биометрия\n- `expo-splash-screen` — экран загрузки",
+      "difficulty": "interview",
+      "tags": ["Expo"]
+    },
+    {
+      "id": "rn-debug-vs-release",
+      "slug": "debug-vs-release",
+      "question": "Почему важно тестировать в release-сборке?",
+      "answer": "- Debug-режим в **2-5 раз медленнее** release\n- В debug: нет Hermes AOT-компиляции, включены DevTools, логирование, __DEV__ проверки\n- В release: Hermes bytecode, удалены console.log, оптимизированные нативные библиотеки\n- Проблемы производительности, видимые в debug, могут **не существовать** в release\n- Всегда профилируйте в release-сборке перед оптимизацией",
+      "difficulty": "interview",
+      "tags": ["Производительность", "Отладка и тестирование"]
+    },
+    {
+      "id": "rn-scroll-vs-flatlist",
+      "slug": "scroll-vs-flatlist",
+      "question": "Когда использовать `ScrollView`, а когда `FlatList`?",
+      "answer": "**ScrollView:**\n- Рендерит **все** дочерние элементы сразу\n- Подходит для: небольшого контента (< 30-50 элементов)\n- Формы, страницы с текстом, настройки\n\n**FlatList:**\n- **Виртуализация**: рендерит только видимые + буфер\n- Подходит для: больших списков (100+ элементов)\n- Ленты, каталоги, списки контактов\n\n**Правило**: если элементов > 50 или данные загружаются динамически → `FlatList`",
+      "difficulty": "interview",
+      "tags": ["Списки и производительность"]
+    },
+    {
+      "id": "rn-root-jailbreak-detection",
+      "slug": "root-jailbreak-detection",
+      "question": "Как определить root/jailbreak и зачем?",
+      "answer": "- `react-native-jail-monkey` — библиотека для обнаружения\n- Root (Android) / Jailbreak (iOS) = пользователь имеет полный доступ к устройству\n- Риски: извлечение данных из хранилища, перехват трафика, модификация приложения\n- Дополнительный слой защиты (может быть обойдён решительным атакующим)\n- Полезно для: банковских приложений, корпоративных решений\n- Можно: показать предупреждение, ограничить функциональность, отказать в работе",
+      "difficulty": "deep",
+      "tags": ["Безопасность"]
+    },
+    {
+      "id": "rn-animated-event",
+      "slug": "animated-event",
+      "question": "Как использовать `Animated.event()` для маппинга нативных событий?",
+      "answer": "- Маппит нативные события напрямую в Animated.Value **без JS-вызовов**\n- Используется для scroll-событий с параллакс-эффектом\n- `scrollEventThrottle: 16` для 60 FPS\n- Пример:\n```jsx\n<Animated.ScrollView\n  onScroll={Animated.event(\n    [{ nativeEvent: { contentOffset: { y: scrollY } } }],\n    { useNativeDriver: true }\n  )}\n/>\n```\n- Анимация привязывается к позиции скролла без пропуска через JS Thread",
+      "difficulty": "deep",
+      "tags": ["Анимации"]
+    },
+    {
+      "id": "rn-native-debugging",
+      "slug": "native-debugging",
+      "question": "Как отлаживать нативный код в React Native?",
+      "answer": "**iOS:**\n- Xcode: breakpoints, View Hierarchy debugger, Instruments\n- Instruments: Time Profiler, Allocations, Leaks, Network\n\n**Android:**\n- Android Studio: breakpoints, Layout Inspector, Android Profiler\n- Logcat: `adb logcat | grep \"ReactNative\"`\n- Memory Profiler, CPU Profiler\n\n**Общее:**\n- Нативные крэши не видны в JS-дебаггере\n- Source maps нужны для маппинга Hermes bytecode → исходный код\n- Flipper (устаревший, но всё ещё используется) / Reactotron",
+      "difficulty": "deep",
+      "tags": ["Отладка и тестирование"]
+    }
+  ]
+}
